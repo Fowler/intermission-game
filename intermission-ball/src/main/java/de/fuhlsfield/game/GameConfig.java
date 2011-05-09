@@ -3,16 +3,25 @@ package de.fuhlsfield.game;
 import java.util.HashSet;
 import java.util.Set;
 
+import de.fuhlsfield.game.rule.BallTakesPartRuleCheck;
+import de.fuhlsfield.game.rule.PlayerTakesPartRuleCheck;
+import de.fuhlsfield.game.rule.RuleCheck;
+
 public enum GameConfig {
 	
-	BIG_BASKET("Großer Korb", 14, 10);
+	FIVE_BALLS("Fünf Bälle", 14, 10);
 	
 	static {
-		BIG_BASKET.addBallValue(new BallValue(Ball.TISCHI_BALLI, 4));
-		BIG_BASKET.addBallValue(new BallValue(Ball.SCHWAMMI, 3));
-		BIG_BASKET.addBallValue(new BallValue(Ball.BASKI, 3));
-		BIG_BASKET.addBallValue(new BallValue(Ball.FROESCHI, 2));
-		BIG_BASKET.addBallValue(new BallValue(Ball.BUNTI, 2));
+		FIVE_BALLS.addBallValue(new BallValue(Ball.TISCHI_BALLI, 4));
+		FIVE_BALLS.addBallValue(new BallValue(Ball.SCHWAMMI, 3));
+		FIVE_BALLS.addBallValue(new BallValue(Ball.BASKI, 3));
+		FIVE_BALLS.addBallValue(new BallValue(Ball.FROESCHI, 2));
+		FIVE_BALLS.addBallValue(new BallValue(Ball.BUNTI, 2));
+	}
+	
+	static {
+		FIVE_BALLS.addRuleCheck(new PlayerTakesPartRuleCheck());
+		FIVE_BALLS.addRuleCheck(new BallTakesPartRuleCheck());
 	}
 	
 	private final String name;
@@ -39,6 +48,14 @@ public enum GameConfig {
 	
 	public int getMaxRounds () {
 		return this.maxRounds;
+	}
+	
+	public Set<BallValue> getBallValues () {
+		return this.ballValues;
+	}
+	
+	public Set<RuleCheck> getRuleChecks () {
+		return this.ruleChecks;
 	}
 	
 	private void addBallValue (BallValue ballValue) {
