@@ -19,8 +19,7 @@ public enum Ball {
 	SCHWAMMI_FAIL("-Schwammi", 0, false), //
 	FROESCHI("Fröschi", 4, true), // 
 	FROESCHI_FAIL("-Fröschi", 0, false), //
-	NONE(null, 0, false), //
-	;
+	NONE(null, 0, false);
 
 	private String name;
 	private int points;
