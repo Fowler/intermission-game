@@ -1,0 +1,26 @@
+BALL
+name : String
+
+GAME_CONFIG
+name : String
+targetPoints : int
+maxRounds : int
+ballValues: List<Ball_Value>
+rules : List<Rule>
+pointsForWin : int
+
+BALL_VALUE
+ballName : String
+points : int
+possibleCheckout : boolean
+
+RULE
+
+ROUND
+ball : Ball
+success : boolean
+
+GAME
+gameConfig : GameConfig
+numberOfPlayer : int
+
