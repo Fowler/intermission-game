@@ -18,8 +18,7 @@ public enum Ball {
 	SCHWAMMI("Schwammi"), // 
 	SCHWAMMI_FAIL("-Schwammi"), //
 	FROESCHI("Fröschi"), // 
-	FROESCHI_FAIL("-Fröschi"), //
-	NONE(null);
+	FROESCHI_FAIL("-Fröschi"); //
 
 	private String name;
 

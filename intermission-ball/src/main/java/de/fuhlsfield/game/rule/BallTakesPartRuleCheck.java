@@ -1,6 +1,6 @@
 package de.fuhlsfield.game.rule;
 
-import java.util.Set;
+import java.util.List;
 
 import de.fuhlsfield.game.Attempt;
 import de.fuhlsfield.game.BallValue;
@@ -10,7 +10,7 @@ public class BallTakesPartRuleCheck implements RuleCheck {
 
 	@Override
 	public boolean isAttemptPossible(Attempt attempt, Game game) {
-		Set<BallValue> ballValues = game.getGameConfig().getBallValues();
+		List<BallValue> ballValues = game.getGameConfig().getBallValues();
 		for (BallValue ballValue : ballValues) {
 			if (ballValue.getBall() == attempt.getBall()) {
 				return true;

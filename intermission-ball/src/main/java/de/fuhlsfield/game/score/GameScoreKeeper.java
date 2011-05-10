@@ -1,32 +1,43 @@
 package de.fuhlsfield.game.score;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.fuhlsfield.game.AttemptResult;
 import de.fuhlsfield.game.Ball;
 
 public class GameScoreKeeper {
-	
+
 	public static final int NO_ATTEMPT = -1;
 
-	private List<AttemptResult> rounds = new ArrayList<AttemptResult>();
+	private AttemptResult[] rounds;
 
 	private int index = 0;
+	private int maxRounds;
+
+	public GameScoreKeeper(int maxRounds) {
+		super();
+		this.maxRounds = maxRounds;
+		rounds = new AttemptResult[maxRounds];
+	}
 
 	public void add(AttemptResult attemptResult) {
-		this.rounds.add(index++, attemptResult);
+		this.rounds[index++] = attemptResult;
 	}
 
 	public Ball getIndexed(int index) {
-		return rounds.get(index).getBall();
+
+		AttemptResult result = rounds[index];
+
+		return result == null ? null : result.getBall();
 	}
-	
-	public int getIndexOfLastAttempt () {
-		if (rounds.size() > 0) {
-		return rounds.size() - 1;
+
+	public int getIndexOfLastAttempt() {
+		if (rounds.length > 0) {
+			return rounds.length - 1;
 		}
 		return NO_ATTEMPT;
+	}
+
+	public int getMaxRounds() {
+		return maxRounds;
 	}
 
 }
