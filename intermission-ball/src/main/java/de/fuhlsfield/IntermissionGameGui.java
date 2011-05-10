@@ -2,6 +2,7 @@ package de.fuhlsfield;
 
 import java.awt.Container;
 import java.awt.GridLayout;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -9,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import de.fuhlsfield.game.BallValue;
 import de.fuhlsfield.game.Game;
 import de.fuhlsfield.game.GameConfig;
 import de.fuhlsfield.game.Player;
@@ -24,10 +26,9 @@ public class IntermissionGameGui {
 	private static final String ROUND = "Runde";
 	private static final String GAME = "Spiel";
 
-	private static final int NUMBER_OF_GAMES_PER_SEASON = 10;
-	
-	private static final Game GAME_KEEPER = new Game(GameConfig.FIVE_BALLS, new Player("Jürgen"), new Player("Marcus"));
-	
+	private static final Game GAME_KEEPER = new Game(GameConfig.FIVE_BALLS,
+			new Player("Jürgen"), new Player("Marcus"));
+
 	private JTable jTableSeason;
 	private JTable jTableGame;
 
@@ -38,9 +39,12 @@ public class IntermissionGameGui {
 
 		c.setLayout(new GridLayout(2, 2));
 
-		String[] columnNamesSeason = new String[] { GAME, GAME_KEEPER.getPlayers().get(0).getName(),
+		String[] columnNamesSeason = new String[] { GAME,
+				GAME_KEEPER.getPlayers().get(0).getName(),
 				GAME_KEEPER.getPlayers().get(1).getName() };
-		String[] columnNamesGame = new String[] { ROUND, GAME_KEEPER.getPlayers().get(0).getName(), GAME_KEEPER.getPlayers().get(1).getName() };
+		String[] columnNamesGame = new String[] { ROUND,
+				GAME_KEEPER.getPlayers().get(0).getName(),
+				GAME_KEEPER.getPlayers().get(1).getName() };
 		String[][] columns = createColumns();
 
 		jTableSeason = new JTable(columns, columnNamesGame);
@@ -49,38 +53,28 @@ public class IntermissionGameGui {
 		c.add(new JScrollPane(jTableGame));
 		c.add(new JScrollPane(jTableSeason));
 
-		JPanel panel = new JPanel();
-
-		panel.setLayout(new GridLayout(5, 2));
-
-		JButton buttonOne = new JButton("TischiBalli");
-		JButton buttonOneNeg = new JButton("-TischiBalli");
-		JButton buttonTwo = new JButton("Bunti");
-		JButton buttonTwoNeg = new JButton("-Bunti");
-		JButton buttonThree = new JButton("Baski");
-		JButton buttonThreeNeg = new JButton("-Baski");
-		JButton buttonFour = new JButton("Schwammi");
-		JButton buttonFourNeg = new JButton("-Schwammi");
-		JButton buttonFive = new JButton("Fröschi");
-		JButton buttonFiveNeg = new JButton("-Fröschi");
-
-		panel.add(buttonOne);
-		panel.add(buttonOneNeg);
-		panel.add(buttonTwo);
-		panel.add(buttonTwoNeg);
-		panel.add(buttonThree);
-		panel.add(buttonThreeNeg);
-		panel.add(buttonFour);
-		panel.add(buttonFourNeg);
-		panel.add(buttonFive);
-		panel.add(buttonFiveNeg);
+		JPanel panel = createPanelWithButtons();
 
 		c.add(panel);
 
-		JPanel right = new JPanel();
-
 		f.setSize(500, 500);
 		f.setVisible(true);
+	}
+
+	private JPanel createPanelWithButtons() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridLayout(5, 2));
+		Set<BallValue> balls = GAME_KEEPER.getGameConfig().getBallValues();
+
+		for (BallValue value : balls) {
+			String ballName = value.getBall().getName();
+			JButton ballSuccess = new JButton(ballName);
+			JButton ballFailed = new JButton("-" + ballName);
+			panel.add(ballSuccess);
+			panel.add(ballFailed);
+
+		}
+		return panel;
 	}
 
 	/**
