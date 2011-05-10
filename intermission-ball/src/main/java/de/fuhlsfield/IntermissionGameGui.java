@@ -9,6 +9,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import de.fuhlsfield.game.Game;
+import de.fuhlsfield.game.GameConfig;
+import de.fuhlsfield.game.Player;
+
 /**
  * First draft of game gui.
  * 
@@ -19,14 +23,13 @@ public class IntermissionGameGui {
 
 	private static final String ROUND = "Runde";
 	private static final String GAME = "Spiel";
-	private static final String PLAYER_TWO = "Marcus";
-	private static final String PLAYER_ONE = "Jürgen";
 
+	private static final int NUMBER_OF_GAMES_PER_SEASON = 10;
+	
+	private static final Game GAME_KEEPER = new Game(GameConfig.FIVE_BALLS, new Player("Jürgen"), new Player("Marcus"));
+	
 	private JTable jTableSeason;
 	private JTable jTableGame;
-
-	private static int NUMBER_OF_GAMES_PER_SEASON = 10;
-	private static int NUMBER_OF_ROUNDS_PER_GAME = 10;
 
 	public void create() {
 		JFrame f = new JFrame();
@@ -35,9 +38,9 @@ public class IntermissionGameGui {
 
 		c.setLayout(new GridLayout(2, 2));
 
-		String[] columnNamesSeason = new String[] { GAME, PLAYER_ONE,
-				PLAYER_TWO };
-		String[] columnNamesGame = new String[] { ROUND, PLAYER_ONE, PLAYER_TWO };
+		String[] columnNamesSeason = new String[] { GAME, GAME_KEEPER.getPlayers().get(0).getName(),
+				GAME_KEEPER.getPlayers().get(1).getName() };
+		String[] columnNamesGame = new String[] { ROUND, GAME_KEEPER.getPlayers().get(0).getName(), GAME_KEEPER.getPlayers().get(1).getName() };
 		String[][] columns = createColumns();
 
 		jTableSeason = new JTable(columns, columnNamesGame);

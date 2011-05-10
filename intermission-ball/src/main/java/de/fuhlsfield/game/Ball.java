@@ -9,38 +9,26 @@ package de.fuhlsfield.game;
  */
 public enum Ball {
 
-	TISCHI_BALLI("TischiBalli", 4, true), // 
-	TISCHI_BALLI_FAIL("-TischiBalli", 0, false), //
-	BUNTI("Bunti", 4, true), // 
-	BUNTI_FAIL("-Bunti", 0, false), //
-	BASKI("Baski", 4, true), // 
-	BASKI_FAIL("-Baski", 0, false), //
-	SCHWAMMI("Schwammi", 4, true), // 
-	SCHWAMMI_FAIL("-Schwammi", 0, false), //
-	FROESCHI("Fröschi", 4, true), // 
-	FROESCHI_FAIL("-Fröschi", 0, false), //
-	NONE(null, 0, false);
+	TISCHI_BALLI("TischiBalli"), // 
+	TISCHI_BALLI_FAIL("-TischiBalli"), //
+	BUNTI("Bunti"), // 
+	BUNTI_FAIL("-Bunti"), //
+	BASKI("Baski"), // 
+	BASKI_FAIL("-Baski"), //
+	SCHWAMMI("Schwammi"), // 
+	SCHWAMMI_FAIL("-Schwammi"), //
+	FROESCHI("Fröschi"), // 
+	FROESCHI_FAIL("-Fröschi"), //
+	NONE(null);
 
 	private String name;
-	private int points;
-	private boolean valid;
 
-	private Ball(String name, int points, boolean valid) {
+	private Ball(String name) {
 		this.name = name;
-		this.points = points;
-		this.valid = valid;
 	}
 
 	public String getName() {
 		return name;
-	}
-
-	public int getPoints() {
-		return points;
-	}
-
-	public boolean isValid() {
-		return valid;
 	}
 
 }

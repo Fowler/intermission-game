@@ -28,17 +28,21 @@ public class Game {
 	public List<Player> getPlayers () {
 		return this.players;
 	}
+	
+	public GameScoreKeeper getGameScore (Player player) {
+		return gameScores.get(player);
+	}
 
-	public Object[][] check(Ball ball, Player player) {
-		gameScores.get(player).add(ball);
+	public Object[][] check(Ball ball, Player player, boolean isSuccess) {
+		gameScores.get(player).add(new AttemptResult(player, ball, isSuccess));
 
-		Object[][] result = new Object[10][3];
+		Object[][] result = new Object[gameConfig.getMaxRounds()][players.size()];
 
 		//GameScoreKeeper first = this.gameScores.get(firstPlayer);
 		//GameScoreKeeper second = this.gameScores.get(secondPlayer);
 
-		for (int i = 0; i < 10; i++) {
-
+		for (int i = 0; i < gameConfig.getMaxRounds(); i++) {
+			
 //			result[i] = new String[] { String.valueOf(i + 1),
 //					first.getIndexed(i).getName(),
 //					second.getIndexed(i).getName() };

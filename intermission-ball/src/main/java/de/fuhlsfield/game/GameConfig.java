@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.fuhlsfield.game.rule.BallTakesPartRuleCheck;
-import de.fuhlsfield.game.rule.PlayerTakesPartRuleCheck;
+import de.fuhlsfield.game.rule.NextPlayerRuleCheck;
 import de.fuhlsfield.game.rule.RuleCheck;
 
 public enum GameConfig {
@@ -20,7 +20,7 @@ public enum GameConfig {
 	}
 	
 	static {
-		FIVE_BALLS.addRuleCheck(new PlayerTakesPartRuleCheck());
+		FIVE_BALLS.addRuleCheck(new NextPlayerRuleCheck());
 		FIVE_BALLS.addRuleCheck(new BallTakesPartRuleCheck());
 	}
 	
