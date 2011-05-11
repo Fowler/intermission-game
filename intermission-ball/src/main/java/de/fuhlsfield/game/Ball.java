@@ -10,15 +10,10 @@ package de.fuhlsfield.game;
 public enum Ball {
 
 	TISCHI_BALLI("TischiBalli"), // 
-	TISCHI_BALLI_FAIL("-TischiBalli"), //
 	BUNTI("Bunti"), // 
-	BUNTI_FAIL("-Bunti"), //
 	BASKI("Baski"), // 
-	BASKI_FAIL("-Baski"), //
 	SCHWAMMI("Schwammi"), // 
-	SCHWAMMI_FAIL("-Schwammi"), //
-	FROESCHI("Fröschi"), // 
-	FROESCHI_FAIL("-Fröschi"); //
+	FROESCHI("Fröschi"); 
 
 	private String name;
 
@@ -27,7 +22,7 @@ public enum Ball {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+import de.fuhlsfield.game.AttemptResult;
 import de.fuhlsfield.game.Player;
 import de.fuhlsfield.game.score.GameScoreKeeper;
 
@@ -14,51 +15,57 @@ public class ScoreTableModel extends AbstractTableModel {
 
 	private List<GameScoreKeeper> gameScoreKeepers = new ArrayList<GameScoreKeeper>();
 
-	private int maxRounds;
+	private final int maxRounds;
 
-	private List<Integer> roundsIndexes = new ArrayList<Integer>();
-	private List<Player> players;
+	private final List<Integer> roundsIndexes = new ArrayList<Integer>();
+	private final List<Player> players;
 
 	public ScoreTableModel(List<GameScoreKeeper> keepers, List<Player> players,
 			int maxRounds) {
-		gameScoreKeepers = keepers;
+		this.gameScoreKeepers = keepers;
 		this.maxRounds = maxRounds;
 
 		for (int i = 0; i < maxRounds; i++) {
-			roundsIndexes.add(i + 1);
+			this.roundsIndexes.add(i + 1);
 		}
 		this.players = players;
 	}
 
 	@Override
 	public int getColumnCount() {
-		return gameScoreKeepers.size() + 1;
+		return this.gameScoreKeepers.size() + 1;
 	}
 
 	@Override
 	public int getRowCount() {
-		return maxRounds;
+		return this.maxRounds;
 	}
 
 	@Override
 	public Object getValueAt(int arg0, int arg1) {
 
 		if (arg1 == 0) {
-			return roundsIndexes.get(arg0);
+			return this.roundsIndexes.get(arg0);
 		}
 
-		return gameScoreKeepers.get(arg1 - 1).getIndexed(arg0);
-
-		// return null;
+		AttemptResult attemptResult = this.gameScoreKeepers.get(arg1 - 1).getIndexed(arg0);
+		if (attemptResult == null) {
+			return null;
+		}
+		if (attemptResult.isSuccess()) {
+			return attemptResult.getBall();
+		}
+		return "-" + attemptResult.getBall();
 	}
 
+	@Override
 	public String getColumnName(int index) {
 
 		if (index == 0) {
 			return "Runde";
 		}
 
-		return players.get(index - 1).getName();
+		return this.players.get(index - 1).getName();
 
 	}
 

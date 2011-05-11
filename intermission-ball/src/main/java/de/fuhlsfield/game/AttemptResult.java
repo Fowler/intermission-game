@@ -12,5 +12,5 @@ public class AttemptResult extends Attempt {
 	public boolean isSuccess () {
 		return this.isSuccess;
 	}
-
+	
 }
