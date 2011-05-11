@@ -69,16 +69,15 @@ public class IntermissionGameGui {
 		c.add(new JScrollPane(this.jTableGame));
 		c.add(new JScrollPane(this.jTableSeason));
 
-		JPanel panel = createPanelWithButtons();
-
-		c.add(panel);
+		c.add(createPanelWithButtons(PLAYER_ONE));
+		c.add(createPanelWithButtons(PLAYER_TWO));
 
 		f.setSize(500, 500);
 		f.setVisible(true);
 		f.setTitle("Intermission Game, enjoy your lunch break...");
 	}
 
-	private JPanel createPanelWithButtons() {
+	private JPanel createPanelWithButtons(Player player) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(5, 2));
 		List<BallValue> balls = GAME_KEEPER.getGameConfig().getBallValues();
@@ -86,9 +85,9 @@ public class IntermissionGameGui {
 		for (BallValue value : balls) {
 			String ballName = value.getBall().getName();
 			JButton ballSuccess = new JButton(ballName);
-			ballSuccess.addActionListener(new SuccessActionListener(GAME_KEEPER, new Attempt(PLAYER_ONE, value.getBall()), this.model));
+			ballSuccess.addActionListener(new SuccessActionListener(GAME_KEEPER, new Attempt(player, value.getBall()), this.model));
 			JButton ballFailed = new JButton("-" + ballName);
-			ballFailed.addActionListener(new FailureActionListener(GAME_KEEPER, new Attempt(PLAYER_ONE, value.getBall()), this.model));
+			ballFailed.addActionListener(new FailureActionListener(GAME_KEEPER, new Attempt(player, value.getBall()), this.model));
 			panel.add(ballSuccess);
 			panel.add(ballFailed);
 

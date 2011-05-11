@@ -27,8 +27,8 @@ public class GameScoreKeeper {
 	}
 
 	public int getIndexOfLastAttempt() {
-		if (this.rounds.length > 0) {
-			return this.rounds.length - 1;
+		if (this.index > 0) {
+			return this.index - 1;
 		}
 		return NO_ATTEMPT;
 	}

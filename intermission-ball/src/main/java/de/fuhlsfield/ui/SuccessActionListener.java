@@ -13,9 +13,8 @@ public class SuccessActionListener extends AttemptActionListener {
 	
 	@Override
 	protected void modifyGameScore () {
-//		this.game.addSuccessfulAttempt(this.attempt);
-//		System.out.println(this.game.getGameScore(this.attempt.getPlayer()).calculateTotalScore());
 		this.game.check(this.attempt.getBall(), this.attempt.getPlayer(), true);
+//		System.out.println(this.game.getGameScore(this.attempt.getPlayer()).calculateTotalScore());
 	}
 
 }

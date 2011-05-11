@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.fuhlsfield.game.rule.RuleChecker;
 import de.fuhlsfield.game.score.GameScoreKeeper;
 
 public class Game {
@@ -17,7 +18,7 @@ public class Game {
 		this.gameConfig = gameConfig;
 		this.players = Arrays.asList(players);
 		for (Player player : this.players) {
-			gameScores.put(player, new GameScoreKeeper(this.gameConfig
+			this.gameScores.put(player, new GameScoreKeeper(this.gameConfig
 					.getMaxRounds()));
 		}
 	}
@@ -31,12 +32,15 @@ public class Game {
 	}
 
 	public GameScoreKeeper getGameScore(Player player) {
-		return gameScores.get(player);
+		return this.gameScores.get(player);
 	}
 
 	public void check(Ball ball, Player player, boolean isSuccess) {
-		gameScores.get(player).add(new AttemptResult(player, ball, isSuccess));
-
+		Attempt attempt = new Attempt(player, ball);
+		RuleChecker ruleChecker = new RuleChecker();
+		if (ruleChecker.isAttemptPossible(attempt, this)) {
+			this.gameScores.get(player).add(new AttemptResult(player, ball, isSuccess));
+		}
 	}
 
 }

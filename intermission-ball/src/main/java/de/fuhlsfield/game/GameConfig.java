@@ -3,6 +3,7 @@ package de.fuhlsfield.game;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.fuhlsfield.game.rule.AttemptLeftRuleCheck;
 import de.fuhlsfield.game.rule.BallTakesPartRuleCheck;
 import de.fuhlsfield.game.rule.NextPlayerRuleCheck;
 import de.fuhlsfield.game.rule.RuleCheck;
@@ -22,6 +23,7 @@ public enum GameConfig {
 	static {
 		FIVE_BALLS.addRuleCheck(new NextPlayerRuleCheck());
 		FIVE_BALLS.addRuleCheck(new BallTakesPartRuleCheck());
+		FIVE_BALLS.addRuleCheck(new AttemptLeftRuleCheck());
 	}
 
 	private final String name;
