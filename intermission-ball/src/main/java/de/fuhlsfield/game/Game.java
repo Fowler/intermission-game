@@ -34,6 +34,15 @@ public class Game {
 	public GameScoreKeeper getGameScore(Player player) {
 		return this.gameScores.get(player);
 	}
+	
+	public BallValue getBallValue (Ball ball) {
+	 for (BallValue ballValue : this.gameConfig.getBallValues()) {
+		 if (ballValue.getBall() == ball) {
+			 return ballValue;
+		 }
+	 }
+	 return null;
+	}
 
 	public void check(Ball ball, Player player, boolean isSuccess) {
 		Attempt attempt = new Attempt(player, ball);
@@ -41,6 +50,7 @@ public class Game {
 		if (ruleChecker.isAttemptPossible(attempt, this)) {
 			this.gameScores.get(player).add(new AttemptResult(player, ball, isSuccess));
 		}
+		System.out.println(player.getName() + ": " + this.gameConfig.getScoreCalculator().calculateScore(this, player));
 	}
 
 }

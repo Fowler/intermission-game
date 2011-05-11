@@ -7,10 +7,12 @@ import de.fuhlsfield.game.rule.AttemptLeftRuleCheck;
 import de.fuhlsfield.game.rule.BallTakesPartRuleCheck;
 import de.fuhlsfield.game.rule.NextPlayerRuleCheck;
 import de.fuhlsfield.game.rule.RuleCheck;
+import de.fuhlsfield.game.score.ScoreCalculator;
+import de.fuhlsfield.game.score.StandardScoreCalculator;
 
 public enum GameConfig {
 
-	FIVE_BALLS("Fünf Bälle", 14, 10);
+	FIVE_BALLS("Fünf Bälle", 14, 10, new StandardScoreCalculator());
 
 	static {
 		FIVE_BALLS.addBallValue(new BallValue(Ball.TISCHI_BALLI, 4));
@@ -29,13 +31,15 @@ public enum GameConfig {
 	private final String name;
 	private final int targetPoints;
 	private final int maxRounds;
+	private final ScoreCalculator scoreCalculator;
 	private List<BallValue> ballValues;
 	private List<RuleCheck> ruleChecks;
 
-	private GameConfig(String name, int targetPoints, int maxRounds) {
+	private GameConfig(String name, int targetPoints, int maxRounds, ScoreCalculator scoreCalculator) {
 		this.name = name;
 		this.targetPoints = targetPoints;
 		this.maxRounds = maxRounds;
+		this.scoreCalculator = scoreCalculator;
 		this.ballValues = new ArrayList<BallValue>();
 		this.ruleChecks = new ArrayList<RuleCheck>();
 	}
@@ -50,6 +54,10 @@ public enum GameConfig {
 
 	public int getMaxRounds() {
 		return this.maxRounds;
+	}
+	
+	public ScoreCalculator getScoreCalculator () {
+		return this.scoreCalculator;
 	}
 
 	public List<BallValue> getBallValues() {

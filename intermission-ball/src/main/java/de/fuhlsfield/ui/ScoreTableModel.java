@@ -49,7 +49,7 @@ public class ScoreTableModel extends AbstractTableModel {
 		}
 
 		AttemptResult attemptResult = this.gameScoreKeepers.get(arg1 - 1).getIndexed(arg0);
-		if (attemptResult == null) {
+		if (attemptResult == AttemptResult.NO_ATTEMPT_RESULT) {
 			return null;
 		}
 		if (attemptResult.isSuccess()) {

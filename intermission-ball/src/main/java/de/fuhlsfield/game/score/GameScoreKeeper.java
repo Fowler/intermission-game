@@ -22,7 +22,9 @@ public class GameScoreKeeper {
 	}
 
 	public AttemptResult getIndexed(int index) {
-
+		if (index < 0 || index > getIndexOfLastAttempt()) {
+			return AttemptResult.NO_ATTEMPT_RESULT;
+		}
 		return this.rounds[index];
 	}
 
