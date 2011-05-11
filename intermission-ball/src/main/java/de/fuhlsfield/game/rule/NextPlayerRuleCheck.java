@@ -14,13 +14,15 @@ public class NextPlayerRuleCheck implements RuleCheck {
 	
 	private Player determineNextPlayer (Game game) {
 		if (game.getPlayers().size() > 0) {
-			Player nextPlayer = game.getPlayers().get(0);
-			int maxIndex = GameScoreKeeper.NO_ATTEMPT;
+			Player nextPlayer = Player.NO_PLAYER;
+			int minIndex = GameScoreKeeper.NO_ATTEMPT;
 			for (Player player : game.getPlayers()) {
 				GameScoreKeeper gameScore = game.getGameScore(player);
 				int index = gameScore.getIndexOfLastAttempt();
-				if (index > maxIndex) {
-					maxIndex = index;
+				if (index == GameScoreKeeper.NO_ATTEMPT) {
+					return player;
+				} else if (minIndex == GameScoreKeeper.NO_ATTEMPT || (index < minIndex)) {
+					minIndex = index;
 					nextPlayer = player;
 				}
 			}
