@@ -1,79 +1,56 @@
 package de.fuhlsfield.game;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.fuhlsfield.game.rule.AttemptLeftRuleCheck;
 import de.fuhlsfield.game.rule.BallTakesPartRuleCheck;
+import de.fuhlsfield.game.rule.EachBallAtLeastOnceRuleCheck;
+import de.fuhlsfield.game.rule.ExactCheckoutRuleCheck;
 import de.fuhlsfield.game.rule.NextPlayerRuleCheck;
 import de.fuhlsfield.game.rule.RuleCheck;
 import de.fuhlsfield.game.score.ScoreCalculator;
 import de.fuhlsfield.game.score.StandardScoreCalculator;
 
-public enum GameConfig {
-
-	FIVE_BALLS("Fünf Bälle", 14, 10, new StandardScoreCalculator());
-
-	static {
-		FIVE_BALLS.addBallValue(new BallValue(Ball.TISCHI_BALLI, 4));
-		FIVE_BALLS.addBallValue(new BallValue(Ball.SCHWAMMI, 3));
-		FIVE_BALLS.addBallValue(new BallValue(Ball.BASKI, 3));
-		FIVE_BALLS.addBallValue(new BallValue(Ball.FROESCHI, 2));
-		FIVE_BALLS.addBallValue(new BallValue(Ball.BUNTI, 2));
-	}
-
-	static {
-		FIVE_BALLS.addRuleCheck(new NextPlayerRuleCheck());
-		FIVE_BALLS.addRuleCheck(new BallTakesPartRuleCheck());
-		FIVE_BALLS.addRuleCheck(new AttemptLeftRuleCheck());
-	}
-
-	private final String name;
-	private final int targetPoints;
-	private final int maxRounds;
-	private final ScoreCalculator scoreCalculator;
-	private List<BallValue> ballValues;
-	private List<RuleCheck> ruleChecks;
-
-	private GameConfig(String name, int targetPoints, int maxRounds, ScoreCalculator scoreCalculator) {
-		this.name = name;
-		this.targetPoints = targetPoints;
-		this.maxRounds = maxRounds;
-		this.scoreCalculator = scoreCalculator;
-		this.ballValues = new ArrayList<BallValue>();
-		this.ruleChecks = new ArrayList<RuleCheck>();
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public int getTargetPoints() {
-		return this.targetPoints;
-	}
-
-	public int getMaxRounds() {
-		return this.maxRounds;
-	}
+public interface GameConfig {
 	
-	public ScoreCalculator getScoreCalculator () {
-		return this.scoreCalculator;
-	}
+	GameConfig FIVE_BALLS = new GameConfig() {
+		
+		@Override
+		public int getTargetPoints() {
+			return 14;
+		}
+		
+		@Override
+		public ScoreCalculator getScoreCalculator() {
+			return new StandardScoreCalculator();
+		}
+		
+		@Override
+		public List<RuleCheck> getRuleChecks() {
+			return Arrays.asList(new NextPlayerRuleCheck(), new BallTakesPartRuleCheck(), new EachBallAtLeastOnceRuleCheck(), new AttemptLeftRuleCheck(), new ExactCheckoutRuleCheck());
+		}
+		
+		@Override
+		public String getName() {
+			return "Fünfball Konfiguration";
+		}
+		
+		@Override
+		public List<BallValue> getBallValues() {
+			return Arrays.asList(new BallValue(Ball.TISCHI_BALLI, 4), new BallValue(Ball.SCHWAMMI, 3), new BallValue(Ball.BASKI, 3), new BallValue(Ball.FROESCHI, 2), new BallValue(Ball.BUNTI, 2));
+		}
+		
+	};
 
-	public List<BallValue> getBallValues() {
-		return this.ballValues;
-	}
+	String getName();
 
-	public List<RuleCheck> getRuleChecks() {
-		return this.ruleChecks;
-	}
+	int getTargetPoints();
 
-	private void addBallValue(BallValue ballValue) {
-		this.ballValues.add(ballValue);
-	}
+	ScoreCalculator getScoreCalculator ();
 
-	private void addRuleCheck(RuleCheck ruleCheck) {
-		this.ruleChecks.add(ruleCheck);
-	}
+	List<BallValue> getBallValues();
+
+	List<RuleCheck> getRuleChecks();
 
 }

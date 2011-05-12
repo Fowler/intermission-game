@@ -12,19 +12,24 @@ public class Game {
 
 	private final GameConfig gameConfig;
 	private final List<Player> players;
+	private final int maxRounds;
 	private final Map<Player, GameScoreKeeper> gameScores = new HashMap<Player, GameScoreKeeper>();
 
-	public Game(GameConfig gameConfig, Player... players) {
+	public Game(GameConfig gameConfig, int maxRounds, Player... players) {
 		this.gameConfig = gameConfig;
+		this.maxRounds = maxRounds;
 		this.players = Arrays.asList(players);
 		for (Player player : this.players) {
-			this.gameScores.put(player, new GameScoreKeeper(this.gameConfig
-					.getMaxRounds()));
+			this.gameScores.put(player, new GameScoreKeeper(maxRounds));
 		}
 	}
 
 	public GameConfig getGameConfig() {
 		return this.gameConfig;
+	}
+	
+	public int getMaxRounds () {
+		return this.maxRounds;
 	}
 
 	public List<Player> getPlayers() {

@@ -34,7 +34,7 @@ public class IntermissionGameGui {
 
 	private static final String GAME = "Spiel";
 
-	private static final Game GAME_KEEPER = new Game(GameConfig.FIVE_BALLS,
+	private static final Game GAME_KEEPER = new Game(GameConfig.FIVE_BALLS, 10,
 			PLAYER_ONE, PLAYER_TWO);
 
 	private JTable jTableSeason;
@@ -62,7 +62,7 @@ public class IntermissionGameGui {
 		keepers.add(GAME_KEEPER.getGameScore(PLAYER_TWO));
 
 		this.model = new ScoreTableModel(keepers, GAME_KEEPER.getPlayers(),
-				GAME_KEEPER.getGameConfig().getMaxRounds());
+				GAME_KEEPER.getMaxRounds());
 
 		this.jTableGame = new JTable(this.model);
 

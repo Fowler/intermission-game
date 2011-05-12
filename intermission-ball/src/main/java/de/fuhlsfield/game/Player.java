@@ -4,7 +4,7 @@ public class Player {
 	
 	public static final Player NO_PLAYER = new Player (null);
 
-	private String name;
+	private final String name;
 
 	public Player(String name) {
 		super();
@@ -12,14 +12,14 @@ public class Player {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
 		return result;
 	}
 
@@ -32,10 +32,10 @@ public class Player {
 		if (getClass() != obj.getClass())
 			return false;
 		Player other = (Player) obj;
-		if (name == null) {
+		if (this.name == null) {
 			if (other.name != null)
 				return false;
-		} else if (!name.equals(other.name))
+		} else if (!this.name.equals(other.name))
 			return false;
 		return true;
 	}

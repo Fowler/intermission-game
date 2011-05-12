@@ -7,7 +7,7 @@ public class AttemptLeftRuleCheck implements RuleCheck {
 
 	@Override
 	public boolean isAttemptPossible(Attempt attempt, Game game) {
-		return game.getGameScore(attempt.getPlayer()).getIndexOfLastAttempt() + 1 < game.getGameConfig().getMaxRounds(); 
+		return game.getGameScore(attempt.getPlayer()).getIndexOfLastAttempt() + 1 < game.getMaxRounds(); 
 	}
 
 }
