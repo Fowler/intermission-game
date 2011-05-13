@@ -7,7 +7,6 @@ import java.util.Set;
 import de.fuhlsfield.game.Attempt;
 import de.fuhlsfield.game.AttemptResult;
 import de.fuhlsfield.game.Ball;
-import de.fuhlsfield.game.BallValue;
 import de.fuhlsfield.game.Game;
 import de.fuhlsfield.game.GameConfig;
 import de.fuhlsfield.game.Player;
@@ -24,40 +23,33 @@ public class EachBallAtLeastOnceRuleCheck implements RuleCheck {
 		int ballValue = game.getGameConfig().getBallValueMapper().getValue(attempt.getBall());
 		int currentScore = gameConfig.getScoreCalculator().calculateScore(game.getGameScore(player));
 		int pointsToScore = gameConfig.getTargetPoints() - currentScore - ballValue;
-		Set<BallValue> usedBalls = determineBallValuesFromAttemptResults(game, game.getGameScore(player)
+		Set<Ball> usedBalls = determineBallValuesFromAttemptResults(game, game.getGameScore(player)
 				.getSuccessfulAttempts());
-		usedBalls.add(new BallValue(attempt.getBall(), game.getBallValue(attempt.getBall())));
-		Set<BallValue> ballsToScore = removeSet(determineBallValues(gameConfig.getBallValueMapper()), usedBalls);
-		return ballsToScore.isEmpty() || (pointsToScore > sumBallValuesExceptMin(ballsToScore));
+		usedBalls.add(attempt.getBall());
+		Set<Ball> ballsToScore = removeSet(game.getGameConfig().getBallValueMapper().getBalls(), usedBalls);
+		return ballsToScore.isEmpty()
+				|| (pointsToScore > sumBallValuesExceptMin(game.getGameConfig().getBallValueMapper(), ballsToScore));
 	}
 
-	private Set<BallValue> determineBallValues(BallValueMapper ballValueMapper) {
-		HashSet<BallValue> ballValues = new HashSet<BallValue>();
-		for (Ball ball : ballValueMapper.getBalls()) {
-			ballValues.add(new BallValue(ball, ballValueMapper.getValue(ball)));
-		}
-		return ballValues;
-	}
-
-	private Set<BallValue> removeSet(Set<BallValue> setA, Set<BallValue> setB) {
-		HashSet<BallValue> setCopy = new HashSet<BallValue>(setA);
+	private Set<Ball> removeSet(List<Ball> setA, Set<Ball> setB) {
+		HashSet<Ball> setCopy = new HashSet<Ball>(setA);
 		setCopy.removeAll(setB);
 		return setCopy;
 	}
 
-	private Set<BallValue> determineBallValuesFromAttemptResults(Game game, List<AttemptResult> attemptResults) {
-		HashSet<BallValue> ballValues = new HashSet<BallValue>();
+	private Set<Ball> determineBallValuesFromAttemptResults(Game game, List<AttemptResult> attemptResults) {
+		HashSet<Ball> balls = new HashSet<Ball>();
 		for (AttemptResult attemptResult : attemptResults) {
-			ballValues.add(new BallValue(attemptResult.getBall(), game.getBallValue(attemptResult.getBall())));
+			balls.add(attemptResult.getBall());
 		}
-		return ballValues;
+		return balls;
 	}
 
-	private int sumBallValuesExceptMin(Set<BallValue> ballValues) {
+	private int sumBallValuesExceptMin(BallValueMapper ballValueMapper, Set<Ball> balls) {
 		int sum = 0;
 		int min = UNDEFINED;
-		for (BallValue ballValue : ballValues) {
-			int value = ballValue.getValue();
+		for (Ball ball : balls) {
+			int value = ballValueMapper.getValue(ball);
 			sum += value;
 			if ((min == UNDEFINED) || (value < min)) {
 				min = value;
