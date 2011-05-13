@@ -1,18 +1,14 @@
 package de.fuhlsfield.game;
 
 public class Player {
-	
-	public static final Player NO_PLAYER = new Player (null);
+
+	public static final Player NO_PLAYER = new Player(null);
 
 	private final String name;
 
 	public Player(String name) {
 		super();
 		this.name = name;
-	}
-
-	public String getName() {
-		return this.name;
 	}
 
 	@Override
@@ -38,6 +34,10 @@ public class Player {
 		} else if (!this.name.equals(other.name))
 			return false;
 		return true;
+	}
+
+	public String getName() {
+		return this.name;
 	}
 
 }

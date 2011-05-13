@@ -20,15 +20,15 @@ public class Game {
 		this.maxRounds = maxRounds;
 		this.players = Arrays.asList(players);
 		for (Player player : this.players) {
-			this.gameScores.put(player, new GameScoreKeeper(maxRounds));
+			this.gameScores.put(player, new GameScoreKeeper());
 		}
 	}
 
 	public GameConfig getGameConfig() {
 		return this.gameConfig;
 	}
-	
-	public int getMaxRounds () {
+
+	public int getMaxRounds() {
 		return this.maxRounds;
 	}
 
@@ -39,23 +39,22 @@ public class Game {
 	public GameScoreKeeper getGameScore(Player player) {
 		return this.gameScores.get(player);
 	}
-	
-	public BallValue getBallValue (Ball ball) {
-	 for (BallValue ballValue : this.gameConfig.getBallValues()) {
-		 if (ballValue.getBall() == ball) {
-			 return ballValue;
-		 }
-	 }
-	 return null;
+
+	public int getBallValue(Ball ball) {
+		return this.gameConfig.getBallValueMapper().getValue(ball);
 	}
 
 	public void check(Ball ball, Player player, boolean isSuccess) {
 		Attempt attempt = new Attempt(player, ball);
 		RuleChecker ruleChecker = new RuleChecker();
 		if (ruleChecker.isAttemptPossible(attempt, this)) {
-			this.gameScores.get(player).add(new AttemptResult(player, ball, isSuccess));
+			this.gameScores.get(player).add(
+					new AttemptResult(player, ball, isSuccess));
 		}
-		System.out.println(player.getName() + ": " + this.gameConfig.getScoreCalculator().calculateScore(this, player));
+		System.out.println(player.getName()
+				+ ": "
+				+ this.gameConfig.getScoreCalculator().calculateScore(
+						this.getGameScore(player)));
 	}
 
 }
