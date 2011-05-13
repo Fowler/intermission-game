@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import de.fuhlsfield.game.AttemptResult;
+import de.fuhlsfield.game.Attempt;
 import de.fuhlsfield.game.Player;
 import de.fuhlsfield.game.score.GameScoreKeeper;
 
@@ -20,8 +20,7 @@ public class ScoreTableModel extends AbstractTableModel {
 	private final List<Integer> roundsIndexes = new ArrayList<Integer>();
 	private final List<Player> players;
 
-	public ScoreTableModel(List<GameScoreKeeper> keepers, List<Player> players,
-			int maxRounds) {
+	public ScoreTableModel(List<GameScoreKeeper> keepers, List<Player> players, int maxRounds) {
 		this.gameScoreKeepers = keepers;
 		this.maxRounds = maxRounds;
 
@@ -48,14 +47,14 @@ public class ScoreTableModel extends AbstractTableModel {
 			return this.roundsIndexes.get(arg0);
 		}
 
-		AttemptResult attemptResult = this.gameScoreKeepers.get(arg1 - 1).getIndexed(arg0);
-		if (attemptResult == AttemptResult.NO_ATTEMPT_RESULT) {
+		Attempt attempt = this.gameScoreKeepers.get(arg1 - 1).getIndexed(arg0);
+		if (attempt == Attempt.NO_ATTEMPT) {
 			return null;
 		}
-		if (attemptResult.isSuccess()) {
-			return attemptResult.getBall();
+		if (attempt.isSuccessful()) {
+			return attempt.getBall();
 		}
-		return "-" + attemptResult.getBall();
+		return "-" + attempt.getBall();
 	}
 
 	@Override

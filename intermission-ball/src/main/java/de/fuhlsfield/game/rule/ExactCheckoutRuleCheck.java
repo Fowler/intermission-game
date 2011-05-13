@@ -3,7 +3,6 @@ package de.fuhlsfield.game.rule;
 import java.util.HashSet;
 import java.util.Set;
 
-import de.fuhlsfield.game.Attempt;
 import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.Game;
 import de.fuhlsfield.game.GameConfig;
@@ -14,10 +13,11 @@ public class ExactCheckoutRuleCheck implements RuleCheck {
 	private static final int UNDEFINED = -1;
 
 	@Override
-	public boolean isAttemptPossible(Attempt attempt, Game game) {
+	public boolean isAttemptPossible(Ball ball, Game game) {
 		GameConfig gameConfig = game.getGameConfig();
-		int ballValue = game.getGameConfig().getBallValueMapper().getValue(attempt.getBall());
-		int currentScore = gameConfig.getScoreCalculator().calculateScore(game.getGameScore(attempt.getPlayer()));
+		int ballValue = game.getGameConfig().getBallValueMapper().getValue(ball);
+		int currentScore = gameConfig.getScoreCalculator()
+				.calculateScore(game.getGameScore(game.determineNextPlayer()));
 		int pointsToScore = gameConfig.getTargetPoints() - currentScore - ballValue;
 		return isTargetPointsAchievable(pointsToScore, determineAtomicPoints(gameConfig.getBallValueMapper()),
 				new HashSet<Integer>());

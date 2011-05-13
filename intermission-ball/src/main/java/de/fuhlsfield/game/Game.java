@@ -45,16 +45,31 @@ public class Game {
 	}
 
 	public void check(Ball ball, Player player, boolean isSuccess) {
-		Attempt attempt = new Attempt(player, ball);
 		RuleChecker ruleChecker = new RuleChecker();
-		if (ruleChecker.isAttemptPossible(attempt, this)) {
-			this.gameScores.get(player).add(
-					new AttemptResult(player, ball, isSuccess));
+		if (determineNextPlayer().equals(player) && ruleChecker.isAttemptPossible(ball, this)) {
+			this.gameScores.get(player).add(new Attempt(ball, isSuccess));
 		}
-		System.out.println(player.getName()
-				+ ": "
-				+ this.gameConfig.getScoreCalculator().calculateScore(
-						this.getGameScore(player)));
+		System.out.println(player.getName() + ": "
+				+ this.gameConfig.getScoreCalculator().calculateScore(this.getGameScore(player)));
+	}
+
+	public Player determineNextPlayer() {
+		if (this.players.size() > 0) {
+			Player nextPlayer = Player.NO_PLAYER;
+			int minIndex = GameScoreKeeper.NO_ATTEMPT;
+			for (Player player : this.players) {
+				GameScoreKeeper gameScore = getGameScore(player);
+				int index = gameScore.getIndexOfLastAttempt();
+				if (index == GameScoreKeeper.NO_ATTEMPT) {
+					return player;
+				} else if ((minIndex == GameScoreKeeper.NO_ATTEMPT) || (index < minIndex)) {
+					minIndex = index;
+					nextPlayer = player;
+				}
+			}
+			return nextPlayer;
+		}
+		return Player.NO_PLAYER;
 	}
 
 }

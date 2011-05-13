@@ -1,21 +1,23 @@
 package de.fuhlsfield.game;
 
 public class Attempt {
-	
-	private final Player player;
+
+	public static final Attempt NO_ATTEMPT = new Attempt(null, false);
+
 	private final Ball ball;
-	
-	public Attempt (Player player, Ball ball) {
+	private final boolean isSuccessful;
+
+	public Attempt(Ball ball, boolean isSuccessful) {
 		this.ball = ball;
-		this.player = player;
+		this.isSuccessful = isSuccessful;
 	}
-	
-	public Player getPlayer () {
-		return this.player;
-	}
-	
-	public Ball getBall () {
+
+	public Ball getBall() {
 		return this.ball;
+	}
+
+	public boolean isSuccessful() {
+		return this.isSuccessful;
 	}
 
 }

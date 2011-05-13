@@ -11,7 +11,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import de.fuhlsfield.game.Attempt;
 import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.Game;
 import de.fuhlsfield.game.GameConfig;
@@ -81,10 +80,9 @@ public class IntermissionGameGui {
 		for (Ball ball : GAME_KEEPER.getGameConfig().getBallValueMapper().getBalls()) {
 			String ballName = ball.getName();
 			JButton ballSuccess = new JButton(ballName);
-			ballSuccess
-					.addActionListener(new SuccessActionListener(GAME_KEEPER, new Attempt(player, ball), this.model));
+			ballSuccess.addActionListener(new SuccessActionListener(GAME_KEEPER, ball, player, this.model));
 			JButton ballFailed = new JButton("-" + ballName);
-			ballFailed.addActionListener(new FailureActionListener(GAME_KEEPER, new Attempt(player, ball), this.model));
+			ballFailed.addActionListener(new FailureActionListener(GAME_KEEPER, ball, player, this.model));
 			panel.add(ballSuccess);
 			panel.add(ballFailed);
 

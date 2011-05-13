@@ -7,7 +7,6 @@ import de.fuhlsfield.game.rule.AttemptLeftRuleCheck;
 import de.fuhlsfield.game.rule.BallTakesPartRuleCheck;
 import de.fuhlsfield.game.rule.EachBallAtLeastOnceRuleCheck;
 import de.fuhlsfield.game.rule.ExactCheckoutRuleCheck;
-import de.fuhlsfield.game.rule.NextPlayerRuleCheck;
 import de.fuhlsfield.game.rule.RuleCheck;
 import de.fuhlsfield.game.score.BallValueMapper;
 import de.fuhlsfield.game.score.ScoreCalculator;
@@ -29,9 +28,7 @@ public interface GameConfig {
 
 		@Override
 		public List<RuleCheck> getRuleChecks() {
-			return Arrays.asList(new NextPlayerRuleCheck(),
-					new BallTakesPartRuleCheck(),
-					new EachBallAtLeastOnceRuleCheck(),
+			return Arrays.asList(new BallTakesPartRuleCheck(), new EachBallAtLeastOnceRuleCheck(),
 					new AttemptLeftRuleCheck(), new ExactCheckoutRuleCheck());
 		}
 

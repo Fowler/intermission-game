@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.fuhlsfield.game.Attempt;
 import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.Game;
 import de.fuhlsfield.game.GameConfig;
@@ -20,10 +19,11 @@ import de.fuhlsfield.game.score.StandardScoreCalculator;
 
 public class ExactCheckoutRuleCheckTest {
 
-	private static final Player PLAYER = new Player("Player");
+	private static final Player PLAYER_A = new Player("Player A");
+	private static final Player PLAYER_B = new Player("Player B");
 
 	private final GameConfig gameConfig = mock(GameConfig.class);
-	private final Game game = new Game(this.gameConfig, 10, PLAYER);
+	private final Game game = new Game(this.gameConfig, 10, PLAYER_A, PLAYER_B);
 
 	@Before
 	public void setUp() {
@@ -38,34 +38,39 @@ public class ExactCheckoutRuleCheckTest {
 
 	@Test
 	public void thatIsAttemptPossibleWhenExactCheckout() {
-		this.game.check(Ball.BUNTI, PLAYER, true);
-		this.game.check(Ball.SCHWAMMI, PLAYER, true);
+		addAttempt(Ball.BUNTI);
+		addAttempt(Ball.SCHWAMMI);
 		when(this.gameConfig.getTargetPoints()).thenReturn(9);
-		assertTrue(createClassUnderTest().isAttemptPossible(new Attempt(PLAYER, Ball.TISCHI_BALLI), this.game));
+		assertTrue(createClassUnderTest().isAttemptPossible(Ball.TISCHI_BALLI, this.game));
 	}
 
 	@Test
 	public void thatIsAttemptPossibleWhenAfterAttemptExactCheckoutPossible() {
-		this.game.check(Ball.BUNTI, PLAYER, true);
-		this.game.check(Ball.SCHWAMMI, PLAYER, true);
+		addAttempt(Ball.BUNTI);
+		addAttempt(Ball.SCHWAMMI);
 		when(this.gameConfig.getTargetPoints()).thenReturn(10);
-		assertTrue(createClassUnderTest().isAttemptPossible(new Attempt(PLAYER, Ball.SCHWAMMI), this.game));
+		assertTrue(createClassUnderTest().isAttemptPossible(Ball.SCHWAMMI, this.game));
 	}
 
 	@Test
 	public void thatIsAttemptNotPossibleWhenAfterAttemptNoExactCheckoutPossible() {
-		this.game.check(Ball.BUNTI, PLAYER, true);
-		this.game.check(Ball.SCHWAMMI, PLAYER, true);
+		addAttempt(Ball.BUNTI);
+		addAttempt(Ball.SCHWAMMI);
 		when(this.gameConfig.getTargetPoints()).thenReturn(10);
-		assertFalse(createClassUnderTest().isAttemptPossible(new Attempt(PLAYER, Ball.TISCHI_BALLI), this.game));
+		assertFalse(createClassUnderTest().isAttemptPossible(Ball.TISCHI_BALLI, this.game));
 	}
 
 	@Test
 	public void thatIsAttemptNotPossibleWhenMorePointsThanNeeded() {
-		this.game.check(Ball.BUNTI, PLAYER, true);
-		this.game.check(Ball.SCHWAMMI, PLAYER, true);
+		addAttempt(Ball.BUNTI);
+		addAttempt(Ball.SCHWAMMI);
 		when(this.gameConfig.getTargetPoints()).thenReturn(8);
-		assertFalse(createClassUnderTest().isAttemptPossible(new Attempt(PLAYER, Ball.TISCHI_BALLI), this.game));
+		assertFalse(createClassUnderTest().isAttemptPossible(Ball.TISCHI_BALLI, this.game));
+	}
+
+	private void addAttempt(Ball ball) {
+		this.game.check(ball, PLAYER_A, true);
+		this.game.check(ball, PLAYER_B, true);
 	}
 
 	private ExactCheckoutRuleCheck createClassUnderTest() {

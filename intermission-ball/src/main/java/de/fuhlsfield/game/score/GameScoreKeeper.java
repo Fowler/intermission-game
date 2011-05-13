@@ -3,45 +3,45 @@ package de.fuhlsfield.game.score;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fuhlsfield.game.AttemptResult;
+import de.fuhlsfield.game.Attempt;
 
 public class GameScoreKeeper {
 
 	public static final int NO_ATTEMPT = -1;
 
-	private final List<AttemptResult> rounds;
+	private final List<Attempt> attempts;
 
 	public GameScoreKeeper() {
-		this.rounds = new ArrayList<AttemptResult>();
+		this.attempts = new ArrayList<Attempt>();
 	}
 
-	public void add(AttemptResult attemptResult) {
-		this.rounds.add(attemptResult);
+	public void add(Attempt attempt) {
+		this.attempts.add(attempt);
 	}
 
-	public AttemptResult getIndexed(int index) {
+	public Attempt getIndexed(int index) {
 		if ((index < 0) || (index > getIndexOfLastAttempt())) {
-			return AttemptResult.NO_ATTEMPT_RESULT;
+			return Attempt.NO_ATTEMPT;
 		}
-		return this.rounds.get(index);
+		return this.attempts.get(index);
 	}
 
 	public int getIndexOfLastAttempt() {
-		if (this.rounds.isEmpty()) {
+		if (this.attempts.isEmpty()) {
 			return NO_ATTEMPT;
 		}
-		return this.rounds.size() - 1;
+		return this.attempts.size() - 1;
 	}
 
-	public List<AttemptResult> getSuccessfulAttempts() {
-		ArrayList<AttemptResult> attemptResults = new ArrayList<AttemptResult>();
+	public List<Attempt> getSuccessfulAttempts() {
+		ArrayList<Attempt> successfulAttempts = new ArrayList<Attempt>();
 		for (int i = 0; i <= getIndexOfLastAttempt(); i++) {
-			AttemptResult attemptResult = getIndexed(i);
-			if (attemptResult.isSuccess()) {
-				attemptResults.add(attemptResult);
+			Attempt attempt = getIndexed(i);
+			if (attempt.isSuccessful()) {
+				successfulAttempts.add(attempt);
 			}
 		}
-		return attemptResults;
+		return successfulAttempts;
 	}
 
 }

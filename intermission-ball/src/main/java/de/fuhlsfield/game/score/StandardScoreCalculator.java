@@ -1,6 +1,6 @@
 package de.fuhlsfield.game.score;
 
-import de.fuhlsfield.game.AttemptResult;
+import de.fuhlsfield.game.Attempt;
 
 public class StandardScoreCalculator implements ScoreCalculator {
 
@@ -14,9 +14,9 @@ public class StandardScoreCalculator implements ScoreCalculator {
 	public int calculateScore(GameScoreKeeper gameScoreKeeper) {
 		int score = 0;
 		for (int i = 0; i <= gameScoreKeeper.getIndexOfLastAttempt(); i++) {
-			AttemptResult attemptResult = gameScoreKeeper.getIndexed(i);
-			if (attemptResult.isSuccess()) {
-				score += this.ballValueMapper.getValue(attemptResult.getBall());
+			Attempt attempt = gameScoreKeeper.getIndexed(i);
+			if (attempt.isSuccessful()) {
+				score += this.ballValueMapper.getValue(attempt.getBall());
 			}
 		}
 		return score;

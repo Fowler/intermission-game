@@ -2,19 +2,19 @@ package de.fuhlsfield.ui;
 
 import javax.swing.table.AbstractTableModel;
 
-import de.fuhlsfield.game.Attempt;
+import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.Game;
+import de.fuhlsfield.game.Player;
 
 public class FailureActionListener extends AttemptActionListener {
 
-	public FailureActionListener(Game game, Attempt attempt,
-			AbstractTableModel model) {
-		super(game, attempt, model);
+	public FailureActionListener(Game game, Ball ball, Player player, AbstractTableModel model) {
+		super(game, ball, player, model);
 	}
-	
+
 	@Override
-	protected void modifyGameScore () {
-		this.game.check(this.attempt.getBall(), this.attempt.getPlayer(), false);
+	protected void modifyGameScore() {
+		this.game.check(this.ball, this.player, false);
 	}
 
 }
