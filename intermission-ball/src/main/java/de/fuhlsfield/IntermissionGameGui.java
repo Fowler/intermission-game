@@ -12,8 +12,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import de.fuhlsfield.game.Ball;
+import de.fuhlsfield.game.FiveBallsGameConfig;
 import de.fuhlsfield.game.Game;
-import de.fuhlsfield.game.GameConfig;
 import de.fuhlsfield.game.Player;
 import de.fuhlsfield.game.score.GameScoreKeeper;
 import de.fuhlsfield.ui.FailureActionListener;
@@ -24,16 +24,15 @@ import de.fuhlsfield.ui.SuccessActionListener;
  * First draft of game gui.
  * 
  * @author juergen
- * 
  */
 public class IntermissionGameGui {
 
-	private static final Player PLAYER_TWO = new Player("Marcus");
 	private static final Player PLAYER_ONE = new Player("Jürgen");
+	private static final Player PLAYER_TWO = new Player("Marcus");
 
 	private static final String GAME = "Spiel";
 
-	private static final Game GAME_KEEPER = new Game(GameConfig.FIVE_BALLS, 10, PLAYER_ONE, PLAYER_TWO);
+	private static final Game GAME_KEEPER = new Game(new FiveBallsGameConfig(), 10, PLAYER_ONE, PLAYER_TWO);
 
 	private JTable jTableSeason;
 	private JTable jTableGame;
@@ -77,7 +76,7 @@ public class IntermissionGameGui {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(5, 2));
 
-		for (Ball ball : GAME_KEEPER.getGameConfig().getBallValueMapper().getBalls()) {
+		for (Ball ball : GAME_KEEPER.getBalls()) {
 			String ballName = ball.getName();
 			JButton ballSuccess = new JButton(ballName);
 			ballSuccess.addActionListener(new SuccessActionListener(GAME_KEEPER, ball, player, this.model));

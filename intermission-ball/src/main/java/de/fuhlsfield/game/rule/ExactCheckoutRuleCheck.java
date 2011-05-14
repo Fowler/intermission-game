@@ -5,8 +5,6 @@ import java.util.Set;
 
 import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.Game;
-import de.fuhlsfield.game.GameConfig;
-import de.fuhlsfield.game.score.BallValueMapper;
 
 public class ExactCheckoutRuleCheck implements RuleCheck {
 
@@ -14,19 +12,16 @@ public class ExactCheckoutRuleCheck implements RuleCheck {
 
 	@Override
 	public boolean isAttemptPossible(Ball ball, Game game) {
-		GameConfig gameConfig = game.getGameConfig();
-		int ballValue = game.getGameConfig().getBallValueMapper().getValue(ball);
-		int currentScore = gameConfig.getScoreCalculator()
-				.calculateScore(game.getGameScore(game.determineNextPlayer()));
-		int pointsToScore = gameConfig.getTargetPoints() - currentScore - ballValue;
-		return isTargetPointsAchievable(pointsToScore, determineAtomicPoints(gameConfig.getBallValueMapper()),
-				new HashSet<Integer>());
+		int ballValue = game.getBallValue(ball);
+		int currentScore = game.getScoreCalculator().calculateScore(game.getGameScore(game.determineNextPlayer()));
+		int pointsToScore = game.getTargetPoints() - currentScore - ballValue;
+		return isTargetPointsAchievable(pointsToScore, determineAtomicPoints(game), new HashSet<Integer>());
 	}
 
-	private Set<Integer> determineAtomicPoints(BallValueMapper ballValueMapper) {
+	private Set<Integer> determineAtomicPoints(Game game) {
 		HashSet<Integer> atomicPoints = new HashSet<Integer>();
-		for (Ball ball : ballValueMapper.getBalls()) {
-			atomicPoints.add(ballValueMapper.getValue(ball));
+		for (Ball ball : game.getBalls()) {
+			atomicPoints.add(game.getBallValue(ball));
 		}
 		return atomicPoints;
 	}

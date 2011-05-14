@@ -7,9 +7,7 @@ import java.util.Set;
 import de.fuhlsfield.game.Attempt;
 import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.Game;
-import de.fuhlsfield.game.GameConfig;
 import de.fuhlsfield.game.Player;
-import de.fuhlsfield.game.score.BallValueMapper;
 
 public class EachBallAtLeastOnceRuleCheck implements RuleCheck {
 
@@ -17,17 +15,15 @@ public class EachBallAtLeastOnceRuleCheck implements RuleCheck {
 
 	@Override
 	public boolean isAttemptPossible(Ball ball, Game game) {
-		GameConfig gameConfig = game.getGameConfig();
 		Player player = game.determineNextPlayer();
-		int ballValue = game.getGameConfig().getBallValueMapper().getValue(ball);
-		int currentScore = gameConfig.getScoreCalculator().calculateScore(game.getGameScore(player));
-		int pointsToScore = gameConfig.getTargetPoints() - currentScore - ballValue;
+		int ballValue = game.getBallValue(ball);
+		int currentScore = game.getScoreCalculator().calculateScore(game.getGameScore(player));
+		int pointsToScore = game.getTargetPoints() - currentScore - ballValue;
 		Set<Ball> usedBalls = determineBallValuesFromAttemptResults(game, game.getGameScore(player)
 				.getSuccessfulAttempts());
 		usedBalls.add(ball);
-		Set<Ball> ballsToScore = removeSet(game.getGameConfig().getBallValueMapper().getBalls(), usedBalls);
-		return ballsToScore.isEmpty()
-				|| (pointsToScore > sumBallValuesExceptMin(game.getGameConfig().getBallValueMapper(), ballsToScore));
+		Set<Ball> ballsToScore = removeSet(game.getBalls(), usedBalls);
+		return ballsToScore.isEmpty() || (pointsToScore > sumBallValuesExceptMin(game, ballsToScore));
 	}
 
 	private Set<Ball> removeSet(List<Ball> setA, Set<Ball> setB) {
@@ -44,11 +40,11 @@ public class EachBallAtLeastOnceRuleCheck implements RuleCheck {
 		return balls;
 	}
 
-	private int sumBallValuesExceptMin(BallValueMapper ballValueMapper, Set<Ball> balls) {
+	private int sumBallValuesExceptMin(Game game, Set<Ball> balls) {
 		int sum = 0;
 		int min = UNDEFINED;
 		for (Ball ball : balls) {
-			int value = ballValueMapper.getValue(ball);
+			int value = game.getBallValue(ball);
 			sum += value;
 			if ((min == UNDEFINED) || (value < min)) {
 				min = value;

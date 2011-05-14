@@ -14,7 +14,7 @@ public class PenaltyPointScoreCalculator extends StandardScoreCalculator {
 	public int calculateScore(GameScoreKeeper gameScoreKeeper) {
 		int score = super.calculateScore(gameScoreKeeper);
 		boolean lastAttemptFails = false;
-		for (int i = 0; gameScoreKeeper.getIndexed(i) != Attempt.NO_ATTEMPT; i++) {
+		for (int i = 0; i <= gameScoreKeeper.getIndexOfLastAttempt(); i++) {
 			Attempt attemptResult = gameScoreKeeper.getIndexed(i);
 			if (!attemptResult.isSuccessful()) {
 				if (lastAttemptFails) {

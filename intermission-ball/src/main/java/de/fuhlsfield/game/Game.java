@@ -5,8 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.fuhlsfield.game.rule.RuleChecker;
+import de.fuhlsfield.game.rule.RuleCheck;
 import de.fuhlsfield.game.score.GameScoreKeeper;
+import de.fuhlsfield.game.score.ScoreCalculator;
 
 public class Game {
 
@@ -24,10 +25,6 @@ public class Game {
 		}
 	}
 
-	public GameConfig getGameConfig() {
-		return this.gameConfig;
-	}
-
 	public int getMaxRounds() {
 		return this.maxRounds;
 	}
@@ -36,8 +33,20 @@ public class Game {
 		return this.players;
 	}
 
+	public List<Ball> getBalls() {
+		return this.gameConfig.getBallValueMapper().getBalls();
+	}
+
 	public GameScoreKeeper getGameScore(Player player) {
 		return this.gameScores.get(player);
+	}
+
+	public ScoreCalculator getScoreCalculator() {
+		return this.gameConfig.getScoreCalculator();
+	}
+
+	public int getTargetPoints() {
+		return this.gameConfig.getTargetPoints();
 	}
 
 	public int getBallValue(Ball ball) {
@@ -45,8 +54,7 @@ public class Game {
 	}
 
 	public void check(Ball ball, Player player, boolean isSuccess) {
-		RuleChecker ruleChecker = new RuleChecker();
-		if (determineNextPlayer().equals(player) && ruleChecker.isAttemptPossible(ball, this)) {
+		if (determineNextPlayer().equals(player) && isAttemptPossible(ball)) {
 			this.gameScores.get(player).add(new Attempt(ball, isSuccess));
 		}
 		System.out.println(player.getName() + ": "
@@ -70,6 +78,15 @@ public class Game {
 			return nextPlayer;
 		}
 		return Player.NO_PLAYER;
+	}
+
+	private boolean isAttemptPossible(Ball ball) {
+		for (RuleCheck ruleCheck : this.gameConfig.getRuleChecks()) {
+			if (!ruleCheck.isAttemptPossible(ball, this)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

@@ -7,7 +7,7 @@ public class BallTakesPartRuleCheck implements RuleCheck {
 
 	@Override
 	public boolean isAttemptPossible(Ball ball, Game game) {
-		return game.getGameConfig().getBallValueMapper().getValue(ball) != null;
+		return game.getBalls().contains(ball);
 	}
 
 }

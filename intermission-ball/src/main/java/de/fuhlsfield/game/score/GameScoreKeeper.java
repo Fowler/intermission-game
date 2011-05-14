@@ -21,7 +21,7 @@ public class GameScoreKeeper {
 
 	public Attempt getIndexed(int index) {
 		if ((index < 0) || (index > getIndexOfLastAttempt())) {
-			return Attempt.NO_ATTEMPT;
+			return null;
 		}
 		return this.attempts.get(index);
 	}
