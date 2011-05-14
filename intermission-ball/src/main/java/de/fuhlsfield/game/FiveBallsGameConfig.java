@@ -3,8 +3,6 @@ package de.fuhlsfield.game;
 import java.util.Arrays;
 import java.util.List;
 
-import de.fuhlsfield.game.rule.AttemptLeftRuleCheck;
-import de.fuhlsfield.game.rule.BallTakesPartRuleCheck;
 import de.fuhlsfield.game.rule.EachBallAtLeastOnceRuleCheck;
 import de.fuhlsfield.game.rule.ExactCheckoutRuleCheck;
 import de.fuhlsfield.game.rule.RuleCheck;
@@ -29,8 +27,8 @@ public class FiveBallsGameConfig implements GameConfig {
 
 	@Override
 	public List<RuleCheck> getRuleChecks() {
-		return Arrays.asList(new BallTakesPartRuleCheck(), new EachBallAtLeastOnceRuleCheck(),
-				new AttemptLeftRuleCheck(), new ExactCheckoutRuleCheck());
+		return Arrays.asList(new EachBallAtLeastOnceRuleCheck(getBallValueMapper().getBalls()),
+				new ExactCheckoutRuleCheck(getScoreCalculator(), TARGET_POINTS));
 	}
 
 	@Override

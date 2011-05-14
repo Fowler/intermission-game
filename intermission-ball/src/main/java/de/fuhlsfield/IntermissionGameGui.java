@@ -3,7 +3,10 @@ package de.fuhlsfield;
 import java.awt.Container;
 import java.awt.GridLayout;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -36,6 +39,7 @@ public class IntermissionGameGui {
 
 	private JTable jTableSeason;
 	private JTable jTableGame;
+	private final Map<Player, Map<Ball, List<JButton>>> jButtons = new HashMap<Player, Map<Ball, List<JButton>>>();
 
 	private ScoreTableModel model;
 
@@ -54,10 +58,10 @@ public class IntermissionGameGui {
 		this.jTableSeason = new JTable(columns, columnNamesSeason);
 
 		List<GameScoreKeeper> keepers = new ArrayList<GameScoreKeeper>();
-		keepers.add(GAME_KEEPER.getGameScore(PLAYER_ONE));
-		keepers.add(GAME_KEEPER.getGameScore(PLAYER_TWO));
+		keepers.add(GAME_KEEPER.getGameScoreKeeper(PLAYER_ONE));
+		keepers.add(GAME_KEEPER.getGameScoreKeeper(PLAYER_TWO));
 
-		this.model = new ScoreTableModel(keepers, GAME_KEEPER.getPlayers(), GAME_KEEPER.getMaxRounds());
+		this.model = new ScoreTableModel(keepers, GAME_KEEPER.getPlayers(), GAME_KEEPER.getMaxAttempts());
 
 		this.jTableGame = new JTable(this.model);
 
@@ -67,15 +71,15 @@ public class IntermissionGameGui {
 		c.add(createPanelWithButtons(PLAYER_ONE));
 		c.add(createPanelWithButtons(PLAYER_TWO));
 
-		f.setSize(500, 500);
+		f.setSize(500, GAME_KEEPER.getMaxAttempts() * 40);
 		f.setVisible(true);
 		f.setTitle("Intermission Game, enjoy your lunch break...");
 	}
 
 	private JPanel createPanelWithButtons(Player player) {
 		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(5, 2));
-
+		panel.setLayout(new GridLayout(GAME_KEEPER.getBalls().size(), 2));
+		this.jButtons.put(player, new HashMap<Ball, List<JButton>>());
 		for (Ball ball : GAME_KEEPER.getBalls()) {
 			String ballName = ball.getName();
 			JButton ballSuccess = new JButton(ballName);
@@ -84,7 +88,7 @@ public class IntermissionGameGui {
 			ballFailed.addActionListener(new FailureActionListener(GAME_KEEPER, ball, player, this.model));
 			panel.add(ballSuccess);
 			panel.add(ballFailed);
-
+			this.jButtons.get(player).put(ball, Arrays.asList(ballSuccess, ballFailed));
 		}
 		return panel;
 	}

@@ -48,13 +48,10 @@ public class ScoreTableModel extends AbstractTableModel {
 
 	@Override
 	public String getColumnName(int index) {
-
 		if (index == 0) {
 			return "Runde";
 		}
-
 		return this.players.get(index - 1).getName();
-
 	}
 
 }

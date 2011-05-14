@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.fuhlsfield.game.Attempt;
+import de.fuhlsfield.game.Ball;
 
 public class GameScoreKeeper {
-
-	public static final int NO_ATTEMPT = -1;
 
 	private final List<Attempt> attempts;
 
@@ -28,17 +27,17 @@ public class GameScoreKeeper {
 
 	public int getIndexOfLastAttempt() {
 		if (this.attempts.isEmpty()) {
-			return NO_ATTEMPT;
+			return -1;
 		}
 		return this.attempts.size() - 1;
 	}
 
-	public List<Attempt> getSuccessfulAttempts() {
-		ArrayList<Attempt> successfulAttempts = new ArrayList<Attempt>();
+	public List<Ball> getSuccessfulAttempts() {
+		ArrayList<Ball> successfulAttempts = new ArrayList<Ball>();
 		for (int i = 0; i <= getIndexOfLastAttempt(); i++) {
 			Attempt attempt = getIndexed(i);
 			if (attempt.isSuccessful()) {
-				successfulAttempts.add(attempt);
+				successfulAttempts.add(attempt.getBall());
 			}
 		}
 		return successfulAttempts;

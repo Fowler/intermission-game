@@ -5,7 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.fuhlsfield.game.rule.RuleCheck;
+import de.fuhlsfield.game.rule.RuleCheckState;
+import de.fuhlsfield.game.rule.RuleChecker;
 import de.fuhlsfield.game.score.GameScoreKeeper;
 import de.fuhlsfield.game.score.ScoreCalculator;
 
@@ -13,20 +14,22 @@ public class Game {
 
 	private final GameConfig gameConfig;
 	private final List<Player> players;
-	private final int maxRounds;
+	private final int maxAttempts;
 	private final Map<Player, GameScoreKeeper> gameScores = new HashMap<Player, GameScoreKeeper>();
+	private Map<Player, Map<Ball, RuleCheckState>> ballRuleCheckStates = new HashMap<Player, Map<Ball, RuleCheckState>>();
 
 	public Game(GameConfig gameConfig, int maxRounds, Player... players) {
 		this.gameConfig = gameConfig;
-		this.maxRounds = maxRounds;
+		this.maxAttempts = maxRounds;
 		this.players = Arrays.asList(players);
 		for (Player player : this.players) {
 			this.gameScores.put(player, new GameScoreKeeper());
 		}
+		upateBallRuleCheckStates();
 	}
 
-	public int getMaxRounds() {
-		return this.maxRounds;
+	public int getMaxAttempts() {
+		return this.maxAttempts;
 	}
 
 	public List<Player> getPlayers() {
@@ -37,7 +40,7 @@ public class Game {
 		return this.gameConfig.getBallValueMapper().getBalls();
 	}
 
-	public GameScoreKeeper getGameScore(Player player) {
+	public GameScoreKeeper getGameScoreKeeper(Player player) {
 		return this.gameScores.get(player);
 	}
 
@@ -53,40 +56,35 @@ public class Game {
 		return this.gameConfig.getBallValueMapper().getValue(ball);
 	}
 
-	public void check(Ball ball, Player player, boolean isSuccess) {
-		if (determineNextPlayer().equals(player) && isAttemptPossible(ball)) {
-			this.gameScores.get(player).add(new Attempt(ball, isSuccess));
+	public void addAttempt(Player player, Attempt attempt) {
+		if (isAttemptAllowed(player, attempt.getBall())) {
+			this.gameScores.get(player).add(attempt);
+			upateBallRuleCheckStates();
 		}
 		System.out.println(player.getName() + ": "
-				+ this.gameConfig.getScoreCalculator().calculateScore(this.getGameScore(player)));
+				+ this.gameConfig.getScoreCalculator().calculateScore(this.getGameScoreKeeper(player)));
 	}
 
-	public Player determineNextPlayer() {
-		if (this.players.size() > 0) {
-			Player nextPlayer = Player.NO_PLAYER;
-			int minIndex = GameScoreKeeper.NO_ATTEMPT;
-			for (Player player : this.players) {
-				GameScoreKeeper gameScore = getGameScore(player);
-				int index = gameScore.getIndexOfLastAttempt();
-				if (index == GameScoreKeeper.NO_ATTEMPT) {
-					return player;
-				} else if ((minIndex == GameScoreKeeper.NO_ATTEMPT) || (index < minIndex)) {
-					minIndex = index;
-					nextPlayer = player;
-				}
-			}
-			return nextPlayer;
-		}
-		return Player.NO_PLAYER;
+	public RuleCheckState getRuleCheckState(Player player, Ball ball) {
+		return this.ballRuleCheckStates.get(player).get(ball);
 	}
 
-	private boolean isAttemptPossible(Ball ball) {
-		for (RuleCheck ruleCheck : this.gameConfig.getRuleChecks()) {
-			if (!ruleCheck.isAttemptPossible(ball, this)) {
-				return false;
+	public boolean isAttemptAllowed(Player player, Ball ball) {
+		RuleChecker ruleChecker = new RuleChecker(this, this.gameConfig.getRuleChecks());
+		return ruleChecker.isAttemptAllowedPreCheck(ball, player)
+				&& ruleChecker.determineRuleCheckState(ball, player).isAllowed();
+	}
+
+	private void upateBallRuleCheckStates() {
+		this.ballRuleCheckStates = new HashMap<Player, Map<Ball, RuleCheckState>>();
+		for (Player player : this.players) {
+			this.ballRuleCheckStates.put(player, new HashMap<Ball, RuleCheckState>());
+			for (Ball ball : getBalls()) {
+				this.ballRuleCheckStates.get(player).put(ball,
+						new RuleChecker(this, this.gameConfig.getRuleChecks()).determineRuleCheckState(ball, player));
 			}
 		}
-		return true;
+		System.out.println(this.ballRuleCheckStates);
 	}
 
 }

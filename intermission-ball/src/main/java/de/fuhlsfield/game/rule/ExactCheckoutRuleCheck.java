@@ -1,63 +1,31 @@
 package de.fuhlsfield.game.rule;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.fuhlsfield.game.Ball;
-import de.fuhlsfield.game.Game;
+import de.fuhlsfield.game.score.GameScoreKeeper;
+import de.fuhlsfield.game.score.ScoreCalculator;
 
 public class ExactCheckoutRuleCheck implements RuleCheck {
 
-	private static final int UNDEFINED = -1;
+	private final ScoreCalculator scoreCalculator;
+	private final int targetPoints;
+
+	public ExactCheckoutRuleCheck(ScoreCalculator scoreCalculator, int targetPoints) {
+		this.scoreCalculator = scoreCalculator;
+		this.targetPoints = targetPoints;
+	}
 
 	@Override
-	public boolean isAttemptPossible(Ball ball, Game game) {
-		int ballValue = game.getBallValue(ball);
-		int currentScore = game.getScoreCalculator().calculateScore(game.getGameScore(game.determineNextPlayer()));
-		int pointsToScore = game.getTargetPoints() - currentScore - ballValue;
-		return isTargetPointsAchievable(pointsToScore, determineAtomicPoints(game), new HashSet<Integer>());
-	}
-
-	private Set<Integer> determineAtomicPoints(Game game) {
-		HashSet<Integer> atomicPoints = new HashSet<Integer>();
-		for (Ball ball : game.getBalls()) {
-			atomicPoints.add(game.getBallValue(ball));
-		}
-		return atomicPoints;
-	}
-
-	private boolean isTargetPointsAchievable(int targetPoints, Set<Integer> atomicPoints, Set<Integer> combinedPoints) {
-		if ((targetPoints == 0) || combinedPoints.contains(targetPoints)) {
-			return true;
-		}
-		int min = determineMinimum(combinedPoints);
-		if ((min != UNDEFINED) && (min > targetPoints)) {
-			return false;
-		}
-		return isTargetPointsAchievable(targetPoints, atomicPoints, calculatePossibleSums(atomicPoints, combinedPoints));
-	}
-
-	private int determineMinimum(Set<Integer> values) {
-		int min = UNDEFINED;
-		for (int value : values) {
-			if ((min == UNDEFINED) || (value < min)) {
-				min = value;
+	public List<List<Ball>> selectPossibleAttempts(List<List<Ball>> possibleBallsLeft, GameScoreKeeper gameScoreKeeper) {
+		ArrayList<List<Ball>> resultPossibleLefts = new ArrayList<List<Ball>>(possibleBallsLeft);
+		for (List<Ball> ballsLeft : possibleBallsLeft) {
+			if (this.scoreCalculator.preCalculateScore(gameScoreKeeper, ballsLeft) != this.targetPoints) {
+				resultPossibleLefts.remove(ballsLeft);
 			}
 		}
-		return min;
-	}
-
-	private Set<Integer> calculatePossibleSums(Set<Integer> valuesA, Set<Integer> valuesB) {
-		if (valuesB.isEmpty()) {
-			return valuesA;
-		}
-		HashSet<Integer> possibleSums = new HashSet<Integer>();
-		for (int valueA : valuesA) {
-			for (int valueB : valuesB) {
-				possibleSums.add(valueA + valueB);
-			}
-		}
-		return possibleSums;
+		return resultPossibleLefts;
 	}
 
 }

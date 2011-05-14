@@ -1,56 +1,31 @@
 package de.fuhlsfield.game.rule;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import de.fuhlsfield.game.Attempt;
 import de.fuhlsfield.game.Ball;
-import de.fuhlsfield.game.Game;
-import de.fuhlsfield.game.Player;
+import de.fuhlsfield.game.score.GameScoreKeeper;
 
 public class EachBallAtLeastOnceRuleCheck implements RuleCheck {
 
-	private static final int UNDEFINED = -1;
+	private final List<Ball> balls;
+
+	public EachBallAtLeastOnceRuleCheck(List<Ball> balls) {
+		this.balls = balls;
+	}
 
 	@Override
-	public boolean isAttemptPossible(Ball ball, Game game) {
-		Player player = game.determineNextPlayer();
-		int ballValue = game.getBallValue(ball);
-		int currentScore = game.getScoreCalculator().calculateScore(game.getGameScore(player));
-		int pointsToScore = game.getTargetPoints() - currentScore - ballValue;
-		Set<Ball> usedBalls = determineBallValuesFromAttemptResults(game, game.getGameScore(player)
-				.getSuccessfulAttempts());
-		usedBalls.add(ball);
-		Set<Ball> ballsToScore = removeSet(game.getBalls(), usedBalls);
-		return ballsToScore.isEmpty() || (pointsToScore > sumBallValuesExceptMin(game, ballsToScore));
-	}
-
-	private Set<Ball> removeSet(List<Ball> setA, Set<Ball> setB) {
-		HashSet<Ball> setCopy = new HashSet<Ball>(setA);
-		setCopy.removeAll(setB);
-		return setCopy;
-	}
-
-	private Set<Ball> determineBallValuesFromAttemptResults(Game game, List<Attempt> attemptResults) {
-		HashSet<Ball> balls = new HashSet<Ball>();
-		for (Attempt attemptResult : attemptResults) {
-			balls.add(attemptResult.getBall());
-		}
-		return balls;
-	}
-
-	private int sumBallValuesExceptMin(Game game, Set<Ball> balls) {
-		int sum = 0;
-		int min = UNDEFINED;
-		for (Ball ball : balls) {
-			int value = game.getBallValue(ball);
-			sum += value;
-			if ((min == UNDEFINED) || (value < min)) {
-				min = value;
+	public List<List<Ball>> selectPossibleAttempts(List<List<Ball>> possibleBallsLeft, GameScoreKeeper gameScoreKeeper) {
+		ArrayList<List<Ball>> resultPossibleLefts = new ArrayList<List<Ball>>(possibleBallsLeft);
+		List<Ball> successfulAttempts = gameScoreKeeper.getSuccessfulAttempts();
+		for (List<Ball> ballsLeft : possibleBallsLeft) {
+			for (Ball ball : this.balls) {
+				if (!ballsLeft.contains(ball) && !successfulAttempts.contains(ball)) {
+					resultPossibleLefts.remove(ballsLeft);
+				}
 			}
 		}
-		return sum - min;
+		return resultPossibleLefts;
 	}
 
 }
