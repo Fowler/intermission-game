@@ -14,18 +14,20 @@ public abstract class AttemptActionListener implements ActionListener {
 	protected final Game game;
 	protected final Ball ball;
 	protected final Player player;
-	protected final AbstractTableModel model;
+	protected final AbstractTableModel[] tableModels;
 
-	public AttemptActionListener(Game game, Ball ball, Player player, AbstractTableModel model) {
+	public AttemptActionListener(Game game, Ball ball, Player player, AbstractTableModel... tableModels) {
 		this.game = game;
 		this.ball = ball;
 		this.player = player;
-		this.model = model;
+		this.tableModels = tableModels;
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		modifyGameScore();
-		this.model.fireTableDataChanged();
+		for (AbstractTableModel tableModel : this.tableModels) {
+			tableModel.fireTableDataChanged();
+		}
 	}
 
 	protected abstract void modifyGameScore();

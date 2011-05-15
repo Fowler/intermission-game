@@ -20,7 +20,8 @@ public class RuleChecker {
 	}
 
 	public boolean isAttemptAllowedPreCheck(Ball ball, Player player) {
-		return isBallTakesPart(ball) && determineNextPlayer().equals(player) && isAttemptLeft(calculateMaxAttempts());
+		return isBallTakesPart(ball) && determineNextPlayer().equals(player)
+				&& isAttemptLeft(determineNextPlayer(), calculateMaxAttempts());
 	}
 
 	public RuleCheckState determineRuleCheckState(Ball ball, Player player) {
@@ -41,6 +42,15 @@ public class RuleChecker {
 			return RuleCheckState.CHECKOUT;
 		}
 		return RuleCheckState.ALLOWED;
+	}
+
+	public boolean isGameFinished() {
+		for (Player player : this.game.getPlayers()) {
+			if (isAttemptLeft(player, calculateMaxAttempts())) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private List<List<Ball>> determinePossibleBallsLeft(List<Ball> possibleBallsLeft, GameScoreKeeper gameScoreKeeper) {
@@ -89,8 +99,8 @@ public class RuleChecker {
 		return this.game.getMaxAttempts();
 	}
 
-	private boolean isAttemptLeft(int maxAttempts) {
-		return this.game.getGameScoreKeeper(determineNextPlayer()).getIndexOfLastAttempt() + 1 < maxAttempts;
+	private boolean isAttemptLeft(Player player, int maxAttempts) {
+		return this.game.getGameScoreKeeper(player).getIndexOfLastAttempt() + 1 < maxAttempts;
 	}
 
 	private boolean isBallTakesPart(Ball ball) {

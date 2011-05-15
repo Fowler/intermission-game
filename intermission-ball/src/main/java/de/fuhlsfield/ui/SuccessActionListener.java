@@ -9,8 +9,8 @@ import de.fuhlsfield.game.Player;
 
 public class SuccessActionListener extends AttemptActionListener {
 
-	public SuccessActionListener(Game game, Ball ball, Player player, AbstractTableModel model) {
-		super(game, ball, player, model);
+	public SuccessActionListener(Game game, Ball ball, Player player, AbstractTableModel... tableModels) {
+		super(game, ball, player, tableModels);
 	}
 
 	@Override
