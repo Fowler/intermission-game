@@ -19,9 +19,9 @@ public class ExactCheckoutRuleCheck implements RuleCheck {
 
 	@Override
 	public List<List<Ball>> selectPossibleAttempts(List<List<Ball>> possibleBallsLeft, GameScoreKeeper gameScoreKeeper) {
-		ArrayList<List<Ball>> resultPossibleLefts = new ArrayList<List<Ball>>(possibleBallsLeft);
+		List<List<Ball>> resultPossibleLefts = new ArrayList<List<Ball>>(possibleBallsLeft);
 		for (List<Ball> ballsLeft : possibleBallsLeft) {
-			if (this.scoreCalculator.preCalculateScore(gameScoreKeeper, ballsLeft) != this.targetPoints) {
+			if (this.scoreCalculator.forecastScore(gameScoreKeeper, ballsLeft) > this.targetPoints) {
 				resultPossibleLefts.remove(ballsLeft);
 			}
 		}

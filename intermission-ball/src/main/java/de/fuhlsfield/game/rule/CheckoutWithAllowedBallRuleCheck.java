@@ -5,20 +5,26 @@ import java.util.List;
 
 import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.score.GameScoreKeeper;
+import de.fuhlsfield.game.score.ScoreCalculator;
 
 public class CheckoutWithAllowedBallRuleCheck implements RuleCheck {
 
 	private final List<Ball> allowedBalls;
+	private final ScoreCalculator scoreCalculator;
+	private final int targetPoints;
 
-	public CheckoutWithAllowedBallRuleCheck(List<Ball> allowedBalls) {
+	public CheckoutWithAllowedBallRuleCheck(List<Ball> allowedBalls, ScoreCalculator scoreCalculator, int targetPoints) {
 		this.allowedBalls = allowedBalls;
+		this.scoreCalculator = scoreCalculator;
+		this.targetPoints = targetPoints;
 	}
 
 	@Override
 	public List<List<Ball>> selectPossibleAttempts(List<List<Ball>> possibleBallsLeft, GameScoreKeeper gameScoreKeeper) {
 		ArrayList<List<Ball>> resultPossibleLefts = new ArrayList<List<Ball>>(possibleBallsLeft);
 		for (List<Ball> ballsLeft : possibleBallsLeft) {
-			if (!isCheckoutWithAllowedBall(ballsLeft)) {
+			if ((this.scoreCalculator.forecastScore(gameScoreKeeper, ballsLeft) >= this.targetPoints)
+					&& !isCheckoutWithAllowedBall(ballsLeft)) {
 				resultPossibleLefts.remove(ballsLeft);
 			}
 		}

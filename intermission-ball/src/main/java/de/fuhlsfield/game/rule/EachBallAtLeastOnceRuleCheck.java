@@ -5,13 +5,18 @@ import java.util.List;
 
 import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.score.GameScoreKeeper;
+import de.fuhlsfield.game.score.ScoreCalculator;
 
 public class EachBallAtLeastOnceRuleCheck implements RuleCheck {
 
 	private final List<Ball> balls;
+	private final ScoreCalculator scoreCalculator;
+	private final int targetPoints;
 
-	public EachBallAtLeastOnceRuleCheck(List<Ball> balls) {
+	public EachBallAtLeastOnceRuleCheck(List<Ball> balls, ScoreCalculator scoreCalculator, int targetPoints) {
 		this.balls = balls;
+		this.scoreCalculator = scoreCalculator;
+		this.targetPoints = targetPoints;
 	}
 
 	@Override
@@ -19,8 +24,14 @@ public class EachBallAtLeastOnceRuleCheck implements RuleCheck {
 		ArrayList<List<Ball>> resultPossibleLefts = new ArrayList<List<Ball>>(possibleBallsLeft);
 		List<Ball> successfulAttempts = gameScoreKeeper.getSuccessfulAttempts();
 		for (List<Ball> ballsLeft : possibleBallsLeft) {
-			for (Ball ball : this.balls) {
-				if (!ballsLeft.contains(ball) && !successfulAttempts.contains(ball)) {
+			if (this.scoreCalculator.forecastScore(gameScoreKeeper, ballsLeft) >= this.targetPoints) {
+				for (Ball ball : this.balls) {
+					if (!ballsLeft.contains(ball) && !successfulAttempts.contains(ball)) {
+						resultPossibleLefts.remove(ballsLeft);
+					}
+				}
+			} else {
+				if (successfulAttempts.contains(ballsLeft.get(0))) {
 					resultPossibleLefts.remove(ballsLeft);
 				}
 			}

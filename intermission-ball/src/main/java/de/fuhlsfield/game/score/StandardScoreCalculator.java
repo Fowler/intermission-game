@@ -27,7 +27,7 @@ public class StandardScoreCalculator implements ScoreCalculator {
 	}
 
 	@Override
-	public int preCalculateScore(GameScoreKeeper gameScoreKeeper, List<Ball> balls) {
+	public int forecastScore(GameScoreKeeper gameScoreKeeper, List<Ball> balls) {
 		return calculateScore(gameScoreKeeper) + calculateScore(balls);
 	}
 

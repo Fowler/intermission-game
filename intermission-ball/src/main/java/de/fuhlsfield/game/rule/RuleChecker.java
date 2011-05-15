@@ -66,7 +66,7 @@ public class RuleChecker {
 		resultPossibleBallsLeft.add(possibleBallsLeft);
 		int numberOfAttempts = gameScoreKeeper.getIndexOfLastAttempt() + 1 + possibleBallsLeft.size();
 		if ((numberOfAttempts < this.game.getMaxAttempts())
-				&& (this.game.getScoreCalculator().preCalculateScore(gameScoreKeeper, possibleBallsLeft) < this.game
+				&& (this.game.getScoreCalculator().forecastScore(gameScoreKeeper, possibleBallsLeft) < this.game
 						.getTargetPoints())) {
 			resultPossibleBallsLeft.remove(possibleBallsLeft);
 			for (Ball ball : this.game.getBalls()) {

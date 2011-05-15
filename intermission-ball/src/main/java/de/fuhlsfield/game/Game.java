@@ -89,7 +89,6 @@ public class Game {
 						new RuleChecker(this, this.gameConfig.getRuleChecks()).determineRuleCheckState(ball, player));
 			}
 		}
-		System.out.println(this.ballRuleCheckStates);
 	}
 
 }

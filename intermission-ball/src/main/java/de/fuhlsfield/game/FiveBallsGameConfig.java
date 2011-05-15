@@ -27,8 +27,8 @@ public class FiveBallsGameConfig implements GameConfig {
 
 	@Override
 	public List<RuleCheck> getRuleChecks() {
-		return Arrays.asList(new EachBallAtLeastOnceRuleCheck(getBallValueMapper().getBalls()),
-				new ExactCheckoutRuleCheck(getScoreCalculator(), TARGET_POINTS));
+		return Arrays.asList(new EachBallAtLeastOnceRuleCheck(getBallValueMapper().getBalls(), getScoreCalculator(),
+				TARGET_POINTS), new ExactCheckoutRuleCheck(getScoreCalculator(), TARGET_POINTS));
 	}
 
 	@Override

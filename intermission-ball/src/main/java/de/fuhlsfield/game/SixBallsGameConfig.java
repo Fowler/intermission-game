@@ -28,9 +28,10 @@ public class SixBallsGameConfig implements GameConfig {
 
 	@Override
 	public List<RuleCheck> getRuleChecks() {
-		return Arrays.asList(new EachBallAtLeastOnceRuleCheck(getBallValueMapper().getBalls()),
-				new ExactCheckoutRuleCheck(getScoreCalculator(), TARGET_POINTS), new CheckoutWithAllowedBallRuleCheck(
-						Arrays.asList(Ball.SCHRAEGI, Ball.BASKI, Ball.FLUMMI, Ball.TISCHI_BALLI, Ball.SCHWAMMI)));
+		return Arrays.asList(new EachBallAtLeastOnceRuleCheck(getBallValueMapper().getBalls(), getScoreCalculator(),
+				TARGET_POINTS), new ExactCheckoutRuleCheck(getScoreCalculator(), TARGET_POINTS),
+				new CheckoutWithAllowedBallRuleCheck(Arrays.asList(Ball.SCHRAEGI, Ball.BASKI, Ball.FLUMMI,
+						Ball.TISCHI_BALLI, Ball.SCHWAMMI), getScoreCalculator(), TARGET_POINTS));
 	}
 
 	@Override
