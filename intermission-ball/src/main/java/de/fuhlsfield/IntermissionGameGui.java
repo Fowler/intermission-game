@@ -2,116 +2,125 @@ package de.fuhlsfield;
 
 import java.awt.Container;
 import java.awt.GridLayout;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import de.fuhlsfield.game.Attempt;
-import de.fuhlsfield.game.BallValue;
+import de.fuhlsfield.game.Ball;
+import de.fuhlsfield.game.FiveBallsGameConfig;
 import de.fuhlsfield.game.Game;
-import de.fuhlsfield.game.GameConfig;
 import de.fuhlsfield.game.Player;
-import de.fuhlsfield.game.score.GameScoreKeeper;
+import de.fuhlsfield.ui.CurrentScoreTableModel;
 import de.fuhlsfield.ui.FailureActionListener;
-import de.fuhlsfield.ui.ScoreTableModel;
+import de.fuhlsfield.ui.FinishActionListener;
+import de.fuhlsfield.ui.GameScoreTableModel;
+import de.fuhlsfield.ui.SeasonScoreTableModel;
 import de.fuhlsfield.ui.SuccessActionListener;
+import de.fuhlsfield.ui.UndoActionListener;
 
 /**
  * First draft of game gui.
  * 
  * @author juergen
- * 
  */
 public class IntermissionGameGui {
 
-	private static final Player PLAYER_TWO = new Player("Marcus");
-	private static final Player PLAYER_ONE = new Player("Jürgen");
+	private static final Game GAME = new Game(new FiveBallsGameConfig(), 10, 10, new Player("Jürgen"), new Player(
+			"Marcus"));
 
-	private static final String GAME = "Spiel";
-
-	private static final Game GAME_KEEPER = new Game(GameConfig.FIVE_BALLS, 10,
-			PLAYER_ONE, PLAYER_TWO);
-
-	private JTable jTableSeason;
-	private JTable jTableGame;
-
-	private ScoreTableModel model;
+	private final Map<Player, Map<Ball, List<JButton>>> jButtons = new HashMap<Player, Map<Ball, List<JButton>>>();
+	private GameScoreTableModel gameScoreTableModel;
+	private SeasonScoreTableModel seasonScoreTableModel;
+	private CurrentScoreTableModel currentScoreTableModel;
 
 	public void create() {
-		JFrame f = new JFrame();
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Container c = f.getContentPane();
+		JFrame frame = new JFrame();
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Container container = frame.getContentPane();
+		int containerColumns = Math.min(3, GAME.getPlayers().size());
+		container.setLayout(new GridLayout(2, containerColumns));
+		container.add(createGameScoreComponent());
+		container.add(createSeasonScoreComponent());
+		container.add(createOverviewComponent());
+		for (int i = containerColumns; i < GAME.getPlayers().size(); i++) {
+			container.add(createEmptyComponent());
+		}
+		for (Player player : GAME.getPlayers()) {
+			container.add(createPanelWithButtons(player));
+		}
+		for (int i = GAME.getPlayers().size(); i < containerColumns; i++) {
+			container.add(createEmptyComponent());
+		}
+		frame.setSize(250 * GAME.getPlayers().size(), GAME.getMaxAttempts() * 40);
+		frame.setVisible(true);
+		frame.setTitle("Intermission Game, enjoy your lunch break...");
+	}
 
-		c.setLayout(new GridLayout(2, 2));
+	private JComponent createGameScoreComponent() {
+		this.gameScoreTableModel = new GameScoreTableModel(GAME);
+		JTable gameScoreTable = new JTable(this.gameScoreTableModel);
+		return new JScrollPane(gameScoreTable);
+	}
 
-		String[] columnNamesSeason = new String[] { GAME,
-				GAME_KEEPER.getPlayers().get(0).getName(),
-				GAME_KEEPER.getPlayers().get(1).getName() };
+	private JComponent createSeasonScoreComponent() {
+		this.seasonScoreTableModel = new SeasonScoreTableModel(GAME);
+		JTable seasonScoreTable = new JTable(this.seasonScoreTableModel);
+		return new JScrollPane(seasonScoreTable);
+	}
 
-		String[][] columns = createColumns();
+	private JComponent createOverviewComponent() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridLayout(3, 1));
+		panel.add(createCurrentScoreComponent());
+		JButton finishButton = new JButton("Spiel beenden");
+		finishButton.addActionListener(new FinishActionListener(GAME, this.gameScoreTableModel,
+				this.currentScoreTableModel, this.seasonScoreTableModel));
+		panel.add(finishButton);
+		JButton undoButton = new JButton("Undo");
+		undoButton
+				.addActionListener(new UndoActionListener(GAME, this.gameScoreTableModel, this.currentScoreTableModel));
+		panel.add(undoButton);
+		return panel;
+	}
 
-		this.jTableSeason = new JTable(columns, columnNamesSeason);
-
-		List<GameScoreKeeper> keepers = new ArrayList<GameScoreKeeper>();
-		keepers.add(GAME_KEEPER.getGameScore(PLAYER_ONE));
-		keepers.add(GAME_KEEPER.getGameScore(PLAYER_TWO));
-
-		this.model = new ScoreTableModel(keepers, GAME_KEEPER.getPlayers(),
-				GAME_KEEPER.getMaxRounds());
-
-		this.jTableGame = new JTable(this.model);
-
-		c.add(new JScrollPane(this.jTableGame));
-		c.add(new JScrollPane(this.jTableSeason));
-
-		c.add(createPanelWithButtons(PLAYER_ONE));
-		c.add(createPanelWithButtons(PLAYER_TWO));
-
-		f.setSize(500, 500);
-		f.setVisible(true);
-		f.setTitle("Intermission Game, enjoy your lunch break...");
+	private JComponent createCurrentScoreComponent() {
+		this.currentScoreTableModel = new CurrentScoreTableModel(GAME);
+		JTable currentScoreTable = new JTable(this.currentScoreTableModel);
+		return new JScrollPane(currentScoreTable);
 	}
 
 	private JPanel createPanelWithButtons(Player player) {
 		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(5, 2));
-		List<BallValue> balls = GAME_KEEPER.getGameConfig().getBallValues();
-
-		for (BallValue value : balls) {
-			String ballName = value.getBall().getName();
-			JButton ballSuccess = new JButton(ballName);
-			ballSuccess.addActionListener(new SuccessActionListener(GAME_KEEPER, new Attempt(player, value.getBall()), this.model));
-			JButton ballFailed = new JButton("-" + ballName);
-			ballFailed.addActionListener(new FailureActionListener(GAME_KEEPER, new Attempt(player, value.getBall()), this.model));
-			panel.add(ballSuccess);
-			panel.add(ballFailed);
-
+		panel.setLayout(new GridLayout(GAME.getBalls().size() + 1, 2));
+		panel.add(new JLabel(player.getName()));
+		panel.add(createEmptyComponent());
+		this.jButtons.put(player, new HashMap<Ball, List<JButton>>());
+		for (Ball ball : GAME.getBalls()) {
+			String ballName = ball.getName();
+			JButton attemptSuccessButton = new JButton(ballName);
+			attemptSuccessButton.addActionListener(new SuccessActionListener(GAME, ball, player,
+					this.gameScoreTableModel, this.currentScoreTableModel));
+			JButton attemptFailureButton = new JButton("-" + ballName);
+			attemptFailureButton.addActionListener(new FailureActionListener(GAME, ball, player,
+					this.gameScoreTableModel, this.currentScoreTableModel));
+			panel.add(attemptSuccessButton);
+			panel.add(attemptFailureButton);
+			this.jButtons.get(player).put(ball, Arrays.asList(attemptSuccessButton, attemptFailureButton));
 		}
 		return panel;
 	}
 
-	/**
-	 * needs to be moved to business class
-	 * 
-	 * @return
-	 */
-	private String[][] createColumns() {
-		String[][] columns = new String[][] { new String[] { "1", null, null },
-				new String[] { "2", null, null },
-				new String[] { "3", null, null },
-				new String[] { "4", null, null },
-				new String[] { "5", null, null },
-				new String[] { "6", null, null },
-				new String[] { "7", null, null },
-				new String[] { "8", null, null },
-				new String[] { "9", null, null },
-				new String[] { "10", null, null }, };
-		return columns;
+	private JComponent createEmptyComponent() {
+		return new JPanel();
 	}
 
 }

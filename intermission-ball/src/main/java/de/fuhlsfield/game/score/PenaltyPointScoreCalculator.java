@@ -1,21 +1,22 @@
 package de.fuhlsfield.game.score;
 
-import de.fuhlsfield.game.AttemptResult;
-import de.fuhlsfield.game.Game;
-import de.fuhlsfield.game.Player;
+import de.fuhlsfield.game.Attempt;
 
 public class PenaltyPointScoreCalculator extends StandardScoreCalculator {
-	
+
 	private final static int PENALTY_POINTS = 1;
-	
+
+	public PenaltyPointScoreCalculator(BallValueMapper ballValueMapper) {
+		super(ballValueMapper);
+	}
+
 	@Override
-	public int calculateScore (Game game, Player player) {
-		int score = super.calculateScore(game, player);
-		GameScoreKeeper gameScoreKeeper = game.getGameScore(player);
+	public int calculateScore(GameScoreKeeper gameScoreKeeper) {
+		int score = super.calculateScore(gameScoreKeeper);
 		boolean lastAttemptFails = false;
-		for (int i = 0; gameScoreKeeper.getIndexed(i) != AttemptResult.NO_ATTEMPT_RESULT; i++) {
-			AttemptResult attemptResult = gameScoreKeeper.getIndexed(i);
-			if (!attemptResult.isSuccess()) {
+		for (int i = 0; i <= gameScoreKeeper.getIndexOfLastAttempt(); i++) {
+			Attempt attemptResult = gameScoreKeeper.getIndexed(i);
+			if (!attemptResult.isSuccessful()) {
 				if (lastAttemptFails) {
 					score -= PENALTY_POINTS;
 					lastAttemptFails = false;

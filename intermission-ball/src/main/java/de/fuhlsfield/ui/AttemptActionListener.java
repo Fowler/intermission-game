@@ -5,26 +5,25 @@ import java.awt.event.ActionListener;
 
 import javax.swing.table.AbstractTableModel;
 
-import de.fuhlsfield.game.Attempt;
 import de.fuhlsfield.game.Game;
 
 public abstract class AttemptActionListener implements ActionListener {
-	
+
 	protected final Game game;
-	protected final Attempt attempt;
-	protected final AbstractTableModel model;
-	
-	public AttemptActionListener (Game game, Attempt attempt, AbstractTableModel model) {
+	protected final AbstractTableModel[] tableModels;
+
+	public AttemptActionListener(Game game, AbstractTableModel... tableModels) {
 		this.game = game;
-		this.attempt = attempt;
-		this.model = model;
+		this.tableModels = tableModels;
 	}
-	
+
 	public void actionPerformed(ActionEvent e) {
-		modifyGameScore();
-		this.model.fireTableDataChanged();
+		modifyScore();
+		for (AbstractTableModel tableModel : this.tableModels) {
+			tableModel.fireTableDataChanged();
+		}
 	}
-	
-	protected abstract void modifyGameScore ();
+
+	protected abstract void modifyScore();
 
 }

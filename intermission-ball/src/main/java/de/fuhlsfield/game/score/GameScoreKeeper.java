@@ -3,48 +3,63 @@ package de.fuhlsfield.game.score;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.fuhlsfield.game.AttemptResult;
+import de.fuhlsfield.game.Attempt;
+import de.fuhlsfield.game.Ball;
 
 public class GameScoreKeeper {
 
-	public static final int NO_ATTEMPT = -1;
+	private final List<Attempt> attempts;
+	private final ScoreCalculator scoreCalculator;
 
-	private final AttemptResult[] rounds;
-
-	private int index = 0;
-
-	public GameScoreKeeper(int maxRounds) {
-		super();
-		this.rounds = new AttemptResult[maxRounds];
+	public GameScoreKeeper(ScoreCalculator scoreCalculator) {
+		this.attempts = new ArrayList<Attempt>();
+		this.scoreCalculator = scoreCalculator;
 	}
 
-	public void add(AttemptResult attemptResult) {
-		this.rounds[this.index++] = attemptResult;
+	public void addAttempt(Attempt attempt) {
+		this.attempts.add(attempt);
 	}
 
-	public AttemptResult getIndexed(int index) {
-		if ((index < 0) || (index > getIndexOfLastAttempt())) {
-			return AttemptResult.NO_ATTEMPT_RESULT;
+	public boolean undoLastAttempt() {
+		int index = this.attempts.size() - 1;
+		if (index >= 0) {
+			this.attempts.remove(index);
+			return true;
 		}
-		return this.rounds[index];
+		return false;
+	}
+
+	public Attempt getIndexed(int index) {
+		if ((index < 0) || (index > getIndexOfLastAttempt())) {
+			return null;
+		}
+		return this.attempts.get(index);
 	}
 
 	public int getIndexOfLastAttempt() {
-		if (this.index > 0) {
-			return this.index - 1;
+		if (this.attempts.isEmpty()) {
+			return -1;
 		}
-		return NO_ATTEMPT;
+		return this.attempts.size() - 1;
 	}
-	
-	public List<AttemptResult> getSuccessfulAttempts () {
-		ArrayList<AttemptResult> attemptResults = new ArrayList<AttemptResult>();
+
+	public List<Ball> getSuccessfulAttempts() {
+		ArrayList<Ball> successfulAttempts = new ArrayList<Ball>();
 		for (int i = 0; i <= getIndexOfLastAttempt(); i++) {
-			AttemptResult attemptResult = getIndexed(i);
-			if (attemptResult.isSuccess()) {
-				attemptResults.add(attemptResult);
+			Attempt attempt = getIndexed(i);
+			if (attempt.isSuccessful()) {
+				successfulAttempts.add(attempt.getBall());
 			}
 		}
-		return attemptResults;
+		return successfulAttempts;
+	}
+
+	public int calculateScore() {
+		return this.scoreCalculator.calculateScore(this);
+	}
+
+	public int forecastScore(List<Ball> balls) {
+		return this.scoreCalculator.forecastScore(this, balls);
 	}
 
 }

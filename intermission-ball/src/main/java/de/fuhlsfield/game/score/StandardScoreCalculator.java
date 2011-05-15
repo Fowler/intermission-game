@@ -1,22 +1,42 @@
 package de.fuhlsfield.game.score;
 
-import de.fuhlsfield.game.AttemptResult;
-import de.fuhlsfield.game.Game;
-import de.fuhlsfield.game.Player;
+import java.util.ArrayList;
+import java.util.List;
+
+import de.fuhlsfield.game.Attempt;
+import de.fuhlsfield.game.Ball;
 
 public class StandardScoreCalculator implements ScoreCalculator {
 
+	protected final BallValueMapper ballValueMapper;
+
+	public StandardScoreCalculator(BallValueMapper ballValueMapper) {
+		this.ballValueMapper = ballValueMapper;
+	}
+
 	@Override
-	public int calculateScore (Game game, Player player) {
-		GameScoreKeeper gameScoreKeeper = game.getGameScore(player);
-		int score = 0;
+	public int calculateScore(GameScoreKeeper gameScoreKeeper) {
+		ArrayList<Ball> balls = new ArrayList<Ball>();
 		for (int i = 0; i <= gameScoreKeeper.getIndexOfLastAttempt(); i++) {
-			AttemptResult attemptResult = gameScoreKeeper.getIndexed(i);
-			if (attemptResult.isSuccess()) {
-				score += game.getBallValue(attemptResult.getBall()).getValue();
+			Attempt attempt = gameScoreKeeper.getIndexed(i);
+			if (attempt.isSuccessful()) {
+				balls.add(attempt.getBall());
 			}
+		}
+		return calculateScore(balls);
+	}
+
+	@Override
+	public int forecastScore(GameScoreKeeper gameScoreKeeper, List<Ball> balls) {
+		return calculateScore(gameScoreKeeper) + calculateScore(balls);
+	}
+
+	private int calculateScore(List<Ball> balls) {
+		int score = 0;
+		for (Ball ball : balls) {
+			score += this.ballValueMapper.getValue(ball);
 		}
 		return score;
 	}
-	
+
 }

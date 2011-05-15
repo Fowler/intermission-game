@@ -3,17 +3,24 @@ package de.fuhlsfield.ui;
 import javax.swing.table.AbstractTableModel;
 
 import de.fuhlsfield.game.Attempt;
+import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.Game;
+import de.fuhlsfield.game.Player;
 
 public class SuccessActionListener extends AttemptActionListener {
-	
-	public SuccessActionListener (Game game, Attempt attempt, AbstractTableModel model) {
-		super(game, attempt, model);
+
+	private final Ball ball;
+	private final Player player;
+
+	public SuccessActionListener(Game game, Ball ball, Player player, AbstractTableModel... tableModels) {
+		super(game, tableModels);
+		this.ball = ball;
+		this.player = player;
 	}
-	
+
 	@Override
-	protected void modifyGameScore () {
-		this.game.check(this.attempt.getBall(), this.attempt.getPlayer(), true);
+	protected void modifyScore() {
+		this.game.addAttempt(this.player, new Attempt(this.ball, true));
 	}
 
 }

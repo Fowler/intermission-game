@@ -1,10 +1,13 @@
 package de.fuhlsfield.game.score;
 
-import de.fuhlsfield.game.Game;
-import de.fuhlsfield.game.Player;
+import java.util.List;
+
+import de.fuhlsfield.game.Ball;
 
 public interface ScoreCalculator {
-	
-	int calculateScore (Game game, Player player);
+
+	int calculateScore(GameScoreKeeper gameScoreKeeper);
+
+	int forecastScore(GameScoreKeeper gameScoreKeeper, List<Ball> balls);
 
 }

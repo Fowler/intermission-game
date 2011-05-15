@@ -5,7 +5,6 @@ package de.fuhlsfield.game;
 
 /**
  * @author juergen
- * 
  */
 public enum Ball {
 
@@ -13,7 +12,10 @@ public enum Ball {
 	BUNTI("Bunti"), // 
 	BASKI("Baski"), // 
 	SCHWAMMI("Schwammi"), // 
-	FROESCHI("Fröschi"); 
+	FROESCHI("Fröschi"), //
+	NORMALI("Normali"), //
+	SCHRAEGI("Schrägi"), //
+	FLUMMI("Flummi");
 
 	private String name;
 
