@@ -23,6 +23,7 @@ import de.fuhlsfield.ui.CurrentScoreTableModel;
 import de.fuhlsfield.ui.FailureActionListener;
 import de.fuhlsfield.ui.ScoreTableModel;
 import de.fuhlsfield.ui.SuccessActionListener;
+import de.fuhlsfield.ui.UndoActionListener;
 
 /**
  * First draft of game gui.
@@ -83,7 +84,9 @@ public class IntermissionGameGui {
 		panel.setLayout(new GridLayout(3, 1));
 		panel.add(createCurrentScoreComponent());
 		panel.add(new JButton("Spiel beenden"));
-		panel.add(new JButton("Undo"));
+		JButton undoButton = new JButton("Undo");
+		undoButton.addActionListener(new UndoActionListener(GAME, this.scoreTableModel, this.currentScoreTableModel));
+		panel.add(undoButton);
 		return panel;
 	}
 
@@ -101,15 +104,15 @@ public class IntermissionGameGui {
 		this.jButtons.put(player, new HashMap<Ball, List<JButton>>());
 		for (Ball ball : GAME.getBalls()) {
 			String ballName = ball.getName();
-			JButton ballSuccess = new JButton(ballName);
-			ballSuccess.addActionListener(new SuccessActionListener(GAME, ball, player, this.scoreTableModel,
+			JButton attemptSuccessButton = new JButton(ballName);
+			attemptSuccessButton.addActionListener(new SuccessActionListener(GAME, ball, player, this.scoreTableModel,
 					this.currentScoreTableModel));
-			JButton ballFailed = new JButton("-" + ballName);
-			ballFailed.addActionListener(new FailureActionListener(GAME, ball, player, this.scoreTableModel,
+			JButton attemptFailureButton = new JButton("-" + ballName);
+			attemptFailureButton.addActionListener(new FailureActionListener(GAME, ball, player, this.scoreTableModel,
 					this.currentScoreTableModel));
-			panel.add(ballSuccess);
-			panel.add(ballFailed);
-			this.jButtons.get(player).put(ball, Arrays.asList(ballSuccess, ballFailed));
+			panel.add(attemptSuccessButton);
+			panel.add(attemptFailureButton);
+			this.jButtons.get(player).put(ball, Arrays.asList(attemptSuccessButton, attemptFailureButton));
 		}
 		return panel;
 	}

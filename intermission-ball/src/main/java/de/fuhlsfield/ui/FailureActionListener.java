@@ -9,8 +9,13 @@ import de.fuhlsfield.game.Player;
 
 public class FailureActionListener extends AttemptActionListener {
 
+	private final Ball ball;
+	private final Player player;
+
 	public FailureActionListener(Game game, Ball ball, Player player, AbstractTableModel... tableModels) {
-		super(game, ball, player, tableModels);
+		super(game, tableModels);
+		this.ball = ball;
+		this.player = player;
 	}
 
 	@Override

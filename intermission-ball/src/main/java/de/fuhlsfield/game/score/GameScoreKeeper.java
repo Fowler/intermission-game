@@ -14,8 +14,17 @@ public class GameScoreKeeper {
 		this.attempts = new ArrayList<Attempt>();
 	}
 
-	public void add(Attempt attempt) {
+	public void addAttempt(Attempt attempt) {
 		this.attempts.add(attempt);
+	}
+
+	public boolean undoLastAttempt() {
+		int index = this.attempts.size() - 1;
+		if (index >= 0) {
+			this.attempts.remove(index);
+			return true;
+		}
+		return false;
 	}
 
 	public Attempt getIndexed(int index) {

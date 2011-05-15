@@ -53,6 +53,14 @@ public class RuleChecker {
 		return true;
 	}
 
+	public Player determinePreviousPlayer() {
+		int index = this.game.getPlayers().indexOf(determineNextPlayer()) - 1;
+		if (index < 0) {
+			index = this.game.getPlayers().size() - 1;
+		}
+		return this.game.getPlayers().get(index);
+	}
+
 	private List<List<Ball>> determinePossibleBallsLeft(List<Ball> possibleBallsLeft, GameScoreKeeper gameScoreKeeper) {
 		ArrayList<List<Ball>> resultPossibleBallsLeft = new ArrayList<List<Ball>>();
 		resultPossibleBallsLeft.add(possibleBallsLeft);

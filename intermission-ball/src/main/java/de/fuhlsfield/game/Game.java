@@ -15,6 +15,7 @@ public class Game {
 	private final GameConfig gameConfig;
 	private final List<Player> players;
 	private final int maxAttempts;
+	private final RuleChecker ruleChecker;
 	private final Map<Player, GameScoreKeeper> gameScoreKeepers = new HashMap<Player, GameScoreKeeper>();
 	private Map<Player, Map<Ball, RuleCheckState>> ballRuleCheckStates = new HashMap<Player, Map<Ball, RuleCheckState>>();
 
@@ -22,6 +23,7 @@ public class Game {
 		this.gameConfig = gameConfig;
 		this.maxAttempts = maxRounds;
 		this.players = Arrays.asList(players);
+		this.ruleChecker = new RuleChecker(this, gameConfig.getRuleChecks());
 		for (Player player : this.players) {
 			this.gameScoreKeepers.put(player, new GameScoreKeeper());
 		}
@@ -58,7 +60,13 @@ public class Game {
 
 	public void addAttempt(Player player, Attempt attempt) {
 		if (isAttemptAllowed(player, attempt.getBall())) {
-			this.gameScoreKeepers.get(player).add(attempt);
+			this.gameScoreKeepers.get(player).addAttempt(attempt);
+			upateBallRuleCheckStates();
+		}
+	}
+
+	public void undoLastAttempt() {
+		if (this.gameScoreKeepers.get(this.ruleChecker.determinePreviousPlayer()).undoLastAttempt()) {
 			upateBallRuleCheckStates();
 		}
 	}
@@ -68,9 +76,8 @@ public class Game {
 	}
 
 	public boolean isAttemptAllowed(Player player, Ball ball) {
-		RuleChecker ruleChecker = new RuleChecker(this, this.gameConfig.getRuleChecks());
-		return ruleChecker.isAttemptAllowedPreCheck(ball, player)
-				&& ruleChecker.determineRuleCheckState(ball, player).isAllowed();
+		return this.ruleChecker.isAttemptAllowedPreCheck(ball, player)
+				&& this.ruleChecker.determineRuleCheckState(ball, player).isAllowed();
 	}
 
 	private void upateBallRuleCheckStates() {
