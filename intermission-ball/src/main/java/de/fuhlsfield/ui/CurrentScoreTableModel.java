@@ -28,7 +28,7 @@ public class CurrentScoreTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Player player = this.game.getPlayers().get(columnIndex);
-		return this.game.getScoreCalculator().calculateScore(this.game.getGameScoreKeeper(player));
+		return this.game.getGameScoreKeeper(player).calculateScore();
 	}
 
 	@Override

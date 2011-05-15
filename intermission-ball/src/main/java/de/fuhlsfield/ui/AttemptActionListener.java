@@ -18,12 +18,12 @@ public abstract class AttemptActionListener implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		modifyGameScore();
+		modifyScore();
 		for (AbstractTableModel tableModel : this.tableModels) {
 			tableModel.fireTableDataChanged();
 		}
 	}
 
-	protected abstract void modifyGameScore();
+	protected abstract void modifyScore();
 
 }

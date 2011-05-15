@@ -21,7 +21,9 @@ import de.fuhlsfield.game.Game;
 import de.fuhlsfield.game.Player;
 import de.fuhlsfield.ui.CurrentScoreTableModel;
 import de.fuhlsfield.ui.FailureActionListener;
-import de.fuhlsfield.ui.ScoreTableModel;
+import de.fuhlsfield.ui.FinishActionListener;
+import de.fuhlsfield.ui.GameScoreTableModel;
+import de.fuhlsfield.ui.SeasonScoreTableModel;
 import de.fuhlsfield.ui.SuccessActionListener;
 import de.fuhlsfield.ui.UndoActionListener;
 
@@ -32,10 +34,12 @@ import de.fuhlsfield.ui.UndoActionListener;
  */
 public class IntermissionGameGui {
 
-	private static final Game GAME = new Game(new FiveBallsGameConfig(), 10, new Player("Jürgen"), new Player("Marcus"));
+	private static final Game GAME = new Game(new FiveBallsGameConfig(), 10, 10, new Player("Jürgen"), new Player(
+			"Marcus"));
 
 	private final Map<Player, Map<Ball, List<JButton>>> jButtons = new HashMap<Player, Map<Ball, List<JButton>>>();
-	private ScoreTableModel scoreTableModel;
+	private GameScoreTableModel gameScoreTableModel;
+	private SeasonScoreTableModel seasonScoreTableModel;
 	private CurrentScoreTableModel currentScoreTableModel;
 
 	public void create() {
@@ -62,20 +66,14 @@ public class IntermissionGameGui {
 	}
 
 	private JComponent createGameScoreComponent() {
-		this.scoreTableModel = new ScoreTableModel(GAME);
-		JTable gameScoreTabel = new JTable(this.scoreTableModel);
-		return new JScrollPane(gameScoreTabel);
+		this.gameScoreTableModel = new GameScoreTableModel(GAME);
+		JTable gameScoreTable = new JTable(this.gameScoreTableModel);
+		return new JScrollPane(gameScoreTable);
 	}
 
 	private JComponent createSeasonScoreComponent() {
-		String[][] columns = createColumns();
-		String[] columnNamesSeason = new String[GAME.getPlayers().size() + 1];
-		columnNamesSeason[0] = "Spiel";
-		int i = 1;
-		for (Player player : GAME.getPlayers()) {
-			columnNamesSeason[i++] = player.getName();
-		}
-		JTable seasonScoreTable = new JTable(columns, columnNamesSeason);
+		this.seasonScoreTableModel = new SeasonScoreTableModel(GAME);
+		JTable seasonScoreTable = new JTable(this.seasonScoreTableModel);
 		return new JScrollPane(seasonScoreTable);
 	}
 
@@ -83,9 +81,13 @@ public class IntermissionGameGui {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(3, 1));
 		panel.add(createCurrentScoreComponent());
-		panel.add(new JButton("Spiel beenden"));
+		JButton finishButton = new JButton("Spiel beenden");
+		finishButton.addActionListener(new FinishActionListener(GAME, this.gameScoreTableModel,
+				this.currentScoreTableModel, this.seasonScoreTableModel));
+		panel.add(finishButton);
 		JButton undoButton = new JButton("Undo");
-		undoButton.addActionListener(new UndoActionListener(GAME, this.scoreTableModel, this.currentScoreTableModel));
+		undoButton
+				.addActionListener(new UndoActionListener(GAME, this.gameScoreTableModel, this.currentScoreTableModel));
 		panel.add(undoButton);
 		return panel;
 	}
@@ -105,11 +107,11 @@ public class IntermissionGameGui {
 		for (Ball ball : GAME.getBalls()) {
 			String ballName = ball.getName();
 			JButton attemptSuccessButton = new JButton(ballName);
-			attemptSuccessButton.addActionListener(new SuccessActionListener(GAME, ball, player, this.scoreTableModel,
-					this.currentScoreTableModel));
+			attemptSuccessButton.addActionListener(new SuccessActionListener(GAME, ball, player,
+					this.gameScoreTableModel, this.currentScoreTableModel));
 			JButton attemptFailureButton = new JButton("-" + ballName);
-			attemptFailureButton.addActionListener(new FailureActionListener(GAME, ball, player, this.scoreTableModel,
-					this.currentScoreTableModel));
+			attemptFailureButton.addActionListener(new FailureActionListener(GAME, ball, player,
+					this.gameScoreTableModel, this.currentScoreTableModel));
 			panel.add(attemptSuccessButton);
 			panel.add(attemptFailureButton);
 			this.jButtons.get(player).put(ball, Arrays.asList(attemptSuccessButton, attemptFailureButton));
@@ -119,14 +121,6 @@ public class IntermissionGameGui {
 
 	private JComponent createEmptyComponent() {
 		return new JPanel();
-	}
-
-	private String[][] createColumns() {
-		String[][] columns = new String[][] { new String[] { "1", null, null }, new String[] { "2", null, null },
-				new String[] { "3", null, null }, new String[] { "4", null, null }, new String[] { "5", null, null },
-				new String[] { "6", null, null }, new String[] { "7", null, null }, new String[] { "8", null, null },
-				new String[] { "9", null, null }, new String[] { "10", null, null }, };
-		return columns;
 	}
 
 }

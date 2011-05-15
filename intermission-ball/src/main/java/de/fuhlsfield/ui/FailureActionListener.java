@@ -19,7 +19,7 @@ public class FailureActionListener extends AttemptActionListener {
 	}
 
 	@Override
-	protected void modifyGameScore() {
+	protected void modifyScore() {
 		this.game.addAttempt(this.player, new Attempt(this.ball, false));
 	}
 

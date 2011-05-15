@@ -5,15 +5,12 @@ import java.util.List;
 
 import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.score.GameScoreKeeper;
-import de.fuhlsfield.game.score.ScoreCalculator;
 
 public class ExactCheckoutRuleCheck implements RuleCheck {
 
-	private final ScoreCalculator scoreCalculator;
 	private final int targetPoints;
 
-	public ExactCheckoutRuleCheck(ScoreCalculator scoreCalculator, int targetPoints) {
-		this.scoreCalculator = scoreCalculator;
+	public ExactCheckoutRuleCheck(int targetPoints) {
 		this.targetPoints = targetPoints;
 	}
 
@@ -21,7 +18,7 @@ public class ExactCheckoutRuleCheck implements RuleCheck {
 	public List<List<Ball>> selectPossibleAttempts(List<List<Ball>> possibleBallsLeft, GameScoreKeeper gameScoreKeeper) {
 		List<List<Ball>> resultPossibleLefts = new ArrayList<List<Ball>>(possibleBallsLeft);
 		for (List<Ball> ballsLeft : possibleBallsLeft) {
-			if (this.scoreCalculator.forecastScore(gameScoreKeeper, ballsLeft) > this.targetPoints) {
+			if (gameScoreKeeper.forecastScore(ballsLeft) > this.targetPoints) {
 				resultPossibleLefts.remove(ballsLeft);
 			}
 		}
