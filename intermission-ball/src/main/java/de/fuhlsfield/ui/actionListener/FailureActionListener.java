@@ -1,16 +1,17 @@
-package de.fuhlsfield.ui;
+package de.fuhlsfield.ui.actionListener;
 
 import de.fuhlsfield.game.Attempt;
 import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.Game;
 import de.fuhlsfield.game.Player;
+import de.fuhlsfield.ui.GameModel;
 
-public class SuccessActionListener extends GameActionListener {
+public class FailureActionListener extends GameActionListener {
 
 	private final Ball ball;
 	private final Player player;
 
-	public SuccessActionListener(Game game, Ball ball, Player player, GameModel... gameModels) {
+	public FailureActionListener(Game game, Ball ball, Player player, GameModel... gameModels) {
 		super(game, gameModels);
 		this.ball = ball;
 		this.player = player;
@@ -18,7 +19,7 @@ public class SuccessActionListener extends GameActionListener {
 
 	@Override
 	protected void modifyGameState() {
-		this.game.addAttempt(this.player, new Attempt(this.ball, true));
+		this.game.addAttempt(this.player, new Attempt(this.ball, false));
 	}
 
 }

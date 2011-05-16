@@ -20,13 +20,14 @@ public class GameScoreKeeper {
 		this.attempts.add(attempt);
 	}
 
-	public boolean undoLastAttempt() {
-		int index = this.attempts.size() - 1;
-		if (index >= 0) {
-			this.attempts.remove(index);
-			return true;
+	public void undoLastAttempt() {
+		if (isUndoLastAttemptPossible()) {
+			this.attempts.remove(this.attempts.size() - 1);
 		}
-		return false;
+	}
+
+	public boolean isUndoLastAttemptPossible() {
+		return this.attempts.size() > 0;
 	}
 
 	public Attempt getIndexed(int index) {

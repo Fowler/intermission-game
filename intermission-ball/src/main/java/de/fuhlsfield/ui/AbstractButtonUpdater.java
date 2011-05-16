@@ -5,14 +5,15 @@ import java.util.List;
 
 import javax.swing.JButton;
 
-public abstract class AbstractButtonModel implements GameModel {
+import de.fuhlsfield.game.Game;
+
+public abstract class AbstractButtonUpdater {
 
 	protected List<JButton> buttons = new ArrayList<JButton>();
 
-	@Override
-	public void updateModel() {
+	public void update(Game game) {
 		for (JButton button : this.buttons) {
-			updateButtonState(button);
+			updateButtonState(game, button);
 		}
 	}
 
@@ -20,6 +21,6 @@ public abstract class AbstractButtonModel implements GameModel {
 		this.buttons.add(button);
 	}
 
-	protected abstract void updateButtonState(JButton button);
+	protected abstract void updateButtonState(Game game, JButton button);
 
 }

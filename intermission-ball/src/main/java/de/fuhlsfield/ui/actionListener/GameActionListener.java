@@ -1,9 +1,10 @@
-package de.fuhlsfield.ui;
+package de.fuhlsfield.ui.actionListener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import de.fuhlsfield.game.Game;
+import de.fuhlsfield.ui.GameModel;
 
 public abstract class GameActionListener implements ActionListener {
 

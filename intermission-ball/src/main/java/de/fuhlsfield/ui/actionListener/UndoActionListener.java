@@ -1,6 +1,7 @@
-package de.fuhlsfield.ui;
+package de.fuhlsfield.ui.actionListener;
 
 import de.fuhlsfield.game.Game;
+import de.fuhlsfield.ui.GameModel;
 
 public class UndoActionListener extends GameActionListener {
 
