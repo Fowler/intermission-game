@@ -3,27 +3,25 @@ package de.fuhlsfield.ui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.table.AbstractTableModel;
-
 import de.fuhlsfield.game.Game;
 
 public abstract class GameActionListener implements ActionListener {
 
 	protected final Game game;
-	protected final AbstractTableModel[] tableModels;
+	protected final GameModel[] gameModels;
 
-	public GameActionListener(Game game, AbstractTableModel... tableModels) {
+	public GameActionListener(Game game, GameModel... gameModels) {
 		this.game = game;
-		this.tableModels = tableModels;
+		this.gameModels = gameModels;
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		modifyScore();
-		for (AbstractTableModel tableModel : this.tableModels) {
-			tableModel.fireTableDataChanged();
+		modifyGameState();
+		for (GameModel gameModel : this.gameModels) {
+			gameModel.updateModel();
 		}
 	}
 
-	protected abstract void modifyScore();
+	protected abstract void modifyGameState();
 
 }

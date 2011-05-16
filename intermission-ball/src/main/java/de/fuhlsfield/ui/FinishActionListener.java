@@ -1,17 +1,15 @@
 package de.fuhlsfield.ui;
 
-import javax.swing.table.AbstractTableModel;
-
 import de.fuhlsfield.game.Game;
 
 public class FinishActionListener extends GameActionListener {
 
-	public FinishActionListener(Game game, AbstractTableModel... tableModels) {
-		super(game, tableModels);
+	public FinishActionListener(Game game, GameModel... gameModels) {
+		super(game, gameModels);
 	}
 
 	@Override
-	protected void modifyScore() {
+	protected void modifyGameState() {
 		this.game.finishGame();
 	}
 
