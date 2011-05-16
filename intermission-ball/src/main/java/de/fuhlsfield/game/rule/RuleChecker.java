@@ -13,10 +13,19 @@ public class RuleChecker {
 
 	private final Game game;
 	private final List<RuleCheck> ruleChecks;
+	@Deprecated
+	// to set if you want to tweak the rule, but you have to know the rules well
+	private final int numberOfAttemptsWithoutCheck;
 
 	public RuleChecker(Game game, List<RuleCheck> ruleChecks) {
+		this(game, ruleChecks, 0);
+	}
+
+	@Deprecated
+	public RuleChecker(Game game, List<RuleCheck> ruleChecks, int numberOfAttemptsWithoutCheck) {
 		this.game = game;
 		this.ruleChecks = ruleChecks;
+		this.numberOfAttemptsWithoutCheck = numberOfAttemptsWithoutCheck;
 	}
 
 	public boolean isAttemptAllowedPreCheck(Ball ball, Player player) {
@@ -26,9 +35,7 @@ public class RuleChecker {
 
 	public RuleCheckState determineRuleCheckState(Ball ball, Player player) {
 		GameScoreKeeper gameScoreKeeper = this.game.getGameScoreKeeper(player);
-		if (gameScoreKeeper.getIndexOfLastAttempt() < 0) {
-			// assumption that each ball can be used in first attempt to
-			// reduce runtime
+		if (gameScoreKeeper.getIndexOfLastAttempt() < this.numberOfAttemptsWithoutCheck) {
 			return RuleCheckState.ALLOWED;
 		}
 		List<List<Ball>> possibleBallsLeft = determinePossibleBallsLeft(Arrays.asList(ball), gameScoreKeeper);

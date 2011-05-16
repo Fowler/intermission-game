@@ -16,9 +16,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import de.fuhlsfield.game.Ball;
-import de.fuhlsfield.game.FiveBallsGameConfig;
 import de.fuhlsfield.game.Game;
 import de.fuhlsfield.game.Player;
+import de.fuhlsfield.game.SixBallsGameConfig;
 import de.fuhlsfield.ui.BallButtonModel;
 import de.fuhlsfield.ui.CurrentScoreTableModel;
 import de.fuhlsfield.ui.FailureActionListener;
@@ -35,7 +35,9 @@ import de.fuhlsfield.ui.UndoActionListener;
  */
 public class IntermissionGameGui {
 
-	private static final Game GAME = new Game(new FiveBallsGameConfig(), 10, 1, new Player("Jürgen"), new Player(
+	// private static final Game GAME = new Game(new FiveBallsGameConfig(), 10,
+	// 1, new Player("Jürgen"), new Player("Marcus"));
+	private static final Game GAME = new Game(new SixBallsGameConfig(), 15, 1, 3, new Player("Jürgen"), new Player(
 			"Marcus"));
 
 	private final Map<Player, Map<Ball, List<JButton>>> jButtons = new HashMap<Player, Map<Ball, List<JButton>>>();

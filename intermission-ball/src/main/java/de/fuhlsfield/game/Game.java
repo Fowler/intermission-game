@@ -34,6 +34,21 @@ public class Game {
 		upateBallRuleCheckStates();
 	}
 
+	@Deprecated
+	public Game(GameConfig gameConfig, int maxAttempts, int numberOfGames, int numberOfAttemptsWithoutCheck,
+			Player... players) {
+		this.gameConfig = gameConfig;
+		this.maxAttempts = maxAttempts;
+		this.numberOfGames = numberOfGames;
+		this.players = Arrays.asList(players);
+		this.ruleChecker = new RuleChecker(this, gameConfig.getRuleChecks(), numberOfAttemptsWithoutCheck);
+		for (Player player : this.players) {
+			this.gameScoreKeepers.put(player, new GameScoreKeeper(gameConfig.getScoreCalculator()));
+			this.seasonScoreKeepers.put(player, new SeasonScoreKeeper());
+		}
+		upateBallRuleCheckStates();
+	}
+
 	public int getMaxAttempts() {
 		return this.maxAttempts;
 	}
@@ -107,8 +122,7 @@ public class Game {
 		for (Player player : this.players) {
 			this.ballRuleCheckStates.put(player, new HashMap<Ball, RuleCheckState>());
 			for (Ball ball : getBalls()) {
-				this.ballRuleCheckStates.get(player).put(ball,
-						new RuleChecker(this, this.gameConfig.getRuleChecks()).determineRuleCheckState(ball, player));
+				this.ballRuleCheckStates.get(player).put(ball, this.ruleChecker.determineRuleCheckState(ball, player));
 			}
 		}
 	}
