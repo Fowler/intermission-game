@@ -7,7 +7,7 @@ import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.Game;
 import de.fuhlsfield.game.Player;
 
-public class FailureActionListener extends AttemptActionListener {
+public class FailureActionListener extends GameActionListener {
 
 	private final Ball ball;
 	private final Player player;

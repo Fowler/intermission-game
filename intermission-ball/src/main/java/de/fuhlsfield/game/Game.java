@@ -67,7 +67,7 @@ public class Game {
 	}
 
 	public void addAttempt(Player player, Attempt attempt) {
-		if (isAttemptAllowed(player, attempt.getBall())) {
+		if (!isSeasonFinished() && isAttemptAllowed(player, attempt.getBall())) {
 			this.gameScoreKeepers.get(player).addAttempt(attempt);
 			upateBallRuleCheckStates();
 		}
@@ -80,9 +80,11 @@ public class Game {
 	}
 
 	public void finishGame() {
-		for (Player player : this.players) {
-			this.seasonScoreKeepers.get(player).addGameScoreKeeper(this.gameScoreKeepers.get(player));
-			this.gameScoreKeepers.put(player, new GameScoreKeeper(this.gameConfig.getScoreCalculator()));
+		if (!isSeasonFinished() && this.ruleChecker.isGameFinished()) {
+			for (Player player : this.players) {
+				this.seasonScoreKeepers.get(player).addGameScoreKeeper(this.gameScoreKeepers.get(player));
+				this.gameScoreKeepers.put(player, new GameScoreKeeper(this.gameConfig.getScoreCalculator()));
+			}
 		}
 	}
 
@@ -93,6 +95,11 @@ public class Game {
 	public boolean isAttemptAllowed(Player player, Ball ball) {
 		return this.ruleChecker.isAttemptAllowedPreCheck(ball, player)
 				&& this.ruleChecker.determineRuleCheckState(ball, player).isAllowed();
+	}
+
+	private boolean isSeasonFinished() {
+		return !getPlayers().isEmpty()
+				&& (this.seasonScoreKeepers.get(getPlayers().get(0)).getNumberOfGameScores() >= this.numberOfGames);
 	}
 
 	private void upateBallRuleCheckStates() {

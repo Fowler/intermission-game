@@ -26,4 +26,8 @@ public class SeasonScoreKeeper {
 		return null;
 	}
 
+	public int getNumberOfGameScores() {
+		return this.gameScoreKeepers.size();
+	}
+
 }

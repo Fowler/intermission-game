@@ -34,7 +34,7 @@ import de.fuhlsfield.ui.UndoActionListener;
  */
 public class IntermissionGameGui {
 
-	private static final Game GAME = new Game(new FiveBallsGameConfig(), 10, 10, new Player("Jürgen"), new Player(
+	private static final Game GAME = new Game(new FiveBallsGameConfig(), 10, 1, new Player("Jürgen"), new Player(
 			"Marcus"));
 
 	private final Map<Player, Map<Ball, List<JButton>>> jButtons = new HashMap<Player, Map<Ball, List<JButton>>>();

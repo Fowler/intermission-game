@@ -4,7 +4,7 @@ import javax.swing.table.AbstractTableModel;
 
 import de.fuhlsfield.game.Game;
 
-public class FinishActionListener extends AttemptActionListener {
+public class FinishActionListener extends GameActionListener {
 
 	public FinishActionListener(Game game, AbstractTableModel... tableModels) {
 		super(game, tableModels);

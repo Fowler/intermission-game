@@ -7,12 +7,12 @@ import javax.swing.table.AbstractTableModel;
 
 import de.fuhlsfield.game.Game;
 
-public abstract class AttemptActionListener implements ActionListener {
+public abstract class GameActionListener implements ActionListener {
 
 	protected final Game game;
 	protected final AbstractTableModel[] tableModels;
 
-	public AttemptActionListener(Game game, AbstractTableModel... tableModels) {
+	public GameActionListener(Game game, AbstractTableModel... tableModels) {
 		this.game = game;
 		this.tableModels = tableModels;
 	}
