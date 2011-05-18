@@ -1,11 +1,9 @@
 package de.fuhlsfield.ui;
 
-import javax.swing.table.AbstractTableModel;
-
 import de.fuhlsfield.game.Game;
 import de.fuhlsfield.game.Player;
 
-public class GameScoreTableModel extends AbstractTableModel {
+public class GameScoreTableModel extends AbstractScoreTabelModel {
 
 	private static final long serialVersionUID = 1L;
 	private static final String TABLE_NAME = "Runde";

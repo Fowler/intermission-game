@@ -19,13 +19,17 @@ import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.FiveBallsGameConfig;
 import de.fuhlsfield.game.Game;
 import de.fuhlsfield.game.Player;
+import de.fuhlsfield.ui.AttemptButtonUpdater;
+import de.fuhlsfield.ui.ButtonModel;
 import de.fuhlsfield.ui.CurrentScoreTableModel;
-import de.fuhlsfield.ui.FailureActionListener;
-import de.fuhlsfield.ui.FinishActionListener;
+import de.fuhlsfield.ui.FinishButtonUpdater;
 import de.fuhlsfield.ui.GameScoreTableModel;
 import de.fuhlsfield.ui.SeasonScoreTableModel;
-import de.fuhlsfield.ui.SuccessActionListener;
-import de.fuhlsfield.ui.UndoActionListener;
+import de.fuhlsfield.ui.UndoButtonUpdater;
+import de.fuhlsfield.ui.actionListener.FailureActionListener;
+import de.fuhlsfield.ui.actionListener.FinishActionListener;
+import de.fuhlsfield.ui.actionListener.SuccessActionListener;
+import de.fuhlsfield.ui.actionListener.UndoActionListener;
 
 /**
  * First draft of game gui.
@@ -36,11 +40,15 @@ public class IntermissionGameGui {
 
 	private static final Game GAME = new Game(new FiveBallsGameConfig(), 10, 10, new Player("Jürgen"), new Player(
 			"Marcus"));
+	// private static final Game GAME = new Game(new SixBallsGameConfig(), 15,
+	// 10, 3, new Player("Jürgen"), new Player(
+	// "Marcus"));
 
 	private final Map<Player, Map<Ball, List<JButton>>> jButtons = new HashMap<Player, Map<Ball, List<JButton>>>();
-	private GameScoreTableModel gameScoreTableModel;
-	private SeasonScoreTableModel seasonScoreTableModel;
-	private CurrentScoreTableModel currentScoreTableModel;
+	private final GameScoreTableModel gameScoreTableModel = new GameScoreTableModel(GAME);
+	private final SeasonScoreTableModel seasonScoreTableModel = new SeasonScoreTableModel(GAME);
+	private final CurrentScoreTableModel currentScoreTableModel = new CurrentScoreTableModel(GAME);
+	private final ButtonModel buttonModel = new ButtonModel(GAME);
 
 	public void create() {
 		JFrame frame = new JFrame();
@@ -63,16 +71,15 @@ public class IntermissionGameGui {
 		frame.setSize(250 * GAME.getPlayers().size(), GAME.getMaxAttempts() * 40);
 		frame.setVisible(true);
 		frame.setTitle("Intermission Game, enjoy your lunch break...");
+		this.buttonModel.updateModel();
 	}
 
 	private JComponent createGameScoreComponent() {
-		this.gameScoreTableModel = new GameScoreTableModel(GAME);
 		JTable gameScoreTable = new JTable(this.gameScoreTableModel);
 		return new JScrollPane(gameScoreTable);
 	}
 
 	private JComponent createSeasonScoreComponent() {
-		this.seasonScoreTableModel = new SeasonScoreTableModel(GAME);
 		JTable seasonScoreTable = new JTable(this.seasonScoreTableModel);
 		return new JScrollPane(seasonScoreTable);
 	}
@@ -83,17 +90,22 @@ public class IntermissionGameGui {
 		panel.add(createCurrentScoreComponent());
 		JButton finishButton = new JButton("Spiel beenden");
 		finishButton.addActionListener(new FinishActionListener(GAME, this.gameScoreTableModel,
-				this.currentScoreTableModel, this.seasonScoreTableModel));
+				this.currentScoreTableModel, this.seasonScoreTableModel, this.buttonModel));
+		FinishButtonUpdater finishButtonUpdater = new FinishButtonUpdater();
+		finishButtonUpdater.addButton(finishButton);
+		this.buttonModel.addUpdater(finishButtonUpdater);
 		panel.add(finishButton);
 		JButton undoButton = new JButton("Undo");
-		undoButton
-				.addActionListener(new UndoActionListener(GAME, this.gameScoreTableModel, this.currentScoreTableModel));
+		undoButton.addActionListener(new UndoActionListener(GAME, this.gameScoreTableModel,
+				this.currentScoreTableModel, this.buttonModel));
+		UndoButtonUpdater undoButtonUpdater = new UndoButtonUpdater();
+		undoButtonUpdater.addButton(undoButton);
+		this.buttonModel.addUpdater(undoButtonUpdater);
 		panel.add(undoButton);
 		return panel;
 	}
 
 	private JComponent createCurrentScoreComponent() {
-		this.currentScoreTableModel = new CurrentScoreTableModel(GAME);
 		JTable currentScoreTable = new JTable(this.currentScoreTableModel);
 		return new JScrollPane(currentScoreTable);
 	}
@@ -104,18 +116,22 @@ public class IntermissionGameGui {
 		panel.add(new JLabel(player.getName()));
 		panel.add(createEmptyComponent());
 		this.jButtons.put(player, new HashMap<Ball, List<JButton>>());
+		AttemptButtonUpdater attemptButtonUpdater = new AttemptButtonUpdater();
 		for (Ball ball : GAME.getBalls()) {
 			String ballName = ball.getName();
 			JButton attemptSuccessButton = new JButton(ballName);
 			attemptSuccessButton.addActionListener(new SuccessActionListener(GAME, ball, player,
-					this.gameScoreTableModel, this.currentScoreTableModel));
+					this.gameScoreTableModel, this.currentScoreTableModel, this.buttonModel));
+			attemptButtonUpdater.addSuccessButton(attemptSuccessButton, player, ball);
 			JButton attemptFailureButton = new JButton("-" + ballName);
 			attemptFailureButton.addActionListener(new FailureActionListener(GAME, ball, player,
-					this.gameScoreTableModel, this.currentScoreTableModel));
+					this.gameScoreTableModel, this.currentScoreTableModel, this.buttonModel));
+			attemptButtonUpdater.addFailureButton(attemptFailureButton, player, ball);
 			panel.add(attemptSuccessButton);
 			panel.add(attemptFailureButton);
 			this.jButtons.get(player).put(ball, Arrays.asList(attemptSuccessButton, attemptFailureButton));
 		}
+		this.buttonModel.addUpdater(attemptButtonUpdater);
 		return panel;
 	}
 
