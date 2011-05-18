@@ -30,4 +30,8 @@ public class SeasonScoreKeeper {
 		return this.gameScoreKeepers.size();
 	}
 
+	public List<GameScoreKeeper> getGameScoreKeepers() {
+		return gameScoreKeepers;
+	}
+
 }

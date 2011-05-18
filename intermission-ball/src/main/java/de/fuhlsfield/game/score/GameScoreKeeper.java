@@ -63,4 +63,8 @@ public class GameScoreKeeper {
 		return this.scoreCalculator.forecastScore(this, balls);
 	}
 
+	public List<Attempt> getAttempts() {
+		return this.attempts;
+	}
+
 }
