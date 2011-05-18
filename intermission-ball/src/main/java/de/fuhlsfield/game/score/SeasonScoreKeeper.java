@@ -31,7 +31,7 @@ public class SeasonScoreKeeper {
 	}
 
 	public List<GameScoreKeeper> getGameScoreKeepers() {
-		return gameScoreKeepers;
+		return this.gameScoreKeepers;
 	}
 
 }

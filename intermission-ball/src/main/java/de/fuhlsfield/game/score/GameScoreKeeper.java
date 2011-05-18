@@ -60,7 +60,7 @@ public class GameScoreKeeper {
 	}
 
 	public int forecastScore(List<Ball> balls) {
-		return this.scoreCalculator.forecastScore(this, balls);
+		return this.scoreCalculator.calculateScore(this, balls);
 	}
 
 	public List<Attempt> getAttempts() {

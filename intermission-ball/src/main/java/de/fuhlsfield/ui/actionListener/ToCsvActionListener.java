@@ -15,8 +15,8 @@ public class ToCsvActionListener implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		new GameScoreCsvExporter().export(game);
-		new SeasonScoreCsvExporter().export(game);
+		new GameScoreCsvExporter().export(this.game);
+		new SeasonScoreCsvExporter().export(this.game);
 	}
 
 }

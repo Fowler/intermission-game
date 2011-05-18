@@ -13,19 +13,10 @@ public class RuleChecker {
 
 	private final Game game;
 	private final List<RuleCheck> ruleChecks;
-	@Deprecated
-	// to set if you want to tweak the rule, but you have to know the rules well
-	private final int numberOfAttemptsWithoutCheck;
 
 	public RuleChecker(Game game, List<RuleCheck> ruleChecks) {
-		this(game, ruleChecks, 0);
-	}
-
-	@Deprecated
-	public RuleChecker(Game game, List<RuleCheck> ruleChecks, int numberOfAttemptsWithoutCheck) {
 		this.game = game;
 		this.ruleChecks = ruleChecks;
-		this.numberOfAttemptsWithoutCheck = numberOfAttemptsWithoutCheck;
 	}
 
 	public boolean isAttemptAllowedPreCheck(Ball ball, Player player) {
@@ -35,7 +26,12 @@ public class RuleChecker {
 
 	public RuleCheckState determineRuleCheckState(Ball ball, Player player) {
 		GameScoreKeeper gameScoreKeeper = this.game.getGameScoreKeeper(player);
-		if (gameScoreKeeper.getIndexOfLastAttempt() < this.numberOfAttemptsWithoutCheck) {
+		int remainingPoints = this.game.getTargetPoints() - gameScoreKeeper.calculateScore()
+				- this.game.getBallValue(ball);
+		if (remainingPoints >= sumAllBallValues()) {
+			if (gameScoreKeeper.getSuccessfulAttempts().contains(ball)) {
+				return RuleCheckState.ALLOWED_AND_PLAYED;
+			}
 			return RuleCheckState.ALLOWED;
 		}
 		List<List<Ball>> possibleBallsLeft = determinePossibleBallsLeft(Arrays.asList(ball), gameScoreKeeper);
@@ -47,6 +43,9 @@ public class RuleChecker {
 		}
 		if ((possibleBallsLeft.size() == 1) && (possibleBallsLeft.get(0).size() == 1)) {
 			return RuleCheckState.CHECKOUT;
+		}
+		if (gameScoreKeeper.getSuccessfulAttempts().contains(ball)) {
+			return RuleCheckState.ALLOWED_AND_PLAYED;
 		}
 		return RuleCheckState.ALLOWED;
 	}
@@ -119,6 +118,14 @@ public class RuleChecker {
 
 	private boolean isBallTakesPart(Ball ball) {
 		return this.game.getBalls().contains(ball);
+	}
+
+	private int sumAllBallValues() {
+		int sum = 0;
+		for (Ball ball : this.game.getBalls()) {
+			sum += this.game.getBallValue(ball);
+		}
+		return sum;
 	}
 
 }

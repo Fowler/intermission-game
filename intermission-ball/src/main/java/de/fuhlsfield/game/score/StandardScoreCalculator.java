@@ -27,16 +27,17 @@ public class StandardScoreCalculator implements ScoreCalculator {
 	}
 
 	@Override
-	public int forecastScore(GameScoreKeeper gameScoreKeeper, List<Ball> balls) {
-		return calculateScore(gameScoreKeeper) + calculateScore(balls);
-	}
-
-	private int calculateScore(List<Ball> balls) {
+	public int calculateScore(List<Ball> balls) {
 		int score = 0;
 		for (Ball ball : balls) {
 			score += this.ballValueMapper.getValue(ball);
 		}
 		return score;
+	}
+
+	@Override
+	public int calculateScore(GameScoreKeeper gameScoreKeeper, List<Ball> balls) {
+		return calculateScore(gameScoreKeeper) + calculateScore(balls);
 	}
 
 }

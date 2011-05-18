@@ -8,6 +8,8 @@ public interface ScoreCalculator {
 
 	int calculateScore(GameScoreKeeper gameScoreKeeper);
 
-	int forecastScore(GameScoreKeeper gameScoreKeeper, List<Ball> balls);
+	int calculateScore(List<Ball> balls);
+
+	int calculateScore(GameScoreKeeper gameScoreKeeper, List<Ball> balls);
 
 }
