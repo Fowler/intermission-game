@@ -1,6 +1,6 @@
 package de.fuhlsfield.game.score;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class SeasonScoreKeeper {
@@ -8,14 +8,14 @@ public class SeasonScoreKeeper {
 	private final List<GameScoreKeeper> gameScoreKeepers;
 
 	public SeasonScoreKeeper() {
-		this.gameScoreKeepers = new ArrayList<GameScoreKeeper>();
+		this.gameScoreKeepers = new LinkedList<GameScoreKeeper>();
 	}
 
 	public void addGameScoreKeeper(GameScoreKeeper gameScoreKeeper) {
 		this.gameScoreKeepers.add(gameScoreKeeper);
 	}
 
-	public int getNumberOfGameScores() {
+	public int getNumberOfGameScoreKeepers() {
 		return this.gameScoreKeepers.size();
 	}
 

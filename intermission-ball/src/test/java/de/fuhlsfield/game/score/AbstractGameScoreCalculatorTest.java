@@ -25,14 +25,14 @@ public abstract class AbstractGameScoreCalculatorTest<T extends GameScoreCalcula
 	}
 
 	@Test
-	public void whenCalculateScoreForGamescoreKeeper() {
+	public void testCalculateScoreForGamescoreKeeper() {
 		GameScoreKeeper gameScoreKeeper = createGameScoreKeeper(new Attempt(Ball.NORMALI, true), new Attempt(
 				Ball.BASKI, false), new Attempt(Ball.SCHWAMMI, true));
 		assertEquals(8, createInstanceUnderTest().calculateScore(gameScoreKeeper));
 	}
 
 	@Test
-	public void whenCalculateScoreForSuccessfulAttempts() {
+	public void testCalculateScoreForSuccessfulAttempts() {
 		LinkedList<Ball> balls = new LinkedList<Ball>();
 		balls.add(Ball.BASKI);
 		balls.add(Ball.TISCHI_BALLI);
@@ -40,7 +40,7 @@ public abstract class AbstractGameScoreCalculatorTest<T extends GameScoreCalcula
 	}
 
 	@Test
-	public void whenCalculateScoreForGamescoreKeeperAndAdditionalSuccessfulAttempts() {
+	public void testCalculateScoreForGamescoreKeeperAndAdditionalSuccessfulAttempts() {
 		GameScoreKeeper gameScoreKeeper = createGameScoreKeeper(new Attempt(Ball.NORMALI, true), new Attempt(
 				Ball.BASKI, false), new Attempt(Ball.SCHWAMMI, true));
 		LinkedList<Ball> balls = new LinkedList<Ball>();
@@ -50,20 +50,20 @@ public abstract class AbstractGameScoreCalculatorTest<T extends GameScoreCalcula
 	}
 
 	@Test
-	public void whenCalculateScoreForAttemptFirstAttempt() {
+	public void testCalculateScoreForAttemptFirstAttempt() {
 		GameScoreKeeper gameScoreKeeper = createGameScoreKeeper(new Attempt(Ball.NORMALI, true));
 		assertEquals(1, createInstanceUnderTest().calculateScoreForAttempt(gameScoreKeeper, 0));
 	}
 
 	@Test
-	public void whenCalculateScoreForAttemptLastAttempt() {
+	public void testCalculateScoreForAttemptLastAttempt() {
 		GameScoreKeeper gameScoreKeeper = createGameScoreKeeper(new Attempt(Ball.NORMALI, true), new Attempt(
 				Ball.BASKI, false), new Attempt(Ball.SCHWAMMI, true));
 		assertEquals(7, createInstanceUnderTest().calculateScoreForAttempt(gameScoreKeeper, 2));
 	}
 
 	@Test
-	public void whenCalculateScoreForAttemptAfterLastAttempt() {
+	public void testCalculateScoreForAttemptAfterLastAttempt() {
 		GameScoreKeeper gameScoreKeeper = createGameScoreKeeper();
 		assertEquals(ScoreConstants.UNDEFINED_SCORE, createInstanceUnderTest().calculateScoreForAttempt(
 				gameScoreKeeper, 0));

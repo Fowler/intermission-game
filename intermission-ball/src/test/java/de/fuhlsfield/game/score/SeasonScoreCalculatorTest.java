@@ -11,14 +11,14 @@ public class SeasonScoreCalculatorTest {
 	private final GameScoreCalculator gameScoreCalculator = mock(GameScoreCalculator.class);
 
 	@Test
-	public void whenCalculateForSeasonScoreKeeperFirstGame() {
+	public void testCalculateForSeasonScoreKeeperFirstGame() {
 		SeasonScoreKeeper seasonScoreKeeper = new SeasonScoreKeeper();
 		seasonScoreKeeper.addGameScoreKeeper(createGameScoreKeeper(8));
 		assertEquals(8, createInstanceUnderTest().calculateScore(seasonScoreKeeper, 0));
 	}
 
 	@Test
-	public void whenCalculateForSeasonScoreKeeperLastGame() {
+	public void testCalculateForSeasonScoreKeeperLastGame() {
 		SeasonScoreKeeper seasonScoreKeeper = new SeasonScoreKeeper();
 		seasonScoreKeeper.addGameScoreKeeper(createGameScoreKeeper(8));
 		seasonScoreKeeper.addGameScoreKeeper(createGameScoreKeeper(13));
@@ -27,7 +27,7 @@ public class SeasonScoreCalculatorTest {
 	}
 
 	@Test
-	public void whenCalculateForSeasonScoreKeeperAfterLastGame() {
+	public void testCalculateForSeasonScoreKeeperAfterLastGame() {
 		SeasonScoreKeeper seasonScoreKeeper = new SeasonScoreKeeper();
 		assertEquals(ScoreConstants.UNDEFINED_SCORE, createInstanceUnderTest().calculateScore(seasonScoreKeeper, 0));
 	}

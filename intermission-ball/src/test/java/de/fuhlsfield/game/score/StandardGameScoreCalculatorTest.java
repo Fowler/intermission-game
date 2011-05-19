@@ -10,20 +10,20 @@ import de.fuhlsfield.game.Ball;
 public class StandardGameScoreCalculatorTest extends AbstractGameScoreCalculatorTest<StandardGameScoreCalculator> {
 
 	@Test
-	public void whenCalculateScoreForGamescoreKeeperWithTwoFailurenInSuccession() {
+	public void testCalculateScoreForGamescoreKeeperWithTwoFailurenInSuccession() {
 		GameScoreKeeper gameScoreKeeper = createGameScoreKeeper(new Attempt(Ball.NORMALI, true), new Attempt(
 				Ball.BASKI, false), new Attempt(Ball.BASKI, false), new Attempt(Ball.SCHWAMMI, true));
 		assertEquals(8, createInstanceUnderTest().calculateScore(gameScoreKeeper));
 	}
 
 	@Test
-	public void whenCalculateScoreForAttemptFirstAttemptFailure() {
+	public void testCalculateScoreForAttemptFirstAttemptFailure() {
 		GameScoreKeeper gameScoreKeeper = createGameScoreKeeper(new Attempt(Ball.NORMALI, false));
 		assertEquals(0, createInstanceUnderTest().calculateScoreForAttempt(gameScoreKeeper, 0));
 	}
 
 	@Test
-	public void whenCalculateScoreForAttemptSecondAttemptOfTwoFailuresInSuccession() {
+	public void testCalculateScoreForAttemptSecondAttemptOfTwoFailuresInSuccession() {
 		GameScoreKeeper gameScoreKeeper = createGameScoreKeeper(new Attempt(Ball.NORMALI, false), new Attempt(
 				Ball.BASKI, false));
 		assertEquals(0, createInstanceUnderTest().calculateScoreForAttempt(gameScoreKeeper, 1));

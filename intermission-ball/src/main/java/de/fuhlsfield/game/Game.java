@@ -109,7 +109,7 @@ public class Game {
 
 	private boolean isSeasonFinished() {
 		return !getPlayers().isEmpty()
-				&& (this.seasonScoreKeepers.get(getPlayers().get(0)).getNumberOfGameScores() >= this.numberOfGames);
+				&& (this.seasonScoreKeepers.get(getPlayers().get(0)).getNumberOfGameScoreKeepers() >= this.numberOfGames);
 	}
 
 	private void upateBallRuleCheckStates() {
