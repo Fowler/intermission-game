@@ -7,7 +7,7 @@ import org.junit.Test;
 import de.fuhlsfield.game.Attempt;
 import de.fuhlsfield.game.Ball;
 
-public class StandardScoreCalculatorTest extends AbstractScoreCalculatorTest<StandardScoreCalculator> {
+public class StandardGameScoreCalculatorTest extends AbstractGameScoreCalculatorTest<StandardGameScoreCalculator> {
 
 	@Test
 	public void whenCalculateScoreForGamescoreKeeperWithTwoFailurenInSuccession() {
@@ -30,8 +30,8 @@ public class StandardScoreCalculatorTest extends AbstractScoreCalculatorTest<Sta
 	}
 
 	@Override
-	protected StandardScoreCalculator createInstanceUnderTest() {
-		return new StandardScoreCalculator(this.ballValueMapper);
+	protected StandardGameScoreCalculator createInstanceUnderTest() {
+		return new StandardGameScoreCalculator(this.ballValueMapper);
 	}
 
 }

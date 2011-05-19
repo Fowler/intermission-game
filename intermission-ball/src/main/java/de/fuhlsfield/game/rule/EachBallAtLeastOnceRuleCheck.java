@@ -5,15 +5,15 @@ import java.util.List;
 
 import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.score.GameScoreKeeper;
-import de.fuhlsfield.game.score.ScoreCalculator;
+import de.fuhlsfield.game.score.GameScoreCalculator;
 
 public class EachBallAtLeastOnceRuleCheck implements RuleCheck {
 
 	private final List<Ball> balls;
 	private final int targetPoints;
-	private final ScoreCalculator scoreCalculator;
+	private final GameScoreCalculator scoreCalculator;
 
-	public EachBallAtLeastOnceRuleCheck(List<Ball> balls, int targetPoints, ScoreCalculator scoreCalculator) {
+	public EachBallAtLeastOnceRuleCheck(List<Ball> balls, int targetPoints, GameScoreCalculator scoreCalculator) {
 		this.balls = balls;
 		this.targetPoints = targetPoints;
 		this.scoreCalculator = scoreCalculator;

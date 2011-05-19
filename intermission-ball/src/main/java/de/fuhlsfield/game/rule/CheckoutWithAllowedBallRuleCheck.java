@@ -5,15 +5,15 @@ import java.util.List;
 
 import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.score.GameScoreKeeper;
-import de.fuhlsfield.game.score.ScoreCalculator;
+import de.fuhlsfield.game.score.GameScoreCalculator;
 
 public class CheckoutWithAllowedBallRuleCheck implements RuleCheck {
 
 	private final List<Ball> allowedBalls;
 	private final int targetPoints;
-	private final ScoreCalculator scoreCalculator;
+	private final GameScoreCalculator scoreCalculator;
 
-	public CheckoutWithAllowedBallRuleCheck(List<Ball> allowedBalls, int targetPoints, ScoreCalculator scoreCalculator) {
+	public CheckoutWithAllowedBallRuleCheck(List<Ball> allowedBalls, int targetPoints, GameScoreCalculator scoreCalculator) {
 		this.allowedBalls = allowedBalls;
 		this.targetPoints = targetPoints;
 		this.scoreCalculator = scoreCalculator;

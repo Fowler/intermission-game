@@ -5,14 +5,14 @@ import java.util.List;
 
 import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.score.GameScoreKeeper;
-import de.fuhlsfield.game.score.ScoreCalculator;
+import de.fuhlsfield.game.score.GameScoreCalculator;
 
 public class ExactCheckoutRuleCheck implements RuleCheck {
 
 	private final int targetPoints;
-	private final ScoreCalculator scoreCalculator;
+	private final GameScoreCalculator scoreCalculator;
 
-	public ExactCheckoutRuleCheck(int targetPoints, ScoreCalculator scoreCalculator) {
+	public ExactCheckoutRuleCheck(int targetPoints, GameScoreCalculator scoreCalculator) {
 		this.targetPoints = targetPoints;
 		this.scoreCalculator = scoreCalculator;
 	}

@@ -5,11 +5,11 @@ import java.util.List;
 import de.fuhlsfield.game.Attempt;
 import de.fuhlsfield.game.Ball;
 
-public class StandardScoreCalculator implements ScoreCalculator {
+public class StandardGameScoreCalculator implements GameScoreCalculator {
 
 	protected final BallValueMapper ballValueMapper;
 
-	public StandardScoreCalculator(BallValueMapper ballValueMapper) {
+	public StandardGameScoreCalculator(BallValueMapper ballValueMapper) {
 		this.ballValueMapper = ballValueMapper;
 	}
 
@@ -37,22 +37,10 @@ public class StandardScoreCalculator implements ScoreCalculator {
 	}
 
 	@Override
-	public final int calculateScore(SeasonScoreKeeper seasonScoreKeeper, int index) {
-		if (index < seasonScoreKeeper.getGameScoreKeepers().size()) {
-			int score = 0;
-			for (int i = 0; i <= index; i++) {
-				score += calculateScore(seasonScoreKeeper.getGameScoreKeepers().get(i));
-			}
-			return score;
-		}
-		return ScoreCalculator.UNDEFINED_SCORE;
-	}
-
-	@Override
 	public int calculateScoreForAttempt(GameScoreKeeper gameScoreKeeper, int index) {
 		Attempt attempt = gameScoreKeeper.getIndexed(index);
 		if (attempt == null) {
-			return ScoreCalculator.UNDEFINED_SCORE;
+			return ScoreConstants.UNDEFINED_SCORE;
 		}
 		if (attempt.isSuccessful()) {
 			return this.ballValueMapper.getValue(attempt.getBall());

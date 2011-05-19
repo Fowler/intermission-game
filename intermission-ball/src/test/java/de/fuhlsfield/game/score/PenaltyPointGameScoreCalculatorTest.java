@@ -7,7 +7,7 @@ import org.junit.Test;
 import de.fuhlsfield.game.Attempt;
 import de.fuhlsfield.game.Ball;
 
-public class PenaltyPointScoreCalculatorTest extends AbstractScoreCalculatorTest<PenaltyPointScoreCalculator> {
+public class PenaltyPointGameScoreCalculatorTest extends AbstractGameScoreCalculatorTest<PenaltyPointGameScoreCalculator> {
 
 	@Test
 	public void whenCalculateScoreForGamescoreKeeperWithTwoFailuresInSuccession() {
@@ -67,8 +67,8 @@ public class PenaltyPointScoreCalculatorTest extends AbstractScoreCalculatorTest
 	}
 
 	@Override
-	protected PenaltyPointScoreCalculator createInstanceUnderTest() {
-		return new PenaltyPointScoreCalculator(this.ballValueMapper);
+	protected PenaltyPointGameScoreCalculator createInstanceUnderTest() {
+		return new PenaltyPointGameScoreCalculator(this.ballValueMapper);
 	}
 
 }

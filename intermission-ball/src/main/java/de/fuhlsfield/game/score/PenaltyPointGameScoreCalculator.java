@@ -2,11 +2,11 @@ package de.fuhlsfield.game.score;
 
 import de.fuhlsfield.game.Attempt;
 
-public class PenaltyPointScoreCalculator extends StandardScoreCalculator {
+public class PenaltyPointGameScoreCalculator extends StandardGameScoreCalculator {
 
 	private final static int PENALTY_POINTS = 1;
 
-	public PenaltyPointScoreCalculator(BallValueMapper ballValueMapper) {
+	public PenaltyPointGameScoreCalculator(BallValueMapper ballValueMapper) {
 		super(ballValueMapper);
 	}
 
@@ -14,7 +14,7 @@ public class PenaltyPointScoreCalculator extends StandardScoreCalculator {
 	public int calculateScoreForAttempt(GameScoreKeeper gameScoreKeeper, int index) {
 		Attempt lastAttempt = gameScoreKeeper.getIndexed(index);
 		if (lastAttempt == null) {
-			return ScoreCalculator.UNDEFINED_SCORE;
+			return ScoreConstants.UNDEFINED_SCORE;
 		}
 		if (lastAttempt.isSuccessful()) {
 			return this.ballValueMapper.getValue(lastAttempt.getBall());

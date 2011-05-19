@@ -7,8 +7,8 @@ import de.fuhlsfield.game.rule.EachBallAtLeastOnceRuleCheck;
 import de.fuhlsfield.game.rule.ExactCheckoutRuleCheck;
 import de.fuhlsfield.game.rule.RuleCheck;
 import de.fuhlsfield.game.score.BallValueMapper;
-import de.fuhlsfield.game.score.ScoreCalculator;
-import de.fuhlsfield.game.score.StandardScoreCalculator;
+import de.fuhlsfield.game.score.GameScoreCalculator;
+import de.fuhlsfield.game.score.StandardGameScoreCalculator;
 
 public class FiveBallsGameConfig implements GameConfig {
 
@@ -21,8 +21,8 @@ public class FiveBallsGameConfig implements GameConfig {
 	}
 
 	@Override
-	public ScoreCalculator getScoreCalculator() {
-		return new StandardScoreCalculator(getBallValueMapper());
+	public GameScoreCalculator getScoreCalculator() {
+		return new StandardGameScoreCalculator(getBallValueMapper());
 	}
 
 	@Override

@@ -8,8 +8,8 @@ import de.fuhlsfield.game.rule.EachBallAtLeastOnceRuleCheck;
 import de.fuhlsfield.game.rule.ExactCheckoutRuleCheck;
 import de.fuhlsfield.game.rule.RuleCheck;
 import de.fuhlsfield.game.score.BallValueMapper;
-import de.fuhlsfield.game.score.PenaltyPointScoreCalculator;
-import de.fuhlsfield.game.score.ScoreCalculator;
+import de.fuhlsfield.game.score.PenaltyPointGameScoreCalculator;
+import de.fuhlsfield.game.score.GameScoreCalculator;
 
 public class SixBallsGameConfig implements GameConfig {
 
@@ -22,8 +22,8 @@ public class SixBallsGameConfig implements GameConfig {
 	}
 
 	@Override
-	public ScoreCalculator getScoreCalculator() {
-		return new PenaltyPointScoreCalculator(getBallValueMapper());
+	public GameScoreCalculator getScoreCalculator() {
+		return new PenaltyPointGameScoreCalculator(getBallValueMapper());
 	}
 
 	@Override

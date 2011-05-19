@@ -4,7 +4,7 @@ import java.util.List;
 
 import de.fuhlsfield.game.rule.RuleCheck;
 import de.fuhlsfield.game.score.BallValueMapper;
-import de.fuhlsfield.game.score.ScoreCalculator;
+import de.fuhlsfield.game.score.GameScoreCalculator;
 
 public interface GameConfig {
 
@@ -12,7 +12,7 @@ public interface GameConfig {
 
 	int getTargetPoints();
 
-	ScoreCalculator getScoreCalculator();
+	GameScoreCalculator getScoreCalculator();
 
 	BallValueMapper getBallValueMapper();
 

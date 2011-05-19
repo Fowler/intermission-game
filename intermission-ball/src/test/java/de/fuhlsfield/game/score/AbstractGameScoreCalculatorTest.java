@@ -12,7 +12,7 @@ import org.junit.Test;
 import de.fuhlsfield.game.Attempt;
 import de.fuhlsfield.game.Ball;
 
-public abstract class AbstractScoreCalculatorTest<T extends ScoreCalculator> {
+public abstract class AbstractGameScoreCalculatorTest<T extends GameScoreCalculator> {
 
 	protected final BallValueMapper ballValueMapper = mock(BallValueMapper.class);
 
@@ -50,36 +50,6 @@ public abstract class AbstractScoreCalculatorTest<T extends ScoreCalculator> {
 	}
 
 	@Test
-	public void whenCalculateForSeasonScoreKeeperFirstGame() {
-		SeasonScoreKeeper seasonScoreKeeper = new SeasonScoreKeeper();
-		seasonScoreKeeper.addGameScoreKeeper(createGameScoreKeeper(new Attempt(Ball.NORMALI, true), new Attempt(
-				Ball.BASKI, false), new Attempt(Ball.SCHWAMMI, true)));
-		seasonScoreKeeper.addGameScoreKeeper(createGameScoreKeeper(new Attempt(Ball.BASKI, true), new Attempt(
-				Ball.SCHWAMMI, false), new Attempt(Ball.TISCHI_BALLI, true)));
-		seasonScoreKeeper.addGameScoreKeeper(createGameScoreKeeper(new Attempt(Ball.SCHWAMMI, true), new Attempt(
-				Ball.TISCHI_BALLI, false), new Attempt(Ball.NORMALI, true)));
-		assertEquals(8, createInstanceUnderTest().calculateScore(seasonScoreKeeper, 0));
-	}
-
-	@Test
-	public void whenCalculateForSeasonScoreKeeperLastGame() {
-		SeasonScoreKeeper seasonScoreKeeper = new SeasonScoreKeeper();
-		seasonScoreKeeper.addGameScoreKeeper(createGameScoreKeeper(new Attempt(Ball.NORMALI, true), new Attempt(
-				Ball.BASKI, false), new Attempt(Ball.SCHWAMMI, true)));
-		seasonScoreKeeper.addGameScoreKeeper(createGameScoreKeeper(new Attempt(Ball.BASKI, true), new Attempt(
-				Ball.SCHWAMMI, false), new Attempt(Ball.TISCHI_BALLI, true)));
-		seasonScoreKeeper.addGameScoreKeeper(createGameScoreKeeper(new Attempt(Ball.SCHWAMMI, true), new Attempt(
-				Ball.TISCHI_BALLI, false), new Attempt(Ball.NORMALI, true)));
-		assertEquals(32, createInstanceUnderTest().calculateScore(seasonScoreKeeper, 2));
-	}
-
-	@Test
-	public void whenCalculateForSeasonScoreKeeperAfterLastGame() {
-		SeasonScoreKeeper seasonScoreKeeper = new SeasonScoreKeeper();
-		assertEquals(ScoreCalculator.UNDEFINED_SCORE, createInstanceUnderTest().calculateScore(seasonScoreKeeper, 0));
-	}
-
-	@Test
 	public void whenCalculateScoreForAttemptFirstAttempt() {
 		GameScoreKeeper gameScoreKeeper = createGameScoreKeeper(new Attempt(Ball.NORMALI, true));
 		assertEquals(1, createInstanceUnderTest().calculateScoreForAttempt(gameScoreKeeper, 0));
@@ -95,7 +65,7 @@ public abstract class AbstractScoreCalculatorTest<T extends ScoreCalculator> {
 	@Test
 	public void whenCalculateScoreForAttemptAfterLastAttempt() {
 		GameScoreKeeper gameScoreKeeper = createGameScoreKeeper();
-		assertEquals(ScoreCalculator.UNDEFINED_SCORE, createInstanceUnderTest().calculateScoreForAttempt(
+		assertEquals(ScoreConstants.UNDEFINED_SCORE, createInstanceUnderTest().calculateScoreForAttempt(
 				gameScoreKeeper, 0));
 	}
 
