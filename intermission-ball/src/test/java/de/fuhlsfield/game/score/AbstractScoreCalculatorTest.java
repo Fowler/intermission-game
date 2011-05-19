@@ -81,8 +81,7 @@ public abstract class AbstractScoreCalculatorTest<T extends ScoreCalculator> {
 
 	@Test
 	public void whenCalculateScoreForAttemptFirstAttempt() {
-		GameScoreKeeper gameScoreKeeper = createGameScoreKeeper(new Attempt(Ball.NORMALI, true), new Attempt(
-				Ball.BASKI, false), new Attempt(Ball.SCHWAMMI, true));
+		GameScoreKeeper gameScoreKeeper = createGameScoreKeeper(new Attempt(Ball.NORMALI, true));
 		assertEquals(1, createInstanceUnderTest().calculateScoreForAttempt(gameScoreKeeper, 0));
 	}
 

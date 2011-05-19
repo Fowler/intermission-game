@@ -16,6 +16,19 @@ public class StandardScoreCalculatorTest extends AbstractScoreCalculatorTest<Sta
 		assertEquals(8, createInstanceUnderTest().calculateScore(gameScoreKeeper));
 	}
 
+	@Test
+	public void whenCalculateScoreForAttemptFirstAttemptFailure() {
+		GameScoreKeeper gameScoreKeeper = createGameScoreKeeper(new Attempt(Ball.NORMALI, false));
+		assertEquals(0, createInstanceUnderTest().calculateScoreForAttempt(gameScoreKeeper, 0));
+	}
+
+	@Test
+	public void whenCalculateScoreForAttemptSecondAttemptOfTwoFailuresInSuccession() {
+		GameScoreKeeper gameScoreKeeper = createGameScoreKeeper(new Attempt(Ball.NORMALI, false), new Attempt(
+				Ball.BASKI, false));
+		assertEquals(0, createInstanceUnderTest().calculateScoreForAttempt(gameScoreKeeper, 1));
+	}
+
 	@Override
 	protected StandardScoreCalculator createInstanceUnderTest() {
 		return new StandardScoreCalculator(this.ballValueMapper);

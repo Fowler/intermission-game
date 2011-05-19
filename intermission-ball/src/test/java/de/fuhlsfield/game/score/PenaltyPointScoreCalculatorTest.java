@@ -39,6 +39,33 @@ public class PenaltyPointScoreCalculatorTest extends AbstractScoreCalculatorTest
 		assertEquals(10, createInstanceUnderTest().calculateScore(gameScoreKeeper));
 	}
 
+	@Test
+	public void whenCalculateScoreForAttemptFirstAttemptFailure() {
+		GameScoreKeeper gameScoreKeeper = createGameScoreKeeper(new Attempt(Ball.NORMALI, false));
+		assertEquals(0, createInstanceUnderTest().calculateScoreForAttempt(gameScoreKeeper, 0));
+	}
+
+	@Test
+	public void whenCalculateScoreForAttemptSecondAttemptOfTwoFailuresInSuccession() {
+		GameScoreKeeper gameScoreKeeper = createGameScoreKeeper(new Attempt(Ball.NORMALI, false), new Attempt(
+				Ball.BASKI, false));
+		assertEquals(-1, createInstanceUnderTest().calculateScoreForAttempt(gameScoreKeeper, 1));
+	}
+
+	@Test
+	public void whenCalculateScoreForAttemptThirdAttemptOfThirdFailuresInSuccession() {
+		GameScoreKeeper gameScoreKeeper = createGameScoreKeeper(new Attempt(Ball.NORMALI, false), new Attempt(
+				Ball.BASKI, false), new Attempt(Ball.SCHWAMMI, false));
+		assertEquals(0, createInstanceUnderTest().calculateScoreForAttempt(gameScoreKeeper, 2));
+	}
+
+	@Test
+	public void whenCalculateScoreForAttemptThirdAttemptFailurePreviousAttemptSuccess() {
+		GameScoreKeeper gameScoreKeeper = createGameScoreKeeper(new Attempt(Ball.NORMALI, false), new Attempt(
+				Ball.BASKI, true), new Attempt(Ball.SCHWAMMI, false));
+		assertEquals(0, createInstanceUnderTest().calculateScoreForAttempt(gameScoreKeeper, 2));
+	}
+
 	@Override
 	protected PenaltyPointScoreCalculator createInstanceUnderTest() {
 		return new PenaltyPointScoreCalculator(this.ballValueMapper);
