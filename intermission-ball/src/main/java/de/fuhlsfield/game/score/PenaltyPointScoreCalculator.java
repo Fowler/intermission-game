@@ -11,23 +11,24 @@ public class PenaltyPointScoreCalculator extends StandardScoreCalculator {
 	}
 
 	@Override
-	public int calculateScore(GameScoreKeeper gameScoreKeeper) {
-		int score = super.calculateScore(gameScoreKeeper);
-		boolean lastAttemptFails = false;
-		for (int i = 0; i <= gameScoreKeeper.getIndexOfLastAttempt(); i++) {
-			Attempt attemptResult = gameScoreKeeper.getIndexed(i);
-			if (!attemptResult.isSuccessful()) {
-				if (lastAttemptFails) {
-					score -= PENALTY_POINTS;
-					lastAttemptFails = false;
-				} else {
-					lastAttemptFails = true;
-				}
+	public int calculateScoreForAttempt(GameScoreKeeper gameScoreKeeper, int index) {
+		Attempt lastAttempt = gameScoreKeeper.getIndexed(index);
+		if (lastAttempt.isSuccessful()) {
+			return this.ballValueMapper.getValue(lastAttempt.getBall());
+		}
+		boolean isAttemptBeforeSuccessfulOrPenalty = true;
+		for (int i = 0; i < index; i++) {
+			Attempt attemptBefore = gameScoreKeeper.getIndexed(i);
+			if (attemptBefore.isSuccessful()) {
+				isAttemptBeforeSuccessfulOrPenalty = true;
 			} else {
-				lastAttemptFails = false;
+				isAttemptBeforeSuccessfulOrPenalty = !isAttemptBeforeSuccessfulOrPenalty;
 			}
 		}
-		return score;
+		if (isAttemptBeforeSuccessfulOrPenalty) {
+			return 0;
+		}
+		return -PENALTY_POINTS;
 	}
 
 }

@@ -2,6 +2,7 @@ package de.fuhlsfield.ui;
 
 import de.fuhlsfield.game.Game;
 import de.fuhlsfield.game.Player;
+import de.fuhlsfield.game.score.ScoreCalculator;
 import de.fuhlsfield.game.score.SeasonScoreKeeper;
 
 public class SeasonScoreTableModel extends AbstractScoreTabelModel {
@@ -31,10 +32,11 @@ public class SeasonScoreTableModel extends AbstractScoreTabelModel {
 			return rowIndex + 1;
 		}
 		SeasonScoreKeeper seasonScoreKeeper = this.game.getSeasonScoreKeeper(getPlayer(columnIndex - 1));
-		if (rowIndex < seasonScoreKeeper.getGameScoreKeepers().size()) {
-			return this.game.getGameConfig().getScoreCalculator().calculateScore(seasonScoreKeeper, rowIndex);
+		int score = this.game.getGameConfig().getScoreCalculator().calculateScore(seasonScoreKeeper, rowIndex);
+		if (score == ScoreCalculator.UNDEFINED_SCORE) {
+			return null;
 		}
-		return null;
+		return score;
 	}
 
 	@Override

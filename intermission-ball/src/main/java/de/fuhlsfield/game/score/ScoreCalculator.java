@@ -6,14 +6,16 @@ import de.fuhlsfield.game.Ball;
 
 public interface ScoreCalculator {
 
-	int calculateScore(GameScoreKeeper gameScoreKeeper);
+	public static int UNDEFINED_SCORE = Integer.MIN_VALUE;
 
-	int calculateScore(GameScoreKeeper gameScoreKeeper, int index);
+	int calculateScore(GameScoreKeeper gameScoreKeeper);
 
 	int calculateScore(List<Ball> balls);
 
 	int calculateScore(GameScoreKeeper gameScoreKeeper, List<Ball> balls);
 
 	int calculateScore(SeasonScoreKeeper seasonScoreKeeper, int index);
+
+	int calculateScoreForAttempt(GameScoreKeeper gameScoreKeeper, int index);
 
 }

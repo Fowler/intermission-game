@@ -1,6 +1,5 @@
 package de.fuhlsfield.game.score;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.fuhlsfield.game.Attempt;
@@ -16,19 +15,11 @@ public class StandardScoreCalculator implements ScoreCalculator {
 
 	@Override
 	public int calculateScore(GameScoreKeeper gameScoreKeeper) {
-		return calculateScore(gameScoreKeeper, gameScoreKeeper.getIndexOfLastAttempt());
-	}
-
-	@Override
-	public int calculateScore(GameScoreKeeper gameScoreKeeper, int index) {
-		ArrayList<Ball> balls = new ArrayList<Ball>();
-		for (int i = 0; i <= index; i++) {
-			Attempt attempt = gameScoreKeeper.getIndexed(i);
-			if (attempt.isSuccessful()) {
-				balls.add(attempt.getBall());
-			}
+		int score = 0;
+		for (int i = 0; i <= gameScoreKeeper.getIndexOfLastAttempt(); i++) {
+			score += calculateScoreForAttempt(gameScoreKeeper, i);
 		}
-		return calculateScore(balls);
+		return score;
 	}
 
 	@Override
@@ -47,11 +38,26 @@ public class StandardScoreCalculator implements ScoreCalculator {
 
 	@Override
 	public int calculateScore(SeasonScoreKeeper seasonScoreKeeper, int index) {
-		int score = 0;
-		for (int i = 0; i <= index; i++) {
-			score += calculateScore(seasonScoreKeeper.getGameScoreKeepers().get(i));
+		if (index < seasonScoreKeeper.getGameScoreKeepers().size()) {
+			int score = 0;
+			for (int i = 0; i <= index; i++) {
+				score += calculateScore(seasonScoreKeeper.getGameScoreKeepers().get(i));
+			}
+			return score;
 		}
-		return score;
+		return ScoreCalculator.UNDEFINED_SCORE;
+	}
+
+	@Override
+	public int calculateScoreForAttempt(GameScoreKeeper gameScoreKeeper, int index) {
+		Attempt attempt = gameScoreKeeper.getIndexed(index);
+		if (attempt == null) {
+			return ScoreCalculator.UNDEFINED_SCORE;
+		}
+		if (attempt.isSuccessful()) {
+			return this.ballValueMapper.getValue(attempt.getBall());
+		}
+		return 0;
 	}
 
 }
