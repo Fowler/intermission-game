@@ -15,17 +15,6 @@ public class SeasonScoreKeeper {
 		this.gameScoreKeepers.add(gameScoreKeeper);
 	}
 
-	public Integer calculateScore(int index) {
-		if (index < this.gameScoreKeepers.size()) {
-			int score = 0;
-			for (int i = 0; i <= index; i++) {
-				score += this.gameScoreKeepers.get(i).calculateScore();
-			}
-			return score;
-		}
-		return null;
-	}
-
 	public int getNumberOfGameScores() {
 		return this.gameScoreKeepers.size();
 	}

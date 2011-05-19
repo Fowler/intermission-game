@@ -9,11 +9,9 @@ import de.fuhlsfield.game.Ball;
 public class GameScoreKeeper {
 
 	private final List<Attempt> attempts;
-	private final ScoreCalculator scoreCalculator;
 
-	public GameScoreKeeper(ScoreCalculator scoreCalculator) {
+	public GameScoreKeeper() {
 		this.attempts = new ArrayList<Attempt>();
-		this.scoreCalculator = scoreCalculator;
 	}
 
 	public void addAttempt(Attempt attempt) {
@@ -53,14 +51,6 @@ public class GameScoreKeeper {
 			}
 		}
 		return successfulAttempts;
-	}
-
-	public int calculateScore() {
-		return this.scoreCalculator.calculateScore(this);
-	}
-
-	public int forecastScore(List<Ball> balls) {
-		return this.scoreCalculator.calculateScore(this, balls);
 	}
 
 	public List<Attempt> getAttempts() {

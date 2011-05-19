@@ -28,7 +28,7 @@ public class Game {
 		this.players = Arrays.asList(players);
 		this.ruleChecker = new RuleChecker(this, gameConfig.getRuleChecks());
 		for (Player player : this.players) {
-			this.gameScoreKeepers.put(player, new GameScoreKeeper(gameConfig.getScoreCalculator()));
+			this.gameScoreKeepers.put(player, new GameScoreKeeper());
 			this.seasonScoreKeepers.put(player, new SeasonScoreKeeper());
 		}
 		upateBallRuleCheckStates();
@@ -88,7 +88,7 @@ public class Game {
 		if (!isSeasonFinished() && isGameFinished()) {
 			for (Player player : this.players) {
 				this.seasonScoreKeepers.get(player).addGameScoreKeeper(this.gameScoreKeepers.get(player));
-				this.gameScoreKeepers.put(player, new GameScoreKeeper(this.gameConfig.getScoreCalculator()));
+				this.gameScoreKeepers.put(player, new GameScoreKeeper());
 				upateBallRuleCheckStates();
 			}
 		}

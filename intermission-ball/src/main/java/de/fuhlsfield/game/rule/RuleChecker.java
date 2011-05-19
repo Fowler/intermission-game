@@ -26,7 +26,8 @@ public class RuleChecker {
 
 	public RuleCheckState determineRuleCheckState(Ball ball, Player player) {
 		GameScoreKeeper gameScoreKeeper = this.game.getGameScoreKeeper(player);
-		int remainingPoints = this.game.getTargetPoints() - gameScoreKeeper.calculateScore()
+		int remainingPoints = this.game.getTargetPoints()
+				- this.game.getGameConfig().getScoreCalculator().calculateScore(gameScoreKeeper)
 				- this.game.getBallValue(ball);
 		if (remainingPoints >= sumAllBallValues()) {
 			if (gameScoreKeeper.getSuccessfulAttempts().contains(ball)) {
@@ -72,7 +73,8 @@ public class RuleChecker {
 		resultPossibleBallsLeft.add(possibleBallsLeft);
 		int numberOfAttempts = gameScoreKeeper.getIndexOfLastAttempt() + 1 + possibleBallsLeft.size();
 		if ((numberOfAttempts < this.game.getMaxAttempts())
-				&& (gameScoreKeeper.forecastScore(possibleBallsLeft) < this.game.getTargetPoints())) {
+				&& (this.game.getGameConfig().getScoreCalculator().calculateScore(gameScoreKeeper, possibleBallsLeft) < this.game
+						.getTargetPoints())) {
 			resultPossibleBallsLeft.remove(possibleBallsLeft);
 			for (Ball ball : this.game.getBalls()) {
 				if ((possibleBallsLeft.size() == 1)
@@ -105,7 +107,8 @@ public class RuleChecker {
 	private int calculateMaxAttempts() {
 		for (Player player : this.game.getPlayers()) {
 			GameScoreKeeper gameScoreKeeper = this.game.getGameScoreKeeper(player);
-			if (gameScoreKeeper.calculateScore() >= this.game.getTargetPoints()) {
+			if (this.game.getGameConfig().getScoreCalculator().calculateScore(gameScoreKeeper) >= this.game
+					.getTargetPoints()) {
 				return gameScoreKeeper.getIndexOfLastAttempt() + 1;
 			}
 		}
