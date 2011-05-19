@@ -14,7 +14,7 @@ public class StandardScoreCalculator implements ScoreCalculator {
 	}
 
 	@Override
-	public int calculateScore(GameScoreKeeper gameScoreKeeper) {
+	public final int calculateScore(GameScoreKeeper gameScoreKeeper) {
 		int score = 0;
 		for (int i = 0; i <= gameScoreKeeper.getIndexOfLastAttempt(); i++) {
 			score += calculateScoreForAttempt(gameScoreKeeper, i);
@@ -23,7 +23,7 @@ public class StandardScoreCalculator implements ScoreCalculator {
 	}
 
 	@Override
-	public int calculateScore(List<Ball> balls) {
+	public final int calculateScore(List<Ball> balls) {
 		int score = 0;
 		for (Ball ball : balls) {
 			score += this.ballValueMapper.getValue(ball);
@@ -32,12 +32,12 @@ public class StandardScoreCalculator implements ScoreCalculator {
 	}
 
 	@Override
-	public int calculateScore(GameScoreKeeper gameScoreKeeper, List<Ball> balls) {
+	public final int calculateScore(GameScoreKeeper gameScoreKeeper, List<Ball> balls) {
 		return calculateScore(gameScoreKeeper) + calculateScore(balls);
 	}
 
 	@Override
-	public int calculateScore(SeasonScoreKeeper seasonScoreKeeper, int index) {
+	public final int calculateScore(SeasonScoreKeeper seasonScoreKeeper, int index) {
 		if (index < seasonScoreKeeper.getGameScoreKeepers().size()) {
 			int score = 0;
 			for (int i = 0; i <= index; i++) {

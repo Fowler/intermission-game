@@ -13,6 +13,9 @@ public class PenaltyPointScoreCalculator extends StandardScoreCalculator {
 	@Override
 	public int calculateScoreForAttempt(GameScoreKeeper gameScoreKeeper, int index) {
 		Attempt lastAttempt = gameScoreKeeper.getIndexed(index);
+		if (lastAttempt == null) {
+			return ScoreCalculator.UNDEFINED_SCORE;
+		}
 		if (lastAttempt.isSuccessful()) {
 			return this.ballValueMapper.getValue(lastAttempt.getBall());
 		}
