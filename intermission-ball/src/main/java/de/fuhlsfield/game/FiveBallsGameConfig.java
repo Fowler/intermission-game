@@ -39,11 +39,11 @@ public class FiveBallsGameConfig implements GameConfig {
 	@Override
 	public BallValueMapper getBallValueMapper() {
 		BallValueMapper ballValueMapper = new BallValueMapper();
-		ballValueMapper.add(Ball.BUNTI, 2);
-		ballValueMapper.add(Ball.FROESCHI, 2);
-		ballValueMapper.add(Ball.BASKI, 3);
-		ballValueMapper.add(Ball.SCHWAMMI, 3);
-		ballValueMapper.add(Ball.TISCHI_BALLI, 4);
+		ballValueMapper.addBall(Ball.BUNTI, 2);
+		ballValueMapper.addBall(Ball.FROESCHI, 2);
+		ballValueMapper.addBall(Ball.BASKI, 3);
+		ballValueMapper.addBall(Ball.SCHWAMMI, 3);
+		ballValueMapper.addBall(Ball.TISCHI_BALLI, 4);
 		return ballValueMapper;
 	}
 

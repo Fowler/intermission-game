@@ -1,49 +1,35 @@
 package de.fuhlsfield.game.score;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import de.fuhlsfield.game.Ball;
 
 public class BallValueMapper {
 
-	private class BallValue {
+	private final List<Ball> balls = new LinkedList<Ball>();
+	private final Map<Ball, Integer> ballValues = new HashMap<Ball, Integer>();
 
-		private final Ball ball;
-		private final Integer value;
-
-		private BallValue(Ball ball, int value) {
-			this.ball = ball;
-			this.value = value;
+	public void addBall(Ball ball, int value) {
+		if (this.ballValues.containsKey(ball)) {
+			this.balls.remove(ball);
+			this.ballValues.remove(ball);
 		}
-
+		this.balls.add(ball);
+		this.ballValues.put(ball, value);
 	}
 
-	private final List<BallValue> ballValues;
-
-	public BallValueMapper() {
-		this.ballValues = new ArrayList<BallValue>();
-	}
-
-	public void add(Ball ball, int value) {
-		this.ballValues.add(new BallValue(ball, value));
-	}
-
-	public Integer getValue(Ball ball) {
-		for (BallValue ballValue : this.ballValues) {
-			if (ballValue.ball == ball) {
-				return ballValue.value;
-			}
+	public int getValue(Ball ball) {
+		if (this.ballValues.containsKey(ball)) {
+			return this.ballValues.get(ball);
 		}
-		return null;
+		throw new IllegalArgumentException("No Mapping for Ball " + ball + "found!");
 	}
 
 	public List<Ball> getBalls() {
-		ArrayList<Ball> balls = new ArrayList<Ball>();
-		for (BallValue ballValue : this.ballValues) {
-			balls.add(ballValue.ball);
-		}
-		return balls;
+		return this.balls;
 	}
 
 }

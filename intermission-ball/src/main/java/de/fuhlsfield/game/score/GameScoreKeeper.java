@@ -8,14 +8,14 @@ import de.fuhlsfield.game.Ball;
 
 public class GameScoreKeeper {
 
-	private final List<Attempt> attempts;
-
-	public GameScoreKeeper() {
-		this.attempts = new ArrayList<Attempt>();
-	}
+	private final List<Attempt> attempts = new ArrayList<Attempt>();
 
 	public void addAttempt(Attempt attempt) {
 		this.attempts.add(attempt);
+	}
+
+	public List<Attempt> getAttempts() {
+		return this.attempts;
 	}
 
 	public void undoLastAttempt() {
@@ -28,33 +28,24 @@ public class GameScoreKeeper {
 		return this.attempts.size() > 0;
 	}
 
-	public Attempt getIndexed(int index) {
-		if ((index < 0) || (index > getIndexOfLastAttempt())) {
+	public Attempt getAttemptByIndex(int index) {
+		if ((index < 0) || (index >= getNumberOfAttempts())) {
 			return null;
 		}
 		return this.attempts.get(index);
 	}
 
-	public int getIndexOfLastAttempt() {
-		if (this.attempts.isEmpty()) {
-			return -1;
-		}
-		return this.attempts.size() - 1;
+	public int getNumberOfAttempts() {
+		return this.attempts.size();
 	}
 
-	public List<Ball> getSuccessfulAttempts() {
-		ArrayList<Ball> successfulAttempts = new ArrayList<Ball>();
-		for (int i = 0; i <= getIndexOfLastAttempt(); i++) {
-			Attempt attempt = getIndexed(i);
-			if (attempt.isSuccessful()) {
-				successfulAttempts.add(attempt.getBall());
+	public boolean isBallSuccessfulPlayed(Ball ball) {
+		for (Attempt attempt : this.attempts) {
+			if ((attempt.getBall() == ball) && attempt.isSuccessful()) {
+				return true;
 			}
 		}
-		return successfulAttempts;
-	}
-
-	public List<Attempt> getAttempts() {
-		return this.attempts;
+		return false;
 	}
 
 }

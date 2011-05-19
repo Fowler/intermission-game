@@ -29,7 +29,7 @@ public class GameScoreTableModel extends AbstractScoreTabelModel {
 		if (columnIndex == 0) {
 			return rowIndex + 1;
 		}
-		return this.game.getGameScoreKeeper(getPlayer(columnIndex - 1)).getIndexed(rowIndex);
+		return this.game.getGameScoreKeeper(getPlayer(columnIndex - 1)).getAttemptByIndex(rowIndex);
 	}
 
 	@Override

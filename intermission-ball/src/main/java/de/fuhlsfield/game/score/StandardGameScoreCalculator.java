@@ -16,7 +16,7 @@ public class StandardGameScoreCalculator implements GameScoreCalculator {
 	@Override
 	public final int calculateScore(GameScoreKeeper gameScoreKeeper) {
 		int score = 0;
-		for (int i = 0; i <= gameScoreKeeper.getIndexOfLastAttempt(); i++) {
+		for (int i = 0; i < gameScoreKeeper.getNumberOfAttempts(); i++) {
 			score += calculateScoreForAttempt(gameScoreKeeper, i);
 		}
 		return score;
@@ -38,7 +38,7 @@ public class StandardGameScoreCalculator implements GameScoreCalculator {
 
 	@Override
 	public int calculateScoreForAttempt(GameScoreKeeper gameScoreKeeper, int index) {
-		Attempt attempt = gameScoreKeeper.getIndexed(index);
+		Attempt attempt = gameScoreKeeper.getAttemptByIndex(index);
 		if (attempt == null) {
 			return ScoreConstants.UNDEFINED_SCORE;
 		}

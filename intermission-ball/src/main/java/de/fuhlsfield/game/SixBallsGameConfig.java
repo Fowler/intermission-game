@@ -42,12 +42,12 @@ public class SixBallsGameConfig implements GameConfig {
 	@Override
 	public BallValueMapper getBallValueMapper() {
 		BallValueMapper ballValueMapper = new BallValueMapper();
-		ballValueMapper.add(Ball.NORMALI, 1);
-		ballValueMapper.add(Ball.SCHRAEGI, 2);
-		ballValueMapper.add(Ball.BASKI, 3);
-		ballValueMapper.add(Ball.FLUMMI, 4);
-		ballValueMapper.add(Ball.TISCHI_BALLI, 5);
-		ballValueMapper.add(Ball.SCHWAMMI, 6);
+		ballValueMapper.addBall(Ball.NORMALI, 1);
+		ballValueMapper.addBall(Ball.SCHRAEGI, 2);
+		ballValueMapper.addBall(Ball.BASKI, 3);
+		ballValueMapper.addBall(Ball.FLUMMI, 4);
+		ballValueMapper.addBall(Ball.TISCHI_BALLI, 5);
+		ballValueMapper.addBall(Ball.SCHWAMMI, 6);
 		return ballValueMapper;
 	}
 
