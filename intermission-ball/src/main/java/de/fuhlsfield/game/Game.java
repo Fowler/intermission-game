@@ -5,8 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.fuhlsfield.game.rule.PlayerSequenceDeterminer;
 import de.fuhlsfield.game.rule.RuleCheckState;
-import de.fuhlsfield.game.rule.RuleChecker;
+import de.fuhlsfield.game.rule.RuleCheckStateDeterminer;
 import de.fuhlsfield.game.score.GameScoreKeeper;
 import de.fuhlsfield.game.score.SeasonScoreKeeper;
 
@@ -16,7 +17,8 @@ public class Game {
 	private final List<Player> players;
 	private final int maxAttempts;
 	private final int numberOfGames;
-	private final RuleChecker ruleChecker;
+	private final RuleCheckStateDeterminer ruleCheckStateDeterminer;
+	private final PlayerSequenceDeterminer playerSequenceDeterminer;
 	private final Map<Player, GameScoreKeeper> gameScoreKeepers = new HashMap<Player, GameScoreKeeper>();
 	private final Map<Player, SeasonScoreKeeper> seasonScoreKeepers = new HashMap<Player, SeasonScoreKeeper>();
 	private Map<Player, Map<Ball, RuleCheckState>> ballRuleCheckStates = new HashMap<Player, Map<Ball, RuleCheckState>>();
@@ -26,10 +28,13 @@ public class Game {
 		this.maxAttempts = maxAttempts;
 		this.numberOfGames = numberOfGames;
 		this.players = Arrays.asList(players);
-		this.ruleChecker = new RuleChecker(this, gameConfig.getRuleChecks());
+		this.ruleCheckStateDeterminer = new RuleCheckStateDeterminer(gameConfig, maxAttempts);
+		this.playerSequenceDeterminer = new PlayerSequenceDeterminer(gameConfig, maxAttempts);
 		for (Player player : this.players) {
-			this.gameScoreKeepers.put(player, new GameScoreKeeper());
+			GameScoreKeeper gameScoreKeeper = new GameScoreKeeper();
+			this.gameScoreKeepers.put(player, gameScoreKeeper);
 			this.seasonScoreKeepers.put(player, new SeasonScoreKeeper());
+			this.playerSequenceDeterminer.addPlayer(player, gameScoreKeeper);
 		}
 		upateBallRuleCheckStates();
 	}
@@ -75,13 +80,13 @@ public class Game {
 
 	public void undoLastAttempt() {
 		if (isUndoLastAttemptPossible()) {
-			this.gameScoreKeepers.get(this.ruleChecker.determinePreviousPlayer()).undoLastAttempt();
+			this.gameScoreKeepers.get(this.playerSequenceDeterminer.getPreviousPlayer()).undoLastAttempt();
 			upateBallRuleCheckStates();
 		}
 	}
 
 	public boolean isUndoLastAttemptPossible() {
-		return this.gameScoreKeepers.get(this.ruleChecker.determinePreviousPlayer()).isUndoLastAttemptPossible();
+		return this.gameScoreKeepers.get(this.playerSequenceDeterminer.getPreviousPlayer()).isUndoLastAttemptPossible();
 	}
 
 	public void finishGame() {
@@ -99,12 +104,12 @@ public class Game {
 	}
 
 	public boolean isAttemptAllowed(Player player, Ball ball) {
-		return !isSeasonFinished() && this.ruleChecker.isAttemptAllowedPreCheck(ball, player)
+		return !isSeasonFinished() && (this.playerSequenceDeterminer.getNextPlayer() != Player.NO_PLAYER)
 				&& this.ballRuleCheckStates.get(player).get(ball).isAllowed();
 	}
 
 	public boolean isGameFinished() {
-		return this.ruleChecker.isGameFinished();
+		return this.playerSequenceDeterminer.isGameFinished();
 	}
 
 	private boolean isSeasonFinished() {
@@ -115,10 +120,8 @@ public class Game {
 	private void upateBallRuleCheckStates() {
 		this.ballRuleCheckStates = new HashMap<Player, Map<Ball, RuleCheckState>>();
 		for (Player player : this.players) {
-			this.ballRuleCheckStates.put(player, new HashMap<Ball, RuleCheckState>());
-			for (Ball ball : getBalls()) {
-				this.ballRuleCheckStates.get(player).put(ball, this.ruleChecker.determineRuleCheckState(ball, player));
-			}
+			this.ballRuleCheckStates.put(player, this.ruleCheckStateDeterminer
+					.determineRuleCheckStates(getGameScoreKeeper(player)));
 		}
 	}
 
