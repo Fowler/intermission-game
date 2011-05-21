@@ -1,12 +1,13 @@
 package de.fuhlsfield;
 
+
 import java.util.HashMap;
 import java.util.Map;
 
-import de.fuhlsfield.game.FiveBallsGameConfig;
 import de.fuhlsfield.game.Game;
 import de.fuhlsfield.game.Player;
-import de.fuhlsfield.game.SixBallsGameConfig;
+import de.fuhlsfield.gameConfig.FiveBallsGameConfig;
+import de.fuhlsfield.gameConfig.SixBallsGameConfig;
 
 /**
  * Starter for intermission game.

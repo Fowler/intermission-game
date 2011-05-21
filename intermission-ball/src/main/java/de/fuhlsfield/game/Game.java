@@ -1,5 +1,6 @@
 package de.fuhlsfield.game;
 
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -7,9 +8,10 @@ import java.util.Map;
 
 import de.fuhlsfield.game.rule.PlayerSequenceDeterminer;
 import de.fuhlsfield.game.rule.RuleCheckState;
-import de.fuhlsfield.game.rule.RuleCheckStateDeterminer;
+import de.fuhlsfield.game.rule.RuleChecker;
 import de.fuhlsfield.game.score.GameScoreKeeper;
 import de.fuhlsfield.game.score.SeasonScoreKeeper;
+import de.fuhlsfield.gameConfig.GameConfig;
 
 public class Game {
 
@@ -17,7 +19,7 @@ public class Game {
 	private final List<Player> players;
 	private final int maxAttempts;
 	private final int numberOfGames;
-	private final RuleCheckStateDeterminer ruleCheckStateDeterminer;
+	private final RuleChecker ruleChecker;
 	private final PlayerSequenceDeterminer playerSequenceDeterminer;
 	private final Map<Player, GameScoreKeeper> gameScoreKeepers = new HashMap<Player, GameScoreKeeper>();
 	private final Map<Player, SeasonScoreKeeper> seasonScoreKeepers = new HashMap<Player, SeasonScoreKeeper>();
@@ -28,7 +30,7 @@ public class Game {
 		this.maxAttempts = maxAttempts;
 		this.numberOfGames = numberOfGames;
 		this.players = Arrays.asList(players);
-		this.ruleCheckStateDeterminer = new RuleCheckStateDeterminer(gameConfig, maxAttempts);
+		this.ruleChecker = new RuleChecker(gameConfig, maxAttempts);
 		this.playerSequenceDeterminer = new PlayerSequenceDeterminer(gameConfig, maxAttempts);
 		for (Player player : this.players) {
 			GameScoreKeeper gameScoreKeeper = new GameScoreKeeper();
@@ -52,7 +54,7 @@ public class Game {
 	}
 
 	public List<Ball> getBalls() {
-		return this.gameConfig.getBallValueMapper().getBalls();
+		return this.gameConfig.getAllowedBalls();
 	}
 
 	public GameScoreKeeper getGameScoreKeeper(Player player) {
@@ -65,10 +67,6 @@ public class Game {
 
 	public int getTargetPoints() {
 		return this.gameConfig.getTargetPoints();
-	}
-
-	public int getBallValue(Ball ball) {
-		return this.gameConfig.getBallValueMapper().getValue(ball);
 	}
 
 	public void addAttempt(Player player, Attempt attempt) {
@@ -120,8 +118,7 @@ public class Game {
 	private void upateBallRuleCheckStates() {
 		this.ballRuleCheckStates = new HashMap<Player, Map<Ball, RuleCheckState>>();
 		for (Player player : this.players) {
-			this.ballRuleCheckStates.put(player, this.ruleCheckStateDeterminer
-					.determineRuleCheckStates(getGameScoreKeeper(player)));
+			this.ballRuleCheckStates.put(player, this.ruleChecker.determineRuleCheckStates(getGameScoreKeeper(player)));
 		}
 	}
 

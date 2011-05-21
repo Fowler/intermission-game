@@ -1,4 +1,4 @@
-package de.fuhlsfield.game.score;
+package de.fuhlsfield.gameConfig;
 
 import static org.junit.Assert.assertEquals;
 

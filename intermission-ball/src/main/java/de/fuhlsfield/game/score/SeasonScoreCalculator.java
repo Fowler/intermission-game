@@ -9,10 +9,10 @@ public class SeasonScoreCalculator {
 	}
 
 	public int calculateScore(SeasonScoreKeeper seasonScoreKeeper, int index) {
-		if (index < seasonScoreKeeper.getGameScoreKeepers().size()) {
+		if (index < seasonScoreKeeper.getNumberOfGameScoreKeepers()) {
 			int score = 0;
 			for (int i = 0; i <= index; i++) {
-				score += this.gameScoreCalculator.calculateScore(seasonScoreKeeper.getGameScoreKeepers().get(i));
+				score += this.gameScoreCalculator.calculateScore(seasonScoreKeeper.getGameScoreKeeperByIndex(i));
 			}
 			return score;
 		}

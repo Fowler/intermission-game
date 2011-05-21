@@ -1,14 +1,15 @@
 package de.fuhlsfield.game.rule;
 
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import de.fuhlsfield.game.GameConfig;
 import de.fuhlsfield.game.Player;
 import de.fuhlsfield.game.score.GameScoreCalculator;
 import de.fuhlsfield.game.score.GameScoreKeeper;
+import de.fuhlsfield.gameConfig.GameConfig;
 
 public class PlayerSequenceDeterminer {
 
@@ -19,7 +20,7 @@ public class PlayerSequenceDeterminer {
 	private final int maxAttempts;
 
 	public PlayerSequenceDeterminer(GameConfig gameConfig, int maxAttempts) {
-		this.gameScoreCalculator = gameConfig.getScoreCalculator();
+		this.gameScoreCalculator = gameConfig.getGameScoreCalculator();
 		this.targetPoints = gameConfig.getTargetPoints();
 		this.maxAttempts = maxAttempts;
 	}

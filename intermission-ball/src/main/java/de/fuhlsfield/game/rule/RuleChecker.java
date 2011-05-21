@@ -1,40 +1,53 @@
 package de.fuhlsfield.game.rule;
 
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.score.GameScoreCalculator;
 import de.fuhlsfield.game.score.GameScoreKeeper;
+import de.fuhlsfield.gameConfig.GameConfig;
 
 public class RuleChecker {
 
 	private final List<RuleCheck> ruleChecks;
+	private final List<Ball> allowedBalls;
 	private final GameScoreCalculator gameScoreCalculator;
 	private final int targetPoints;
 	private final int maxAttempts;
 
-	public RuleChecker(List<RuleCheck> ruleChecks, GameScoreCalculator gameScoreCalculator, int targetPoints,
-			int maxAttempts) {
-		this.ruleChecks = ruleChecks;
-		this.gameScoreCalculator = gameScoreCalculator;
-		this.targetPoints = targetPoints;
+	public RuleChecker(GameConfig gameConfig, int maxAttempts) {
+		this.ruleChecks = gameConfig.getRuleChecks();
+		this.allowedBalls = gameConfig.getAllowedBalls();
+		this.gameScoreCalculator = gameConfig.getGameScoreCalculator();
+		this.targetPoints = gameConfig.getTargetPoints();
 		this.maxAttempts = maxAttempts;
 
 	}
 
-	public RuleCheckState determineRuleCheckState(Ball ball, GameScoreKeeper gameScoreKeeper, List<Ball> allowedBalls) {
+	public Map<Ball, RuleCheckState> determineRuleCheckStates(GameScoreKeeper gameScoreKeeper) {
+		HashMap<Ball, RuleCheckState> ruleCheckStates = new HashMap<Ball, RuleCheckState>();
+		for (Ball ball : this.allowedBalls) {
+			ruleCheckStates.put(ball, determineRuleCheckState(ball, gameScoreKeeper));
+		}
+		return ruleCheckStates;
+	}
+
+	private RuleCheckState determineRuleCheckState(Ball ball, GameScoreKeeper gameScoreKeeper) {
 		int remainingPoints = this.targetPoints
 				- this.gameScoreCalculator.calculateScore(gameScoreKeeper, Arrays.asList(ball));
-		if (remainingPoints >= sumAllBallValues(allowedBalls)) {
+		if (remainingPoints >= sumAllBallValues(this.allowedBalls)) {
 			if (gameScoreKeeper.isBallSuccessfulPlayed(ball)) {
 				return RuleCheckState.ALLOWED_AND_PLAYED;
 			}
 			return RuleCheckState.ALLOWED;
 		}
 		List<List<Ball>> possibleBallsLeft = determinePossibleBallsLeft(Arrays.asList(ball), gameScoreKeeper,
-				allowedBalls);
+				this.allowedBalls);
 		for (RuleCheck ruleCheck : this.ruleChecks) {
 			possibleBallsLeft = ruleCheck.selectPossibleAttempts(possibleBallsLeft, gameScoreKeeper);
 		}

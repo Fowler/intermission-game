@@ -14,10 +14,6 @@ public class GameScoreKeeper {
 		this.attempts.add(attempt);
 	}
 
-	public List<Attempt> getAttempts() {
-		return this.attempts;
-	}
-
 	public void undoLastAttempt() {
 		if (this.attempts.size() > 0) {
 			this.attempts.remove(this.attempts.size() - 1);
@@ -25,7 +21,7 @@ public class GameScoreKeeper {
 	}
 
 	public Attempt getAttemptByIndex(int index) {
-		if ((index < 0) || (index >= getNumberOfAttempts())) {
+		if ((index < 0) || (index >= this.attempts.size())) {
 			return null;
 		}
 		return this.attempts.get(index);

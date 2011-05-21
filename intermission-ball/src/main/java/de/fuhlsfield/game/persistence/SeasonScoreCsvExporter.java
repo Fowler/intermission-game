@@ -20,28 +20,23 @@ public class SeasonScoreCsvExporter {
 		try {
 			writer = new FileWriter("/tmp/season-scores.csv");
 
-			Map<Player, SeasonScoreKeeper> gameScoreKeepers = game
-					.getSeasonScoreKeepers();
+			Map<Player, SeasonScoreKeeper> gameScoreKeepers = game.getSeasonScoreKeepers();
 
-			for (Map.Entry<Player, SeasonScoreKeeper> keeperValues : gameScoreKeepers
-					.entrySet()) {
+			for (Map.Entry<Player, SeasonScoreKeeper> keeperValues : gameScoreKeepers.entrySet()) {
 
-				for (GameScoreKeeper keeper : keeperValues.getValue()
-						.getGameScoreKeepers()) {
-
+				for (int keeperIndex = 0; keeperIndex < keeperValues.getValue().getNumberOfGameScoreKeepers(); keeperIndex++) {
+					GameScoreKeeper keeper = keeperValues.getValue().getGameScoreKeeperByIndex(keeperIndex);
 					writer.append(keeperValues.getKey().getName());
 					writer.append(SEPARATOR);
 
-					for (Attempt attempt : keeper.getAttempts()) {
+					for (int attemptIndex = 0; attemptIndex < keeper.getNumberOfAttempts(); attemptIndex++) {
+						Attempt attempt = keeper.getAttemptByIndex(attemptIndex);
 
-						writer.append(attempt.isSuccessful() ? attempt
-								.getBall().getName() : "-"
-								+ attempt.getBall().getName());
+						writer.append(attempt.getBall().getName());
 						writer.append(SEPARATOR);
-						Integer valueOfAttept = attempt.isSuccessful() ? game
-								.getGameConfig().getBallValueMapper().getValue(
-										attempt.getBall()) : 0;
-						writer.append(String.valueOf(valueOfAttept));
+						Integer valueOfAttempt = game.getGameConfig().getGameScoreCalculator()
+								.calculateScoreForAttempt(keeper, attemptIndex);
+						writer.append(String.valueOf(valueOfAttempt));
 						writer.append(SEPARATOR);
 					}
 					writer.append(EOL);

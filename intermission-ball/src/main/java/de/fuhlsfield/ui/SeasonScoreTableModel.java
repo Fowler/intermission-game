@@ -33,7 +33,7 @@ public class SeasonScoreTableModel extends AbstractScoreTabelModel {
 			return rowIndex + 1;
 		}
 		SeasonScoreKeeper seasonScoreKeeper = this.game.getSeasonScoreKeeper(getPlayer(columnIndex - 1));
-		int score = new SeasonScoreCalculator(this.game.getGameConfig().getScoreCalculator()).calculateScore(
+		int score = new SeasonScoreCalculator(this.game.getGameConfig().getGameScoreCalculator()).calculateScore(
 				seasonScoreKeeper, rowIndex);
 		if (score == ScoreConstants.UNDEFINED_SCORE) {
 			return null;

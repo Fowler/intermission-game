@@ -19,23 +19,20 @@ public class GameScoreCsvExporter {
 		try {
 			writer = new FileWriter("/tmp/game-scores.csv");
 
-			Map<Player, GameScoreKeeper> gameScoreKeepers = game
-					.getGameScoreKeepers();
+			Map<Player, GameScoreKeeper> gameScoreKeepers = game.getGameScoreKeepers();
 
-			for (Map.Entry<Player, GameScoreKeeper> keeperValues : gameScoreKeepers
-					.entrySet()) {
+			for (Map.Entry<Player, GameScoreKeeper> keeperValues : gameScoreKeepers.entrySet()) {
 				writer.append(keeperValues.getKey().getName());
 				writer.append(SEPARATOR);
 
-				for (Attempt attempt : keeperValues.getValue().getAttempts()) {
+				for (int i = 0; i < keeperValues.getValue().getNumberOfAttempts(); i++) {
+					Attempt attempt = keeperValues.getValue().getAttemptByIndex(i);
 
-					writer.append(attempt.isSuccessful() ? attempt.getBall()
-							.getName() : "-" + attempt.getBall().getName());
+					writer.append(attempt.getBall().getName());
 					writer.append(SEPARATOR);
-					Integer valueOfAttept = attempt.isSuccessful() ? game
-							.getGameConfig().getBallValueMapper().getValue(
-									attempt.getBall()) : 0;
-					writer.append(String.valueOf(valueOfAttept));
+					Integer valueOfAttempt = game.getGameConfig().getGameScoreCalculator().calculateScoreForAttempt(
+							keeperValues.getValue(), i);
+					writer.append(String.valueOf(valueOfAttempt));
 					writer.append(SEPARATOR);
 				}
 

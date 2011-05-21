@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+
 import java.util.LinkedList;
 
 import org.junit.Before;
@@ -11,6 +12,7 @@ import org.junit.Test;
 
 import de.fuhlsfield.game.Attempt;
 import de.fuhlsfield.game.Ball;
+import de.fuhlsfield.gameConfig.BallValueMapper;
 
 public abstract class AbstractGameScoreCalculatorTest<T extends GameScoreCalculator> {
 

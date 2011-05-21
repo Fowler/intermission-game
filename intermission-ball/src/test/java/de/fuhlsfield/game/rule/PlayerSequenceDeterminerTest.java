@@ -9,10 +9,10 @@ import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.fuhlsfield.game.GameConfig;
 import de.fuhlsfield.game.Player;
 import de.fuhlsfield.game.score.GameScoreCalculator;
 import de.fuhlsfield.game.score.GameScoreKeeper;
+import de.fuhlsfield.gameConfig.GameConfig;
 
 public class PlayerSequenceDeterminerTest {
 
@@ -28,7 +28,7 @@ public class PlayerSequenceDeterminerTest {
 
 	@Before
 	public void beforeTest() {
-		when(this.gameConfig.getScoreCalculator()).thenReturn(this.gameScoreCalculator);
+		when(this.gameConfig.getGameScoreCalculator()).thenReturn(this.gameScoreCalculator);
 		when(this.gameConfig.getTargetPoints()).thenReturn(TARGET_POINTS);
 	}
 

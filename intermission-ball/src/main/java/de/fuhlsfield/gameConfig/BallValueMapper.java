@@ -1,4 +1,4 @@
-package de.fuhlsfield.game.score;
+package de.fuhlsfield.gameConfig;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -12,7 +12,14 @@ public class BallValueMapper {
 	private final List<Ball> balls = new LinkedList<Ball>();
 	private final Map<Ball, Integer> ballValues = new HashMap<Ball, Integer>();
 
-	public void addBall(Ball ball, int value) {
+	public int getValue(Ball ball) {
+		if (this.ballValues.containsKey(ball)) {
+			return this.ballValues.get(ball);
+		}
+		throw new IllegalArgumentException("No Mapping for Ball " + ball + "found!");
+	}
+
+	void addBall(Ball ball, int value) {
 		if (this.ballValues.containsKey(ball)) {
 			this.balls.remove(ball);
 			this.ballValues.remove(ball);
@@ -21,14 +28,7 @@ public class BallValueMapper {
 		this.ballValues.put(ball, value);
 	}
 
-	public int getValue(Ball ball) {
-		if (this.ballValues.containsKey(ball)) {
-			return this.ballValues.get(ball);
-		}
-		throw new IllegalArgumentException("No Mapping for Ball " + ball + "found!");
-	}
-
-	public List<Ball> getBalls() {
+	List<Ball> getBalls() {
 		return this.balls;
 	}
 

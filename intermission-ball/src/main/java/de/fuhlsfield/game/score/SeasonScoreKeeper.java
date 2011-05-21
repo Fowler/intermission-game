@@ -15,8 +15,11 @@ public class SeasonScoreKeeper {
 		return this.gameScoreKeepers.size();
 	}
 
-	public List<GameScoreKeeper> getGameScoreKeepers() {
-		return this.gameScoreKeepers;
+	public GameScoreKeeper getGameScoreKeeperByIndex(int index) {
+		if ((index < 0) || (index >= this.gameScoreKeepers.size())) {
+			return null;
+		}
+		return this.gameScoreKeepers.get(index);
 	}
 
 }
