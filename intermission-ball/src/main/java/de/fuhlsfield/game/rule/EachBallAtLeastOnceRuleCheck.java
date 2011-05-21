@@ -20,6 +20,40 @@ public class EachBallAtLeastOnceRuleCheck implements RuleCheck {
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.balls == null) ? 0 : this.balls.hashCode());
+		result = prime * result + ((this.scoreCalculator == null) ? 0 : this.scoreCalculator.hashCode());
+		result = prime * result + this.targetPoints;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		EachBallAtLeastOnceRuleCheck other = (EachBallAtLeastOnceRuleCheck) obj;
+		if (this.balls == null) {
+			if (other.balls != null)
+				return false;
+		} else if (!this.balls.equals(other.balls))
+			return false;
+		if (this.scoreCalculator == null) {
+			if (other.scoreCalculator != null)
+				return false;
+		} else if (!this.scoreCalculator.equals(other.scoreCalculator))
+			return false;
+		if (this.targetPoints != other.targetPoints)
+			return false;
+		return true;
+	}
+
+	@Override
 	public List<List<Ball>> selectPossibleAttempts(List<List<Ball>> possibleBallsLeft, GameScoreKeeper gameScoreKeeper) {
 		ArrayList<List<Ball>> resultPossibleLefts = new ArrayList<List<Ball>>(possibleBallsLeft);
 		for (List<Ball> ballsLeft : possibleBallsLeft) {

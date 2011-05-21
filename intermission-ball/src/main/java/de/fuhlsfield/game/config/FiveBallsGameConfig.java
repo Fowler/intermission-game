@@ -31,20 +31,20 @@ public class FiveBallsGameConfig extends AbstractGameConfig {
 	}
 
 	@Override
-	public Set<RuleCheck> getRuleChecks() {
-		HashSet<RuleCheck> ruleChecks = new HashSet<RuleCheck>();
-		ruleChecks.add(new EachBallAtLeastOnceRuleCheck(getAllowedBalls(), TARGET_POINTS, getGameScoreCalculator()));
-		ruleChecks.add(new ExactCheckoutRuleCheck(TARGET_POINTS, getGameScoreCalculator()));
-		return ruleChecks;
-	}
-
-	@Override
 	protected void addBallValues() {
 		this.ballValueMapper.addBall(Ball.BUNTI, 2);
 		this.ballValueMapper.addBall(Ball.FROESCHI, 2);
 		this.ballValueMapper.addBall(Ball.BASKI, 3);
 		this.ballValueMapper.addBall(Ball.SCHWAMMI, 3);
 		this.ballValueMapper.addBall(Ball.TISCHI_BALLI, 4);
+	}
+
+	@Override
+	protected Set<RuleCheck> createRuleChecks() {
+		HashSet<RuleCheck> ruleChecks = new HashSet<RuleCheck>();
+		ruleChecks.add(new EachBallAtLeastOnceRuleCheck(getAllowedBalls(), TARGET_POINTS, getGameScoreCalculator()));
+		ruleChecks.add(new ExactCheckoutRuleCheck(TARGET_POINTS, getGameScoreCalculator()));
+		return ruleChecks;
 	}
 
 }

@@ -33,16 +33,6 @@ public class SixBallsGameConfig extends AbstractGameConfig {
 	}
 
 	@Override
-	public Set<RuleCheck> getRuleChecks() {
-		HashSet<RuleCheck> ruleChecks = new HashSet<RuleCheck>();
-		ruleChecks.add(new EachBallAtLeastOnceRuleCheck(getAllowedBalls(), TARGET_POINTS, getGameScoreCalculator()));
-		ruleChecks.add(new ExactCheckoutRuleCheck(TARGET_POINTS, getGameScoreCalculator()));
-		ruleChecks.add(new CheckoutWithAllowedBallRuleCheck(Arrays.asList(Ball.SCHRAEGI, Ball.BASKI, Ball.FLUMMI,
-				Ball.TISCHI_BALLI, Ball.SCHWAMMI), TARGET_POINTS, getGameScoreCalculator()));
-		return ruleChecks;
-	}
-
-	@Override
 	protected void addBallValues() {
 		this.ballValueMapper.addBall(Ball.NORMALI, 1);
 		this.ballValueMapper.addBall(Ball.SCHRAEGI, 2);
@@ -50,6 +40,21 @@ public class SixBallsGameConfig extends AbstractGameConfig {
 		this.ballValueMapper.addBall(Ball.FLUMMI, 4);
 		this.ballValueMapper.addBall(Ball.TISCHI_BALLI, 5);
 		this.ballValueMapper.addBall(Ball.SCHWAMMI, 6);
+	}
+
+	@Override
+	protected Set<RuleCheck> createRuleChecks() {
+		HashSet<RuleCheck> ruleChecks = new HashSet<RuleCheck>();
+		ruleChecks.add(new EachBallAtLeastOnceRuleCheck(getAllowedBalls(), TARGET_POINTS, getGameScoreCalculator()));
+		ruleChecks.add(new ExactCheckoutRuleCheck(TARGET_POINTS, getGameScoreCalculator()));
+		ruleChecks.add(new CheckoutWithAllowedBallRuleCheck(createAllowedCheckoutBalls(), TARGET_POINTS,
+				getGameScoreCalculator()));
+		return ruleChecks;
+	}
+
+	private Set<Ball> createAllowedCheckoutBalls() {
+		return new HashSet<Ball>(Arrays
+				.asList(Ball.SCHRAEGI, Ball.BASKI, Ball.FLUMMI, Ball.TISCHI_BALLI, Ball.SCHWAMMI));
 	}
 
 }

@@ -1,6 +1,5 @@
 package de.fuhlsfield.game.score;
 
-
 import java.util.List;
 
 import de.fuhlsfield.game.Attempt;
@@ -13,6 +12,31 @@ public class StandardGameScoreCalculator implements GameScoreCalculator {
 
 	public StandardGameScoreCalculator(BallValueMapper ballValueMapper) {
 		this.ballValueMapper = ballValueMapper;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((this.ballValueMapper == null) ? 0 : this.ballValueMapper.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StandardGameScoreCalculator other = (StandardGameScoreCalculator) obj;
+		if (this.ballValueMapper == null) {
+			if (other.ballValueMapper != null)
+				return false;
+		} else if (!this.ballValueMapper.equals(other.ballValueMapper))
+			return false;
+		return true;
 	}
 
 	@Override

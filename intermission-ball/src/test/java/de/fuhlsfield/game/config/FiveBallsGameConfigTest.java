@@ -2,14 +2,20 @@ package de.fuhlsfield.game.config;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.LinkedList;
+import java.util.HashSet;
 
 import org.junit.Test;
 
 import de.fuhlsfield.game.Ball;
+import de.fuhlsfield.game.rule.EachBallAtLeastOnceRuleCheck;
+import de.fuhlsfield.game.rule.ExactCheckoutRuleCheck;
+import de.fuhlsfield.game.rule.RuleCheck;
+import de.fuhlsfield.game.score.GameScoreCalculator;
 import de.fuhlsfield.game.score.StandardGameScoreCalculator;
 
-public class FiveBallsGameConfigTest {
+public class FiveBallsGameConfigTest extends AbstractGameConfigTest<FiveBallsGameConfig> {
+
+	private static int EXPECTED_TARGET_POINTS = 14;
 
 	@Test
 	public void testGetName() {
@@ -18,26 +24,37 @@ public class FiveBallsGameConfigTest {
 
 	@Test
 	public void testGetTargetPoints() {
-		assertEquals(14, createInstanceUnderTest().getTargetPoints());
+		assertEquals(EXPECTED_TARGET_POINTS, createInstanceUnderTest().getTargetPoints());
 	}
 
 	@Test
-	public void testGetGameScoreCalculator() {
-		assertEquals(StandardGameScoreCalculator.class, createInstanceUnderTest().getGameScoreCalculator().getClass());
+	public void testGetRuleChecks() {
+		HashSet<RuleCheck> expectedRuleChecks = new HashSet<RuleCheck>();
+		expectedRuleChecks.add(new EachBallAtLeastOnceRuleCheck(createExpectedBalls(), EXPECTED_TARGET_POINTS,
+				new StandardGameScoreCalculator(createExpectedBallValueMapper())));
+		expectedRuleChecks.add(new ExactCheckoutRuleCheck(EXPECTED_TARGET_POINTS, new StandardGameScoreCalculator(
+				createExpectedBallValueMapper())));
+		assertEquals(expectedRuleChecks, createInstanceUnderTest().getRuleChecks());
 	}
 
-	@Test
-	public void testGetAllowedBalls() {
-		LinkedList<Ball> expectedBalls = new LinkedList<Ball>();
-		expectedBalls.add(Ball.BUNTI);
-		expectedBalls.add(Ball.FROESCHI);
-		expectedBalls.add(Ball.BASKI);
-		expectedBalls.add(Ball.SCHWAMMI);
-		expectedBalls.add(Ball.TISCHI_BALLI);
-		assertEquals(expectedBalls, createInstanceUnderTest().getAllowedBalls());
+	@Override
+	protected GameScoreCalculator createExpectedGameScoreCalculator() {
+		return new StandardGameScoreCalculator(createExpectedBallValueMapper());
 	}
 
-	private FiveBallsGameConfig createInstanceUnderTest() {
+	@Override
+	protected BallValueMapper createExpectedBallValueMapper() {
+		BallValueMapper expectedBallValueMapper = new BallValueMapper();
+		expectedBallValueMapper.addBall(Ball.BUNTI, 2);
+		expectedBallValueMapper.addBall(Ball.FROESCHI, 2);
+		expectedBallValueMapper.addBall(Ball.BASKI, 3);
+		expectedBallValueMapper.addBall(Ball.SCHWAMMI, 3);
+		expectedBallValueMapper.addBall(Ball.TISCHI_BALLI, 4);
+		return expectedBallValueMapper;
+	}
+
+	@Override
+	protected FiveBallsGameConfig createInstanceUnderTest() {
 		return new FiveBallsGameConfig();
 	}
 
