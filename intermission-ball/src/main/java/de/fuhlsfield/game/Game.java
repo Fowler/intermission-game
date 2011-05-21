@@ -80,13 +80,13 @@ public class Game {
 
 	public void undoLastAttempt() {
 		if (isUndoLastAttemptPossible()) {
-			this.gameScoreKeepers.get(this.playerSequenceDeterminer.getPreviousPlayer()).undoLastAttempt();
+			this.gameScoreKeepers.get(this.playerSequenceDeterminer.determinePreviousPlayer()).undoLastAttempt();
 			upateBallRuleCheckStates();
 		}
 	}
 
 	public boolean isUndoLastAttemptPossible() {
-		return this.gameScoreKeepers.get(this.playerSequenceDeterminer.getPreviousPlayer()).isUndoLastAttemptPossible();
+		return this.playerSequenceDeterminer.determinePreviousPlayer() != Player.NO_PLAYER;
 	}
 
 	public void finishGame() {
@@ -104,7 +104,7 @@ public class Game {
 	}
 
 	public boolean isAttemptAllowed(Player player, Ball ball) {
-		return !isSeasonFinished() && (this.playerSequenceDeterminer.getNextPlayer() != Player.NO_PLAYER)
+		return !isSeasonFinished() && (this.playerSequenceDeterminer.determineNextPlayer() != Player.NO_PLAYER)
 				&& this.ballRuleCheckStates.get(player).get(ball).isAllowed();
 	}
 

@@ -1,5 +1,6 @@
 package de.fuhlsfield.game.rule;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -32,6 +33,48 @@ public class PlayerSequenceDeterminerTest {
 	}
 
 	@Test
+	public void testDetermineNextPlayerWhenSecondPlayerHasLessAttempts() {
+		when(this.gameScoreKeeperA.getNumberOfAttempts()).thenReturn(1);
+		when(this.gameScoreKeeperB.getNumberOfAttempts()).thenReturn(0);
+		assertEquals(this.playerB, createInstanceUnderTest().determineNextPlayer());
+	}
+
+	@Test
+	public void testDetermineNextPlayerWhenSecondPlayerHasEqualAttempts() {
+		when(this.gameScoreKeeperA.getNumberOfAttempts()).thenReturn(1);
+		when(this.gameScoreKeeperB.getNumberOfAttempts()).thenReturn(1);
+		assertEquals(this.playerA, createInstanceUnderTest().determineNextPlayer());
+	}
+
+	@Test
+	public void testDetermineNextPlayerWhenGameFinished() {
+		when(this.gameScoreKeeperA.getNumberOfAttempts()).thenReturn(MAX_ATTEMPTS);
+		when(this.gameScoreKeeperB.getNumberOfAttempts()).thenReturn(MAX_ATTEMPTS);
+		assertEquals(Player.NO_PLAYER, createInstanceUnderTest().determineNextPlayer());
+	}
+
+	@Test
+	public void testDeterminePreviousPlayerWhenSecondPlayerHasLessAttempts() {
+		when(this.gameScoreKeeperA.getNumberOfAttempts()).thenReturn(1);
+		when(this.gameScoreKeeperB.getNumberOfAttempts()).thenReturn(0);
+		assertEquals(this.playerA, createInstanceUnderTest().determinePreviousPlayer());
+	}
+
+	@Test
+	public void testDeterminePreviousPlayerWhenSecondPlayerHasEqualAttempts() {
+		when(this.gameScoreKeeperA.getNumberOfAttempts()).thenReturn(1);
+		when(this.gameScoreKeeperB.getNumberOfAttempts()).thenReturn(1);
+		assertEquals(this.playerB, createInstanceUnderTest().determinePreviousPlayer());
+	}
+
+	@Test
+	public void testDeterminePreviousPlayerWhenNoPlayerHasAnyAttempt() {
+		when(this.gameScoreKeeperA.getNumberOfAttempts()).thenReturn(0);
+		when(this.gameScoreKeeperB.getNumberOfAttempts()).thenReturn(0);
+		assertEquals(Player.NO_PLAYER, createInstanceUnderTest().determinePreviousPlayer());
+	}
+
+	@Test
 	public void testIsGameNotFinishedWhenFirstPlayerReachedTargetPointsAndSecondPlayerHasLessAttempts() {
 		when(this.gameScoreCalculator.calculateScore(this.gameScoreKeeperA)).thenReturn(TARGET_POINTS);
 		when(this.gameScoreKeeperA.getNumberOfAttempts()).thenReturn(1);
@@ -41,7 +84,7 @@ public class PlayerSequenceDeterminerTest {
 	}
 
 	@Test
-	public void testIsGameFinishedWhenFirstPlayerReachedTargetPointsAndSecondPlayerHasSameAttempts() {
+	public void testIsGameFinishedWhenFirstPlayerReachedTargetPointsAndSecondPlayerHasEqualAttempts() {
 		when(this.gameScoreCalculator.calculateScore(this.gameScoreKeeperA)).thenReturn(TARGET_POINTS);
 		when(this.gameScoreKeeperA.getNumberOfAttempts()).thenReturn(1);
 		when(this.gameScoreCalculator.calculateScore(this.gameScoreKeeperB)).thenReturn(0);
@@ -59,7 +102,7 @@ public class PlayerSequenceDeterminerTest {
 	}
 
 	@Test
-	public void testIsGameFinishedWhenFirstPlayerReachedMaxAttemptsAndSecondPlayerHasSameAttempts() {
+	public void testIsGameFinishedWhenFirstPlayerReachedMaxAttemptsAndSecondPlayerHasEqualAttempts() {
 		when(this.gameScoreCalculator.calculateScore(this.gameScoreKeeperA)).thenReturn(0);
 		when(this.gameScoreKeeperA.getNumberOfAttempts()).thenReturn(MAX_ATTEMPTS);
 		when(this.gameScoreCalculator.calculateScore(this.gameScoreKeeperB)).thenReturn(0);

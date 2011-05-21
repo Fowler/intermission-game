@@ -29,28 +29,33 @@ public class PlayerSequenceDeterminer {
 		this.gameScoreKeepers.put(player, gameScoreKeeper);
 	}
 
-	public Player getNextPlayer() {
+	public Player determineNextPlayer() {
 		Player nextPlayer = Player.NO_PLAYER;
-		int minIndex = -1;
-		for (Player player : this.players) {
-			GameScoreKeeper gameScore = this.gameScoreKeepers.get(player);
-			int index = gameScore.getNumberOfAttempts() - 1;
-			if (index < 0) {
-				return player;
-			} else if ((minIndex < 0) || (index < minIndex)) {
-				minIndex = index;
-				nextPlayer = player;
+		if (!isGameFinished()) {
+			int minIndex = -1;
+			for (Player player : this.players) {
+				GameScoreKeeper gameScore = this.gameScoreKeepers.get(player);
+				int index = gameScore.getNumberOfAttempts() - 1;
+				if (index < 0) {
+					return player;
+				} else if ((minIndex < 0) || (index < minIndex)) {
+					minIndex = index;
+					nextPlayer = player;
+				}
 			}
 		}
 		return nextPlayer;
 	}
 
-	public Player getPreviousPlayer() {
-		int index = this.players.indexOf(getNextPlayer()) - 1;
-		if (index < 0) {
-			index = this.players.size() - 1;
+	public Player determinePreviousPlayer() {
+		if (isGameStarted()) {
+			int index = this.players.indexOf(determineNextPlayer()) - 1;
+			if (index < 0) {
+				index = this.players.size() - 1;
+			}
+			return this.players.get(index);
 		}
-		return this.players.get(index);
+		return Player.NO_PLAYER;
 	}
 
 	public boolean isGameFinished() {
@@ -76,4 +81,12 @@ public class PlayerSequenceDeterminer {
 		return this.maxAttempts;
 	}
 
+	private boolean isGameStarted() {
+		for (Player player : this.players) {
+			if (this.gameScoreKeepers.get(player).getNumberOfAttempts() > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

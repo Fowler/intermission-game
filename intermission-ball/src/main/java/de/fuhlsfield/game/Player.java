@@ -2,7 +2,8 @@ package de.fuhlsfield.game;
 
 public class Player {
 
-	public static final Player NO_PLAYER = new Player(null);
+	public static final Player NO_PLAYER = new Player("") {
+	};
 
 	private final String name;
 

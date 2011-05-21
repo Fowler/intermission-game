@@ -19,13 +19,9 @@ public class GameScoreKeeper {
 	}
 
 	public void undoLastAttempt() {
-		if (isUndoLastAttemptPossible()) {
+		if (this.attempts.size() > 0) {
 			this.attempts.remove(this.attempts.size() - 1);
 		}
-	}
-
-	public boolean isUndoLastAttemptPossible() {
-		return this.attempts.size() > 0;
 	}
 
 	public Attempt getAttemptByIndex(int index) {

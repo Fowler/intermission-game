@@ -61,19 +61,6 @@ public class GameScoreKeeperTest {
 	}
 
 	@Test
-	public void testIsUndoOfLastAttemptPossibleWhenOneAttempt() {
-		GameScoreKeeper gameScoreKeeper = createInstanceUnderTest();
-		gameScoreKeeper.addAttempt(new Attempt(Ball.BASKI, true));
-		assertTrue(gameScoreKeeper.isUndoLastAttemptPossible());
-	}
-
-	@Test
-	public void testIsUndoOfLastAttemptPossibleWhenNoAttempt() {
-		GameScoreKeeper gameScoreKeeper = createInstanceUnderTest();
-		assertFalse(gameScoreKeeper.isUndoLastAttemptPossible());
-	}
-
-	@Test
 	public void testGetAttemptByIndexWhenNegativeIndex() {
 		assertNull(createInstanceUnderTest().getAttemptByIndex(-1));
 	}
