@@ -5,7 +5,7 @@ import java.util.List;
 
 import de.fuhlsfield.game.Attempt;
 import de.fuhlsfield.game.Ball;
-import de.fuhlsfield.gameConfig.BallValueMapper;
+import de.fuhlsfield.game.config.BallValueMapper;
 
 public class StandardGameScoreCalculator implements GameScoreCalculator {
 

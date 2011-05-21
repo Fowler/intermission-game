@@ -6,12 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.fuhlsfield.game.config.GameConfig;
 import de.fuhlsfield.game.rule.PlayerSequenceDeterminer;
 import de.fuhlsfield.game.rule.RuleCheckState;
 import de.fuhlsfield.game.rule.RuleChecker;
 import de.fuhlsfield.game.score.GameScoreKeeper;
 import de.fuhlsfield.game.score.SeasonScoreKeeper;
-import de.fuhlsfield.gameConfig.GameConfig;
 
 public class Game {
 

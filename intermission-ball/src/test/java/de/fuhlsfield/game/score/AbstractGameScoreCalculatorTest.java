@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import de.fuhlsfield.game.Attempt;
 import de.fuhlsfield.game.Ball;
-import de.fuhlsfield.gameConfig.BallValueMapper;
+import de.fuhlsfield.game.config.BallValueMapper;
 
 public abstract class AbstractGameScoreCalculatorTest<T extends GameScoreCalculator> {
 

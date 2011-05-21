@@ -10,9 +10,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.fuhlsfield.game.Player;
+import de.fuhlsfield.game.config.GameConfig;
 import de.fuhlsfield.game.score.GameScoreCalculator;
 import de.fuhlsfield.game.score.GameScoreKeeper;
-import de.fuhlsfield.gameConfig.GameConfig;
 
 public class PlayerSequenceDeterminerTest {
 

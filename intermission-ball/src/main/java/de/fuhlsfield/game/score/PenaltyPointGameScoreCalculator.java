@@ -1,7 +1,7 @@
 package de.fuhlsfield.game.score;
 
 import de.fuhlsfield.game.Attempt;
-import de.fuhlsfield.gameConfig.BallValueMapper;
+import de.fuhlsfield.game.config.BallValueMapper;
 
 public class PenaltyPointGameScoreCalculator extends StandardGameScoreCalculator {
 

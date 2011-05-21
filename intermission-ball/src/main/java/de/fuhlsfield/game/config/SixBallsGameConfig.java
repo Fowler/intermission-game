@@ -1,4 +1,4 @@
-package de.fuhlsfield.gameConfig;
+package de.fuhlsfield.game.config;
 
 import java.util.Arrays;
 import java.util.List;

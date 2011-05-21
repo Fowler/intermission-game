@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import de.fuhlsfield.game.Player;
+import de.fuhlsfield.game.config.GameConfig;
 import de.fuhlsfield.game.score.GameScoreCalculator;
 import de.fuhlsfield.game.score.GameScoreKeeper;
-import de.fuhlsfield.gameConfig.GameConfig;
 
 public class PlayerSequenceDeterminer {
 

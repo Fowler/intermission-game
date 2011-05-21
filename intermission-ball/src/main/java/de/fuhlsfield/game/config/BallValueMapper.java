@@ -1,4 +1,4 @@
-package de.fuhlsfield.gameConfig;
+package de.fuhlsfield.game.config;
 
 import java.util.HashMap;
 import java.util.LinkedList;

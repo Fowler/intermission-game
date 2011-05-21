@@ -6,8 +6,8 @@ import java.util.Map;
 
 import de.fuhlsfield.game.Game;
 import de.fuhlsfield.game.Player;
-import de.fuhlsfield.gameConfig.FiveBallsGameConfig;
-import de.fuhlsfield.gameConfig.SixBallsGameConfig;
+import de.fuhlsfield.game.config.FiveBallsGameConfig;
+import de.fuhlsfield.game.config.SixBallsGameConfig;
 
 /**
  * Starter for intermission game.
