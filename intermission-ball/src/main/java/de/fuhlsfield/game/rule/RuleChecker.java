@@ -1,11 +1,11 @@
 package de.fuhlsfield.game.rule;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.config.GameConfig;
@@ -14,7 +14,7 @@ import de.fuhlsfield.game.score.GameScoreKeeper;
 
 public class RuleChecker {
 
-	private final List<RuleCheck> ruleChecks;
+	private final Set<RuleCheck> ruleChecks;
 	private final List<Ball> allowedBalls;
 	private final GameScoreCalculator gameScoreCalculator;
 	private final int targetPoints;

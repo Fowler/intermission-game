@@ -1,7 +1,7 @@
 package de.fuhlsfield.game.config;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.rule.EachBallAtLeastOnceRuleCheck;
@@ -16,6 +16,11 @@ public class FiveBallsGameConfig extends AbstractGameConfig {
 	private static int TARGET_POINTS = 14;
 
 	@Override
+	public String getName() {
+		return NAME;
+	}
+
+	@Override
 	public int getTargetPoints() {
 		return TARGET_POINTS;
 	}
@@ -26,14 +31,11 @@ public class FiveBallsGameConfig extends AbstractGameConfig {
 	}
 
 	@Override
-	public List<RuleCheck> getRuleChecks() {
-		return Arrays.asList(new EachBallAtLeastOnceRuleCheck(getAllowedBalls(), TARGET_POINTS,
-				getGameScoreCalculator()), new ExactCheckoutRuleCheck(TARGET_POINTS, getGameScoreCalculator()));
-	}
-
-	@Override
-	public String getName() {
-		return NAME;
+	public Set<RuleCheck> getRuleChecks() {
+		HashSet<RuleCheck> ruleChecks = new HashSet<RuleCheck>();
+		ruleChecks.add(new EachBallAtLeastOnceRuleCheck(getAllowedBalls(), TARGET_POINTS, getGameScoreCalculator()));
+		ruleChecks.add(new ExactCheckoutRuleCheck(TARGET_POINTS, getGameScoreCalculator()));
+		return ruleChecks;
 	}
 
 	@Override

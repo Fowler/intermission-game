@@ -1,6 +1,7 @@
 package de.fuhlsfield.game.config;
 
 import java.util.List;
+import java.util.Set;
 
 import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.rule.RuleCheck;
@@ -16,6 +17,6 @@ public interface GameConfig {
 
 	List<Ball> getAllowedBalls();
 
-	List<RuleCheck> getRuleChecks();
+	Set<RuleCheck> getRuleChecks();
 
 }

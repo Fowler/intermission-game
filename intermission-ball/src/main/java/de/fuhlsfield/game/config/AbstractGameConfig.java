@@ -8,6 +8,10 @@ public abstract class AbstractGameConfig implements GameConfig {
 
 	protected final BallValueMapper ballValueMapper = new BallValueMapper();
 
+	public AbstractGameConfig() {
+		addBallValues();
+	}
+
 	@Override
 	public final List<Ball> getAllowedBalls() {
 		return this.ballValueMapper.getBalls();
