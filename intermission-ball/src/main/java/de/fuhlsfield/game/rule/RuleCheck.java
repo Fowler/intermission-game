@@ -7,6 +7,6 @@ import de.fuhlsfield.game.score.GameScoreKeeper;
 
 public interface RuleCheck {
 
-	List<List<Ball>> selectPossibleAttempts(List<List<Ball>> possibleBallsLeft, GameScoreKeeper gameScoreKeeper);
+	boolean isPossibleAttempts(List<Ball> balls, GameScoreKeeper gameScoreKeeper);
 
 }

@@ -71,7 +71,7 @@ public class IntermissionGameGui {
 
 		addExport(container);
 
-		frame.setSize(250 * this.game.getPlayers().size(), this.game.getMaxAttempts() * 40);
+		frame.setSize(330 * containerColumns, this.game.getMaxAttempts() * 40);
 		frame.setVisible(true);
 		frame.setTitle("Intermission Game, enjoy your lunch break...");
 		this.buttonModel.updateModel();

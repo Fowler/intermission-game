@@ -42,8 +42,9 @@ public class FiveBallsGameConfig extends AbstractGameConfig {
 	@Override
 	protected Set<RuleCheck> createRuleChecks() {
 		HashSet<RuleCheck> ruleChecks = new HashSet<RuleCheck>();
-		ruleChecks.add(new EachBallAtLeastOnceRuleCheck(getAllowedBalls(), TARGET_POINTS, getGameScoreCalculator()));
-		ruleChecks.add(new ExactCheckoutRuleCheck(TARGET_POINTS, getGameScoreCalculator()));
+		ruleChecks.add(new EachBallAtLeastOnceRuleCheck(getGameScoreCalculator(), TARGET_POINTS, new HashSet<Ball>(
+				getAllowedBalls())));
+		ruleChecks.add(new ExactCheckoutRuleCheck(getGameScoreCalculator(), TARGET_POINTS));
 		return ruleChecks;
 	}
 

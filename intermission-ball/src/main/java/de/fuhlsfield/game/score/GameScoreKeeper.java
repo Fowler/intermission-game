@@ -1,7 +1,9 @@
 package de.fuhlsfield.game.score;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import de.fuhlsfield.game.Attempt;
 import de.fuhlsfield.game.Ball;
@@ -31,13 +33,14 @@ public class GameScoreKeeper {
 		return this.attempts.size();
 	}
 
-	public boolean isBallSuccessfulPlayed(Ball ball) {
+	public Set<Ball> getSuccessfulPlayedBalls() {
+		HashSet<Ball> balls = new HashSet<Ball>();
 		for (Attempt attempt : this.attempts) {
-			if ((attempt.getBall() == ball) && attempt.isSuccessful()) {
-				return true;
+			if (attempt.isSuccessful()) {
+				balls.add(attempt.getBall());
 			}
 		}
-		return false;
+		return balls;
 	}
 
 }

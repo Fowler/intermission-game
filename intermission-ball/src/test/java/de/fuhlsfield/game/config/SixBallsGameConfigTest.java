@@ -33,11 +33,11 @@ public class SixBallsGameConfigTest extends AbstractGameConfigTest<SixBallsGameC
 	@Test
 	public void testGetRuleChecks() {
 		HashSet<RuleCheck> expectedRuleChecks = new HashSet<RuleCheck>();
-		expectedRuleChecks.add(new EachBallAtLeastOnceRuleCheck(createExpectedBalls(), EXPECTED_TARGET_POINTS,
-				createExpectedGameScoreCalculator()));
-		expectedRuleChecks.add(new ExactCheckoutRuleCheck(EXPECTED_TARGET_POINTS, createExpectedGameScoreCalculator()));
-		expectedRuleChecks.add(new CheckoutWithAllowedBallRuleCheck(createExpectedAllowedCheckoutBalls(),
-				EXPECTED_TARGET_POINTS, createExpectedGameScoreCalculator()));
+		expectedRuleChecks.add(new EachBallAtLeastOnceRuleCheck(createExpectedGameScoreCalculator(),
+				EXPECTED_TARGET_POINTS, new HashSet<Ball>(createExpectedBalls())));
+		expectedRuleChecks.add(new ExactCheckoutRuleCheck(createExpectedGameScoreCalculator(), EXPECTED_TARGET_POINTS));
+		expectedRuleChecks.add(new CheckoutWithAllowedBallRuleCheck(createExpectedGameScoreCalculator(),
+				EXPECTED_TARGET_POINTS, createExpectedAllowedCheckoutBalls()));
 		assertEquals(expectedRuleChecks, createInstanceUnderTest().getRuleChecks());
 	}
 

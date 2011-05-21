@@ -1,6 +1,5 @@
 package de.fuhlsfield;
 
-
 import java.util.HashMap;
 import java.util.Map;
 

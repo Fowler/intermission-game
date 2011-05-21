@@ -30,10 +30,10 @@ public class FiveBallsGameConfigTest extends AbstractGameConfigTest<FiveBallsGam
 	@Test
 	public void testGetRuleChecks() {
 		HashSet<RuleCheck> expectedRuleChecks = new HashSet<RuleCheck>();
-		expectedRuleChecks.add(new EachBallAtLeastOnceRuleCheck(createExpectedBalls(), EXPECTED_TARGET_POINTS,
-				new StandardGameScoreCalculator(createExpectedBallValueMapper())));
-		expectedRuleChecks.add(new ExactCheckoutRuleCheck(EXPECTED_TARGET_POINTS, new StandardGameScoreCalculator(
-				createExpectedBallValueMapper())));
+		expectedRuleChecks.add(new EachBallAtLeastOnceRuleCheck(new StandardGameScoreCalculator(
+				createExpectedBallValueMapper()), EXPECTED_TARGET_POINTS, new HashSet<Ball>(createExpectedBalls())));
+		expectedRuleChecks.add(new ExactCheckoutRuleCheck(new StandardGameScoreCalculator(
+				createExpectedBallValueMapper()), EXPECTED_TARGET_POINTS));
 		assertEquals(expectedRuleChecks, createInstanceUnderTest().getRuleChecks());
 	}
 

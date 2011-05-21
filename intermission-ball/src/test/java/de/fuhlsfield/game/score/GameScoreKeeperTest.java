@@ -1,9 +1,10 @@
 package de.fuhlsfield.game.score;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+
+import java.util.Arrays;
+import java.util.HashSet;
 
 import org.junit.Test;
 
@@ -78,22 +79,25 @@ public class GameScoreKeeperTest {
 	}
 
 	@Test
-	public void testIsBallSuccessfulPlayedWhenNoAttempts() {
-		assertFalse(createInstanceUnderTest().isBallSuccessfulPlayed(Ball.BASKI));
+	public void testGetSuccessfulPlayedBallsWhenNoAttempts() {
+		HashSet<Ball> expectedBalls = new HashSet<Ball>();
+		assertEquals(expectedBalls, createInstanceUnderTest().getSuccessfulPlayedBalls());
 	}
 
 	@Test
-	public void testIsBallSuccessfulPlayedWhenSuccessfulAttempt() {
+	public void testGetSuccessfulPlayedBallsWhenSuccessfulAttempt() {
 		GameScoreKeeper gameScoreKeeper = createInstanceUnderTest();
 		gameScoreKeeper.addAttempt(new Attempt(Ball.BASKI, true));
-		assertTrue(gameScoreKeeper.isBallSuccessfulPlayed(Ball.BASKI));
+		HashSet<Ball> expectedBalls = new HashSet<Ball>(Arrays.asList(Ball.BASKI));
+		assertEquals(expectedBalls, gameScoreKeeper.getSuccessfulPlayedBalls());
 	}
 
 	@Test
-	public void testIsBallSuccessfulPlayedWhenFailedAttempt() {
+	public void testGetSuccessfulPlayedBallsWhenFailedAttempt() {
 		GameScoreKeeper gameScoreKeeper = createInstanceUnderTest();
 		gameScoreKeeper.addAttempt(new Attempt(Ball.BASKI, false));
-		assertFalse(gameScoreKeeper.isBallSuccessfulPlayed(Ball.BASKI));
+		HashSet<Ball> expectedBalls = new HashSet<Ball>();
+		assertEquals(expectedBalls, gameScoreKeeper.getSuccessfulPlayedBalls());
 	}
 
 	private GameScoreKeeper createInstanceUnderTest() {

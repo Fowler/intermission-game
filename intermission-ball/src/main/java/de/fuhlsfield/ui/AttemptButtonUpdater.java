@@ -19,7 +19,6 @@ public class AttemptButtonUpdater extends AbstractButtonUpdater {
 		BUTTON_COLORS.put(RuleCheckState.CHECKOUT, new Color(0, 255, 0));
 		BUTTON_COLORS.put(RuleCheckState.ALLOWED, new Color(0, 255, 255));
 		BUTTON_COLORS.put(RuleCheckState.ALLOWED_AND_PLAYED, new Color(0, 0, 255));
-		BUTTON_COLORS.put(RuleCheckState.ALLOWED_BUT_NOT_YET, new Color(255, 255, 0));
 		BUTTON_COLORS.put(RuleCheckState.NOT_ALLOWED, new Color(255, 0, 0));
 	}
 

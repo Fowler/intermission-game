@@ -6,12 +6,12 @@ import java.util.Set;
 import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.rule.RuleCheck;
 
-public abstract class AbstractGameConfig implements GameConfig {
+abstract class AbstractGameConfig implements GameConfig {
 
 	protected final BallValueMapper ballValueMapper = new BallValueMapper();
 	private final Set<RuleCheck> ruleChecks;
 
-	public AbstractGameConfig() {
+	AbstractGameConfig() {
 		addBallValues();
 		this.ruleChecks = createRuleChecks();
 	}
