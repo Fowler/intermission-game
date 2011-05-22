@@ -1,5 +1,6 @@
 package de.fuhlsfield.game.config;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -18,12 +19,12 @@ abstract class AbstractGameConfig implements GameConfig {
 
 	@Override
 	public final List<Ball> getAllowedBalls() {
-		return this.ballValueMapper.getBalls();
+		return Collections.unmodifiableList(this.ballValueMapper.getBalls());
 	}
 
 	@Override
 	public final Set<RuleCheck> getRuleChecks() {
-		return this.ruleChecks;
+		return Collections.unmodifiableSet(this.ruleChecks);
 	}
 
 	protected abstract void addBallValues();

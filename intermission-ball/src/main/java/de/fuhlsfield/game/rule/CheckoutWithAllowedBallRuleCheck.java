@@ -42,17 +42,17 @@ public class CheckoutWithAllowedBallRuleCheck extends AbstractRuleCheck {
 	}
 
 	@Override
-	public boolean isPossibleAttempts(List<Ball> balls, GameScoreKeeper gameScoreKeeper) {
-		if ((this.gameScoreCalculator.calculateScore(gameScoreKeeper, balls) >= this.targetPoints)
+	public boolean isPossibleAttempts(PossibleAttempts balls, GameScoreKeeper gameScoreKeeper) {
+		if ((this.gameScoreCalculator.calculateScore(gameScoreKeeper, balls.toList()) >= this.targetPoints)
 				&& !isCheckoutWithAllowedBall(balls)) {
 			return false;
 		}
 		return true;
 	}
 
-	private boolean isCheckoutWithAllowedBall(List<Ball> balls) {
-		return ((balls.size() == 1) && this.allowedBalls.contains(balls.get(0)))
-				|| isAllowedBallInList(createListWithoutFirstElement(balls));
+	private boolean isCheckoutWithAllowedBall(PossibleAttempts balls) {
+		return ((balls.size() == 1) && this.allowedBalls.contains(balls.getFirstAttempt()))
+				|| isAllowedBallInList(balls.nextAttemptsToList());
 	}
 
 	private boolean isAllowedBallInList(List<Ball> balls) {
@@ -62,10 +62,6 @@ public class CheckoutWithAllowedBallRuleCheck extends AbstractRuleCheck {
 			}
 		}
 		return false;
-	}
-
-	private List<Ball> createListWithoutFirstElement(List<Ball> balls) {
-		return balls.subList(1, balls.size());
 	}
 
 }

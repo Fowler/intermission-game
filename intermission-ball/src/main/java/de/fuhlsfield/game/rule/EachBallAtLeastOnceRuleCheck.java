@@ -1,7 +1,7 @@
 package de.fuhlsfield.game.rule;
 
+import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 import de.fuhlsfield.game.Ball;
@@ -42,24 +42,24 @@ public class EachBallAtLeastOnceRuleCheck extends AbstractRuleCheck {
 	}
 
 	@Override
-	public boolean isPossibleAttempts(List<Ball> balls, GameScoreKeeper gameScoreKeeper) {
-		if (this.gameScoreCalculator.calculateScore(gameScoreKeeper, balls) >= this.targetPoints) {
+	public boolean isPossibleAttempts(PossibleAttempts balls, GameScoreKeeper gameScoreKeeper) {
+		if (this.gameScoreCalculator.calculateScore(gameScoreKeeper, balls.toList()) >= this.targetPoints) {
 			return isEachBallAtLeastOnce(balls, gameScoreKeeper);
 		}
 		return isNoBallPlayedTwice(balls, gameScoreKeeper);
 	}
 
-	private boolean isEachBallAtLeastOnce(List<Ball> balls, GameScoreKeeper gameScoreKeeper) {
-		Set<Ball> ballsPlayed = gameScoreKeeper.getSuccessfulPlayedBalls();
-		ballsPlayed.addAll(balls);
+	private boolean isEachBallAtLeastOnce(PossibleAttempts balls, GameScoreKeeper gameScoreKeeper) {
+		HashSet<Ball> ballsPlayed = new HashSet<Ball>(gameScoreKeeper.getSuccessfulPlayedBalls());
+		ballsPlayed.addAll(balls.toList());
 		LinkedList<Ball> ballsToPlayCopy = new LinkedList<Ball>(this.ballsToPlay);
 		ballsToPlayCopy.removeAll(ballsPlayed);
 		return ballsToPlayCopy.isEmpty();
 	}
 
-	private boolean isNoBallPlayedTwice(List<Ball> balls, GameScoreKeeper gameScoreKeeper) {
+	private boolean isNoBallPlayedTwice(PossibleAttempts balls, GameScoreKeeper gameScoreKeeper) {
 		LinkedList<Ball> ballsPlayed = new LinkedList<Ball>(gameScoreKeeper.getSuccessfulPlayedBalls());
-		ballsPlayed.addAll(balls);
+		ballsPlayed.addAll(balls.toList());
 		for (Ball ball : this.ballsToPlay) {
 			ballsPlayed.remove(ball);
 			if (ballsPlayed.contains(ball)) {

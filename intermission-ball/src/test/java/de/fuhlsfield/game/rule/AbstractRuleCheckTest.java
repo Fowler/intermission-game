@@ -3,9 +3,6 @@ package de.fuhlsfield.game.rule;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.Before;
 
 import de.fuhlsfield.game.Attempt;
@@ -27,8 +24,12 @@ public abstract class AbstractRuleCheckTest<T extends RuleCheck> {
 		when(this.ballValueMapper.getValue(Ball.SCHWAMMI)).thenReturn(7);
 	}
 
-	protected List<Ball> createBallsLeft(Ball... balls) {
-		return Arrays.asList(balls);
+	protected PossibleAttempts createBallsLeft(Ball... balls) {
+		PossibleAttempts possibleAttempts = new PossibleAttempts(balls[0]);
+		for (int i = 1; i < balls.length; i++) {
+			possibleAttempts.add(balls[i]);
+		}
+		return possibleAttempts;
 	}
 
 	protected void addAttempts(Ball... balls) {

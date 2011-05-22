@@ -1,10 +1,8 @@
 package de.fuhlsfield.game.rule;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
-import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.score.GameScoreKeeper;
 
 public class RuleCheckDisposer {
@@ -15,10 +13,10 @@ public class RuleCheckDisposer {
 		this.ruleChecks = ruleChecks;
 	}
 
-	List<List<Ball>> disposeRuleChecks(List<List<Ball>> allBalls, GameScoreKeeper gameScoreKeeper) {
-		LinkedList<List<Ball>> resultAllBalls = new LinkedList<List<Ball>>(allBalls);
+	Set<PossibleAttempts> disposeRuleChecks(Set<PossibleAttempts> allBalls, GameScoreKeeper gameScoreKeeper) {
+		HashSet<PossibleAttempts> resultAllBalls = new HashSet<PossibleAttempts>(allBalls);
 		for (RuleCheck ruleCheck : this.ruleChecks) {
-			for (List<Ball> balls : allBalls) {
+			for (PossibleAttempts balls : allBalls) {
 				if (!ruleCheck.isPossibleAttempts(balls, gameScoreKeeper)) {
 					resultAllBalls.remove(balls);
 				}
