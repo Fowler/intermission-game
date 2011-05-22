@@ -1,7 +1,5 @@
 package de.fuhlsfield.game.rule;
 
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,28 +11,23 @@ import de.fuhlsfield.game.score.GameScoreKeeper;
 public class PlayerSequenceDeterminer {
 
 	private final GameScoreCalculator gameScoreCalculator;
-	private final List<Player> players = new LinkedList<Player>();
-	private final Map<Player, GameScoreKeeper> gameScoreKeepers = new HashMap<Player, GameScoreKeeper>();
+	private final List<Player> players;
 	private final int targetPoints;
 	private final int maxAttempts;
 
-	public PlayerSequenceDeterminer(GameConfig gameConfig, int maxAttempts) {
+	public PlayerSequenceDeterminer(GameConfig gameConfig, int maxAttempts, List<Player> players) {
 		this.gameScoreCalculator = gameConfig.getGameScoreCalculator();
 		this.targetPoints = gameConfig.getTargetPoints();
 		this.maxAttempts = maxAttempts;
+		this.players = players;
 	}
 
-	public void addPlayer(Player player, GameScoreKeeper gameScoreKeeper) {
-		this.players.add(player);
-		this.gameScoreKeepers.put(player, gameScoreKeeper);
-	}
-
-	public Player determineNextPlayer() {
+	public Player determineNextPlayer(Map<Player, GameScoreKeeper> gameScoreKeepers) {
 		Player nextPlayer = Player.NO_PLAYER;
-		if (!isGameFinished()) {
+		if (!isGameFinished(gameScoreKeepers)) {
 			int minIndex = -1;
 			for (Player player : this.players) {
-				GameScoreKeeper gameScore = this.gameScoreKeepers.get(player);
+				GameScoreKeeper gameScore = gameScoreKeepers.get(player);
 				int index = gameScore.getNumberOfAttempts() - 1;
 				if (index < 0) {
 					return player;
@@ -47,9 +40,9 @@ public class PlayerSequenceDeterminer {
 		return nextPlayer;
 	}
 
-	public Player determinePreviousPlayer() {
-		if (isGameStarted()) {
-			int index = this.players.indexOf(determineNextPlayer()) - 1;
+	public Player determinePreviousPlayer(Map<Player, GameScoreKeeper> gameScoreKeepers) {
+		if (isGameStarted(gameScoreKeepers)) {
+			int index = this.players.indexOf(determineNextPlayer(gameScoreKeepers)) - 1;
 			if (index < 0) {
 				index = this.players.size() - 1;
 			}
@@ -58,22 +51,22 @@ public class PlayerSequenceDeterminer {
 		return Player.NO_PLAYER;
 	}
 
-	public boolean isGameFinished() {
+	public boolean isGameFinished(Map<Player, GameScoreKeeper> gameScoreKeepers) {
 		for (Player player : this.players) {
-			if (isAttemptLeft(player, calculateMaxAttempts())) {
+			if (isAttemptLeft(gameScoreKeepers.get(player), calculateMaxAttempts(gameScoreKeepers))) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	private boolean isAttemptLeft(Player player, int maxAttempts) {
-		return this.gameScoreKeepers.get(player).getNumberOfAttempts() < maxAttempts;
+	private boolean isAttemptLeft(GameScoreKeeper gameScoreKeeper, int maxAttempts) {
+		return gameScoreKeeper.getNumberOfAttempts() < maxAttempts;
 	}
 
-	private int calculateMaxAttempts() {
+	private int calculateMaxAttempts(Map<Player, GameScoreKeeper> gameScoreKeepers) {
 		for (Player player : this.players) {
-			GameScoreKeeper gameScoreKeeper = this.gameScoreKeepers.get(player);
+			GameScoreKeeper gameScoreKeeper = gameScoreKeepers.get(player);
 			if (this.gameScoreCalculator.calculateScore(gameScoreKeeper) >= this.targetPoints) {
 				return gameScoreKeeper.getNumberOfAttempts();
 			}
@@ -81,9 +74,9 @@ public class PlayerSequenceDeterminer {
 		return this.maxAttempts;
 	}
 
-	private boolean isGameStarted() {
+	private boolean isGameStarted(Map<Player, GameScoreKeeper> gameScoreKeepers) {
 		for (Player player : this.players) {
-			if (this.gameScoreKeepers.get(player).getNumberOfAttempts() > 0) {
+			if (gameScoreKeepers.get(player).getNumberOfAttempts() > 0) {
 				return true;
 			}
 		}

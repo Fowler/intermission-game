@@ -4,7 +4,6 @@ import de.fuhlsfield.game.Game;
 import de.fuhlsfield.game.Player;
 import de.fuhlsfield.game.score.ScoreConstants;
 import de.fuhlsfield.game.score.SeasonScoreCalculator;
-import de.fuhlsfield.game.score.SeasonScoreKeeper;
 
 public class SeasonScoreTableModel extends AbstractScoreTabelModel {
 
@@ -12,9 +11,11 @@ public class SeasonScoreTableModel extends AbstractScoreTabelModel {
 	private static final String TABLE_NAME = "Spiel";
 
 	private final Game game;
+	private final SeasonScoreCalculator seasonScoreCalculator;
 
-	public SeasonScoreTableModel(Game game) {
+	public SeasonScoreTableModel(Game game, SeasonScoreCalculator seasonScoreCalculator) {
 		this.game = game;
+		this.seasonScoreCalculator = seasonScoreCalculator;
 	}
 
 	@Override
@@ -32,9 +33,8 @@ public class SeasonScoreTableModel extends AbstractScoreTabelModel {
 		if (columnIndex == 0) {
 			return rowIndex + 1;
 		}
-		SeasonScoreKeeper seasonScoreKeeper = this.game.getSeasonScoreKeeper(getPlayer(columnIndex - 1));
-		int score = new SeasonScoreCalculator(this.game.getGameConfig().getGameScoreCalculator()).calculateScore(
-				seasonScoreKeeper, rowIndex);
+		int score = this.seasonScoreCalculator.calculateScore(this.game.getSeasonScoreKeepers(),
+				getPlayer(columnIndex - 1), rowIndex);
 		if (score == ScoreConstants.UNDEFINED_SCORE) {
 			return null;
 		}

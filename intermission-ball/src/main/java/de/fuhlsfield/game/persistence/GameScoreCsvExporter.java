@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.util.Map;
 
 import de.fuhlsfield.game.Attempt;
-import de.fuhlsfield.game.Game;
 import de.fuhlsfield.game.Player;
+import de.fuhlsfield.game.score.GameScoreCalculator;
 import de.fuhlsfield.game.score.GameScoreKeeper;
 
 public class GameScoreCsvExporter {
@@ -14,12 +14,10 @@ public class GameScoreCsvExporter {
 	private static final String EOL = "\n";
 	private static final String SEPARATOR = ",";
 
-	public void export(Game game) {
+	public void export(Map<Player, GameScoreKeeper> gameScoreKeepers, GameScoreCalculator gameScoreCalculator) {
 		FileWriter writer;
 		try {
 			writer = new FileWriter("/tmp/game-scores.csv");
-
-			Map<Player, GameScoreKeeper> gameScoreKeepers = game.getGameScoreKeepers();
 
 			for (Map.Entry<Player, GameScoreKeeper> keeperValues : gameScoreKeepers.entrySet()) {
 				writer.append(keeperValues.getKey().getName());
@@ -30,8 +28,7 @@ public class GameScoreCsvExporter {
 
 					writer.append(attempt.getBall().getName());
 					writer.append(SEPARATOR);
-					Integer valueOfAttempt = game.getGameConfig().getGameScoreCalculator().calculateScoreForAttempt(
-							keeperValues.getValue(), i);
+					Integer valueOfAttempt = gameScoreCalculator.calculateScoreForAttempt(keeperValues.getValue(), i);
 					writer.append(String.valueOf(valueOfAttempt));
 					writer.append(SEPARATOR);
 				}

@@ -18,6 +18,9 @@ import javax.swing.JTable;
 import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.Game;
 import de.fuhlsfield.game.Player;
+import de.fuhlsfield.game.config.GameConfig;
+import de.fuhlsfield.game.score.GameScoreCalculator;
+import de.fuhlsfield.game.score.SeasonScoreCalculator;
 import de.fuhlsfield.ui.AttemptButtonUpdater;
 import de.fuhlsfield.ui.ButtonModel;
 import de.fuhlsfield.ui.CurrentScoreTableModel;
@@ -39,17 +42,20 @@ import de.fuhlsfield.ui.actionListener.UndoActionListener;
 public class IntermissionGameGui {
 
 	private final Map<Player, Map<Ball, List<JButton>>> jButtons = new HashMap<Player, Map<Ball, List<JButton>>>();
-	private Game game;
-	private GameScoreTableModel gameScoreTableModel;
-	private SeasonScoreTableModel seasonScoreTableModel;
-	private CurrentScoreTableModel currentScoreTableModel;
-	private ButtonModel buttonModel;
+	private final Game game;
+	private final GameScoreCalculator gameScoreCalculator;
+	private final GameScoreTableModel gameScoreTableModel;
+	private final SeasonScoreTableModel seasonScoreTableModel;
+	private final CurrentScoreTableModel currentScoreTableModel;
+	private final ButtonModel buttonModel;
 
-	public void create(Game game) {
-		this.game = game;
+	public IntermissionGameGui(GameConfig gameConfig, int maxAttempts, int numberOfGames, int bonusPoints) {
+		this.game = new Game(gameConfig, maxAttempts, numberOfGames, new Player("Jürgen"), new Player("Marcus"));
+		this.gameScoreCalculator = gameConfig.getGameScoreCalculator();
 		this.gameScoreTableModel = new GameScoreTableModel(this.game);
-		this.seasonScoreTableModel = new SeasonScoreTableModel(this.game);
-		this.currentScoreTableModel = new CurrentScoreTableModel(this.game);
+		this.seasonScoreTableModel = new SeasonScoreTableModel(this.game, new SeasonScoreCalculator(gameConfig
+				.getGameScoreCalculator(), bonusPoints));
+		this.currentScoreTableModel = new CurrentScoreTableModel(this.game, gameConfig.getGameScoreCalculator());
 		this.buttonModel = new ButtonModel(this.game);
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -71,7 +77,7 @@ public class IntermissionGameGui {
 
 		addExport(container);
 
-		frame.setSize(330 * containerColumns, this.game.getMaxAttempts() * 40);
+		frame.setSize(330 * containerColumns, Math.max(maxAttempts, numberOfGames) * 40);
 		frame.setVisible(true);
 		frame.setTitle("Intermission Game, enjoy your lunch break...");
 		this.buttonModel.updateModel();
@@ -81,7 +87,8 @@ public class IntermissionGameGui {
 	private void addExport(Container container) {
 		JPanel tocsv = new JPanel();
 		JButton exportToCsv = new JButton("export");
-		exportToCsv.addActionListener(new ToCsvActionListener(this.game));
+		exportToCsv.addActionListener(new ToCsvActionListener(this.game.getSeasonScoreKeepers(), this.game
+				.getGameScoreKeepers(), this.gameScoreCalculator));
 		tocsv.add(exportToCsv);
 		container.add(tocsv);
 	}

@@ -30,12 +30,11 @@ public class Game {
 		this.numberOfGames = numberOfGames;
 		this.players = Arrays.asList(players);
 		this.ruleChecker = new RuleChecker(gameConfig, maxAttempts);
-		this.playerSequenceDeterminer = new PlayerSequenceDeterminer(gameConfig, maxAttempts);
+		this.playerSequenceDeterminer = new PlayerSequenceDeterminer(gameConfig, maxAttempts, this.players);
 		for (Player player : this.players) {
 			GameScoreKeeper gameScoreKeeper = new GameScoreKeeper();
 			this.gameScoreKeepers.put(player, gameScoreKeeper);
 			this.seasonScoreKeepers.put(player, new SeasonScoreKeeper());
-			this.playerSequenceDeterminer.addPlayer(player, gameScoreKeeper);
 			upateBallRuleCheckStates(player);
 		}
 	}
@@ -64,26 +63,23 @@ public class Game {
 		return this.seasonScoreKeepers.get(player);
 	}
 
-	public int getTargetPoints() {
-		return this.gameConfig.getTargetPoints();
-	}
-
 	public void addAttempt(Player player, Attempt attempt) {
 		if (isAttemptAllowed(player, attempt.getBall())) {
 			this.gameScoreKeepers.get(player).addAttempt(attempt);
-			upateBallRuleCheckStates(this.playerSequenceDeterminer.determinePreviousPlayer());
+			upateBallRuleCheckStates(this.playerSequenceDeterminer.determinePreviousPlayer(this.gameScoreKeepers));
 		}
 	}
 
 	public void undoLastAttempt() {
 		if (isUndoLastAttemptPossible()) {
-			this.gameScoreKeepers.get(this.playerSequenceDeterminer.determinePreviousPlayer()).undoLastAttempt();
-			upateBallRuleCheckStates(this.playerSequenceDeterminer.determineNextPlayer());
+			this.gameScoreKeepers.get(this.playerSequenceDeterminer.determinePreviousPlayer(this.gameScoreKeepers))
+					.undoLastAttempt();
+			upateBallRuleCheckStates(this.playerSequenceDeterminer.determineNextPlayer(this.gameScoreKeepers));
 		}
 	}
 
 	public boolean isUndoLastAttemptPossible() {
-		return this.playerSequenceDeterminer.determinePreviousPlayer() != Player.NO_PLAYER;
+		return this.playerSequenceDeterminer.determinePreviousPlayer(this.gameScoreKeepers) != Player.NO_PLAYER;
 	}
 
 	public void finishGame() {
@@ -101,12 +97,13 @@ public class Game {
 	}
 
 	public boolean isAttemptAllowed(Player player, Ball ball) {
-		return !isSeasonFinished() && (this.playerSequenceDeterminer.determineNextPlayer() == player)
+		return !isSeasonFinished()
+				&& (this.playerSequenceDeterminer.determineNextPlayer(this.gameScoreKeepers) == player)
 				&& this.ballRuleCheckStates.get(player).get(ball).isAllowed();
 	}
 
 	public boolean isGameFinished() {
-		return this.playerSequenceDeterminer.isGameFinished();
+		return this.playerSequenceDeterminer.isGameFinished(this.gameScoreKeepers);
 	}
 
 	private boolean isSeasonFinished() {
@@ -115,10 +112,6 @@ public class Game {
 
 	private void upateBallRuleCheckStates(Player player) {
 		this.ballRuleCheckStates.put(player, this.ruleChecker.determineRuleCheckStates(getGameScoreKeeper(player)));
-	}
-
-	public GameConfig getGameConfig() {
-		return this.gameConfig;
 	}
 
 	public Map<Player, GameScoreKeeper> getGameScoreKeepers() {
