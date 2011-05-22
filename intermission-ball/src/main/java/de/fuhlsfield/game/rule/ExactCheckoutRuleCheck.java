@@ -13,4 +13,5 @@ public class ExactCheckoutRuleCheck extends AbstractRuleCheck {
 	public boolean isPossibleAttempts(PossibleAttempts balls, GameScoreKeeper gameScoreKeeper) {
 		return this.gameScoreCalculator.calculateScore(gameScoreKeeper, balls.toList()) <= this.targetPoints;
 	}
+
 }

@@ -14,7 +14,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.fuhlsfield.game.Player;
-import de.fuhlsfield.game.config.GameConfig;
 import de.fuhlsfield.game.score.GameScoreCalculator;
 import de.fuhlsfield.game.score.GameScoreKeeper;
 
@@ -23,7 +22,6 @@ public class PlayerSequenceDeterminerTest {
 	private static final int TARGET_POINTS = 5;
 	private static final int MAX_ATTEMPTS = 2;
 
-	private final GameConfig gameConfig = mock(GameConfig.class);
 	private final GameScoreCalculator gameScoreCalculator = mock(GameScoreCalculator.class);
 	private final Map<Player, GameScoreKeeper> gameScoreKeepers = new HashMap<Player, GameScoreKeeper>();
 	private final Player playerA = mock(Player.class);
@@ -33,8 +31,6 @@ public class PlayerSequenceDeterminerTest {
 
 	@Before
 	public void beforeTest() {
-		when(this.gameConfig.getGameScoreCalculator()).thenReturn(this.gameScoreCalculator);
-		when(this.gameConfig.getTargetPoints()).thenReturn(TARGET_POINTS);
 		this.gameScoreKeepers.put(this.playerA, this.gameScoreKeeperA);
 		this.gameScoreKeepers.put(this.playerB, this.gameScoreKeeperB);
 	}
@@ -118,8 +114,8 @@ public class PlayerSequenceDeterminerTest {
 	}
 
 	private PlayerSequenceDeterminer createInstanceUnderTest() {
-		PlayerSequenceDeterminer playerSequenceDeterminer = new PlayerSequenceDeterminer(this.gameConfig, MAX_ATTEMPTS,
-				Arrays.asList(this.playerA, this.playerB));
+		PlayerSequenceDeterminer playerSequenceDeterminer = new PlayerSequenceDeterminer(this.gameScoreCalculator,
+				TARGET_POINTS, MAX_ATTEMPTS, Arrays.asList(this.playerA, this.playerB));
 		return playerSequenceDeterminer;
 	}
 

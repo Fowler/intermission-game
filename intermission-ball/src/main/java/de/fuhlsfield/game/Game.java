@@ -30,7 +30,8 @@ public class Game {
 		this.numberOfGames = numberOfGames;
 		this.players = Arrays.asList(players);
 		this.ruleChecker = new RuleChecker(gameConfig, maxAttempts);
-		this.playerSequenceDeterminer = new PlayerSequenceDeterminer(gameConfig, maxAttempts, this.players);
+		this.playerSequenceDeterminer = new PlayerSequenceDeterminer(gameConfig.getGameScoreCalculator(), gameConfig
+				.getTargetPoints(), maxAttempts, this.players);
 		for (Player player : this.players) {
 			GameScoreKeeper gameScoreKeeper = new GameScoreKeeper();
 			this.gameScoreKeepers.put(player, gameScoreKeeper);

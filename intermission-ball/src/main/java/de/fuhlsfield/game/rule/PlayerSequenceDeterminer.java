@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import de.fuhlsfield.game.Player;
-import de.fuhlsfield.game.config.GameConfig;
 import de.fuhlsfield.game.score.GameScoreCalculator;
 import de.fuhlsfield.game.score.GameScoreKeeper;
 
@@ -15,9 +14,10 @@ public class PlayerSequenceDeterminer {
 	private final int targetPoints;
 	private final int maxAttempts;
 
-	public PlayerSequenceDeterminer(GameConfig gameConfig, int maxAttempts, List<Player> players) {
-		this.gameScoreCalculator = gameConfig.getGameScoreCalculator();
-		this.targetPoints = gameConfig.getTargetPoints();
+	public PlayerSequenceDeterminer(GameScoreCalculator gameScoreCalculator, int targetPoints, int maxAttempts,
+			List<Player> players) {
+		this.gameScoreCalculator = gameScoreCalculator;
+		this.targetPoints = targetPoints;
 		this.maxAttempts = maxAttempts;
 		this.players = players;
 	}

@@ -3,6 +3,7 @@ package de.fuhlsfield.ui;
 import de.fuhlsfield.game.Attempt;
 import de.fuhlsfield.game.Game;
 import de.fuhlsfield.game.Player;
+import de.fuhlsfield.game.score.GameScoreCalculator;
 
 public class GameScoreTableModel extends AbstractScoreTabelModel {
 
@@ -10,9 +11,11 @@ public class GameScoreTableModel extends AbstractScoreTabelModel {
 	private static final String TABLE_NAME = "Runde";
 
 	private final Game game;
+	private final GameScoreCalculator gameScoreCalculator;
 
-	public GameScoreTableModel(Game game) {
+	public GameScoreTableModel(Game game, GameScoreCalculator gameScoreCalculator) {
 		this.game = game;
+		this.gameScoreCalculator = gameScoreCalculator;
 	}
 
 	@Override
@@ -22,11 +25,18 @@ public class GameScoreTableModel extends AbstractScoreTabelModel {
 
 	@Override
 	public int getRowCount() {
-		return this.game.getMaxAttempts();
+		return this.game.getMaxAttempts() + 1;
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
+		if (rowIndex >= this.game.getMaxAttempts()) {
+			if (columnIndex == 0) {
+				return "Spielstand";
+			}
+			Player player = this.game.getPlayers().get(columnIndex - 1);
+			return this.gameScoreCalculator.calculateScore(this.game.getGameScoreKeeper(player));
+		}
 		if (columnIndex == 0) {
 			return rowIndex + 1;
 		}

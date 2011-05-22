@@ -18,7 +18,7 @@ public class CurrentScoreTableModel extends AbstractScoreTabelModel {
 
 	@Override
 	public int getColumnCount() {
-		return this.game.getPlayers().size();
+		return this.game.getPlayers().size() + 1;
 	}
 
 	@Override
@@ -28,13 +28,19 @@ public class CurrentScoreTableModel extends AbstractScoreTabelModel {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		Player player = this.game.getPlayers().get(columnIndex);
+		if (columnIndex == 0) {
+			return "aktuell";
+		}
+		Player player = this.game.getPlayers().get(columnIndex - 1);
 		return this.gameScoreCalculator.calculateScore(this.game.getGameScoreKeeper(player));
 	}
 
 	@Override
 	public String getColumnName(int index) {
-		return this.game.getPlayers().get(index).getName();
+		if (index == 0) {
+			return "Spielstand";
+		}
+		return this.game.getPlayers().get(index - 1).getName();
 	}
 
 }
