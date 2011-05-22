@@ -32,12 +32,12 @@ public class RuleChecker {
 	public Map<Ball, RuleCheckState> determineRuleCheckStates(GameScoreKeeper gameScoreKeeper) {
 		HashMap<Ball, RuleCheckState> result = new HashMap<Ball, RuleCheckState>();
 		for (Ball ball : this.allowedBalls) {
-			if (isAllowedPreCheck(ball, gameScoreKeeper)) {
-				result.put(ball, RuleCheckState.ALLOWED);
-			} else {
+			RuleCheckState ruleCheckState = RuleCheckState.ALLOWED;
+			if (!isAllowedPreCheck(ball, gameScoreKeeper)) {
 				Set<PossibleAttempts> balls = determineRuleCheckState(ball, gameScoreKeeper);
-				result.put(ball, determineRuleCheckState(balls, gameScoreKeeper));
+				ruleCheckState = determineRuleCheckState(balls, gameScoreKeeper);
 			}
+			result.put(ball, addIsPlayedInformationToRuleCheckState(ball, gameScoreKeeper, ruleCheckState));
 		}
 		return result;
 	}
@@ -55,6 +55,19 @@ public class RuleChecker {
 			return RuleCheckState.CHECKOUT;
 		}
 		return RuleCheckState.ALLOWED;
+	}
+
+	private RuleCheckState addIsPlayedInformationToRuleCheckState(Ball ball, GameScoreKeeper gameScoreKeeper,
+			RuleCheckState ruleCheckState) {
+		if (gameScoreKeeper.getSuccessfulPlayedBalls().contains(ball)) {
+			switch (ruleCheckState) {
+			case ALLOWED:
+				return RuleCheckState.ALLOWED_AND_PLAYED;
+			case NOT_ALLOWED:
+				return RuleCheckState.NOT_ALLOWED_AND_PLAYED;
+			}
+		}
+		return ruleCheckState;
 	}
 
 	private boolean isAllowedPreCheck(Ball ball, GameScoreKeeper gameScoreKeeper) {

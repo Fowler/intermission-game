@@ -27,4 +27,9 @@ public class RuleCheckStateTest {
 		assertTrue(RuleCheckState.ALLOWED_AND_PLAYED.isAllowed());
 	}
 
+	@Test
+	public void testIsAllowedStateNotAllowedAndPlayed() {
+		assertFalse(RuleCheckState.NOT_ALLOWED_AND_PLAYED.isAllowed());
+	}
+
 }
