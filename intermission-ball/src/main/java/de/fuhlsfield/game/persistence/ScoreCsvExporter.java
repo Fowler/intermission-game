@@ -35,7 +35,6 @@ public class ScoreCsvExporter {
 	public void export(Map<Player, SeasonScoreKeeper> seasonScoreKeepers, Map<Player, GameScoreKeeper> gameScoreKeepers) {
 		Writer writer = null;
 		try {
-			System.out.println(EXPORT_DIR + FILE_SEPARATOR + "scores.csv");
 			writer = new FileWriter(EXPORT_DIR + FILE_SEPARATOR + "scores.csv");
 			writeHeadline(writer);
 			writer.write(EOL);
