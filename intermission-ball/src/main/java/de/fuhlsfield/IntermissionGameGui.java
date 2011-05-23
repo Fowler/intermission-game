@@ -65,7 +65,8 @@ public class IntermissionGameGui {
 	}
 
 	private void initGame(GameConfig gameConfig, int maxAttempts, int numberOfGames, int bonusPoints) {
-		this.game = new Game(gameConfig, maxAttempts, numberOfGames, new Player("Jürgen"), new Player("Marcus"));
+		this.game = new Game(gameConfig, maxAttempts, numberOfGames, bonusPoints, new Player("Jürgen"), new Player(
+				"Marcus"));
 		this.gameScoreCalculator = gameConfig.getGameScoreCalculator();
 		this.gameScoreTableModel = new GameScoreTableModel(this.game, this.gameScoreCalculator);
 		this.seasonScoreTableModel = new SeasonScoreTableModel(this.game, new SeasonScoreCalculator(gameConfig
@@ -127,8 +128,7 @@ public class IntermissionGameGui {
 		this.buttonModel.addUpdater(undoButtonUpdater);
 		panel.add(undoButton);
 		JButton exportToCsv = new JButton("export");
-		exportToCsv.addActionListener(new ToCsvActionListener(this.game.getSeasonScoreKeepers(), this.game
-				.getGameScoreKeepers(), this.gameScoreCalculator));
+		exportToCsv.addActionListener(new ToCsvActionListener(this.game));
 		panel.add(exportToCsv);
 		JButton fiveBallsConfigButton = new JButton(new FiveBallsGameConfig().getName());
 		fiveBallsConfigButton.addActionListener(new ActionListener() {

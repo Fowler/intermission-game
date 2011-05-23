@@ -34,8 +34,8 @@ public class SeasonScoreCalculatorTest {
 	@Test
 	public void testCalculateScoreWhenSeasonScoreKeeperAfterLastGame() {
 		addSeasonScoreKeeper(this.playerA);
-		assertEquals(ScoreConstants.UNDEFINED_SCORE, createInstanceUnderTest(0).calculateScore(this.seasonScoreKeepers,
-				this.playerA, 0));
+		assertEquals(GameScoreCalculator.UNDEFINED_SCORE, createInstanceUnderTest(0).calculateScore(
+				this.seasonScoreKeepers, this.playerA, 0));
 	}
 
 	@Test

@@ -15,7 +15,7 @@ public class PenaltyPointGameScoreCalculator extends StandardGameScoreCalculator
 	public int calculateScoreForAttempt(GameScoreKeeper gameScoreKeeper, int index) {
 		Attempt lastAttempt = gameScoreKeeper.getAttemptByIndex(index);
 		if (lastAttempt == null) {
-			return ScoreConstants.UNDEFINED_SCORE;
+			return GameScoreCalculator.UNDEFINED_SCORE;
 		}
 		if (lastAttempt.isSuccessful()) {
 			return this.ballValueMapper.getValue(lastAttempt.getBall());

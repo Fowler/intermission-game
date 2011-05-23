@@ -6,10 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import de.fuhlsfield.game.config.GameConfig;
+import de.fuhlsfield.game.persistence.ScoreCsvExporter;
 import de.fuhlsfield.game.rule.PlayerSequenceDeterminer;
 import de.fuhlsfield.game.rule.RuleCheckState;
 import de.fuhlsfield.game.rule.RuleChecker;
 import de.fuhlsfield.game.score.GameScoreKeeper;
+import de.fuhlsfield.game.score.SeasonScoreCalculator;
 import de.fuhlsfield.game.score.SeasonScoreKeeper;
 
 public class Game {
@@ -23,8 +25,9 @@ public class Game {
 	private final Map<Player, GameScoreKeeper> gameScoreKeepers = new HashMap<Player, GameScoreKeeper>();
 	private final Map<Player, SeasonScoreKeeper> seasonScoreKeepers = new HashMap<Player, SeasonScoreKeeper>();
 	private final Map<Player, Map<Ball, RuleCheckState>> ballRuleCheckStates = new HashMap<Player, Map<Ball, RuleCheckState>>();
+	private final ScoreCsvExporter scoreCsvExporter;
 
-	public Game(GameConfig gameConfig, int maxAttempts, int numberOfGames, Player... players) {
+	public Game(GameConfig gameConfig, int maxAttempts, int numberOfGames, int bonusPoints, Player... players) {
 		this.gameConfig = gameConfig;
 		this.maxAttempts = maxAttempts;
 		this.numberOfGames = numberOfGames;
@@ -38,6 +41,8 @@ public class Game {
 			this.seasonScoreKeepers.put(player, new SeasonScoreKeeper());
 			upateBallRuleCheckStates(player);
 		}
+		this.scoreCsvExporter = new ScoreCsvExporter(this.players, new SeasonScoreCalculator(gameConfig
+				.getGameScoreCalculator(), bonusPoints), gameConfig.getGameScoreCalculator());
 	}
 
 	public int getMaxAttempts() {
@@ -121,6 +126,11 @@ public class Game {
 
 	public Map<Player, SeasonScoreKeeper> getSeasonScoreKeepers() {
 		return this.seasonScoreKeepers;
+	}
+
+	public void export() {
+		this.scoreCsvExporter.export(this.seasonScoreKeepers, this.gameScoreKeepers);
+
 	}
 
 }

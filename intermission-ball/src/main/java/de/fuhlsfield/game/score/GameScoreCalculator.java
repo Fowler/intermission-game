@@ -6,6 +6,8 @@ import de.fuhlsfield.game.Ball;
 
 public interface GameScoreCalculator {
 
+	int UNDEFINED_SCORE = Integer.MIN_VALUE;
+
 	int calculateScore(GameScoreKeeper gameScoreKeeper);
 
 	int calculateScore(List<Ball> balls);

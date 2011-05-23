@@ -66,7 +66,7 @@ public abstract class AbstractGameScoreCalculatorTest<T extends GameScoreCalcula
 	@Test
 	public final void testCalculateScoreForAttemptAfterLastAttempt() {
 		GameScoreKeeper gameScoreKeeper = createGameScoreKeeper();
-		assertEquals(ScoreConstants.UNDEFINED_SCORE, createInstanceUnderTest().calculateScoreForAttempt(
+		assertEquals(GameScoreCalculator.UNDEFINED_SCORE, createInstanceUnderTest().calculateScoreForAttempt(
 				gameScoreKeeper, 0));
 	}
 

@@ -28,14 +28,14 @@ public class SeasonScoreCalculator {
 			}
 			return totalScore;
 		}
-		return ScoreConstants.UNDEFINED_SCORE;
+		return GameScoreCalculator.UNDEFINED_SCORE;
 	}
 
 	private int calculateMaxScore(Map<Player, SeasonScoreKeeper> seasonScoreKeepers, int index) {
-		int maxScore = ScoreConstants.UNDEFINED_SCORE;
+		int maxScore = GameScoreCalculator.UNDEFINED_SCORE;
 		for (SeasonScoreKeeper seasonScoreKeeper : seasonScoreKeepers.values()) {
 			int score = this.gameScoreCalculator.calculateScore(seasonScoreKeeper.getGameScoreKeeperByIndex(index));
-			if ((maxScore == ScoreConstants.UNDEFINED_SCORE) || (score > maxScore)) {
+			if ((maxScore == GameScoreCalculator.UNDEFINED_SCORE) || (score > maxScore)) {
 				maxScore = score;
 			}
 		}
