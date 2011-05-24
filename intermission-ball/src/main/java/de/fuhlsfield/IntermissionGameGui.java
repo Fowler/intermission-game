@@ -57,20 +57,19 @@ public class IntermissionGameGui {
 	}
 
 	private void initFiveBallGame() {
-		initGame(new FiveBallsGameConfig(), 10, 10, 2);
+		initGame(new FiveBallsGameConfig());
 	}
 
 	private void initSixBallGame() {
-		initGame(new SixBallsGameConfig(), 15, 10, 4);
+		initGame(new SixBallsGameConfig());
 	}
 
-	private void initGame(GameConfig gameConfig, int maxAttempts, int numberOfGames, int bonusPoints) {
-		this.game = new Game(gameConfig, maxAttempts, numberOfGames, bonusPoints, new Player("Jürgen"), new Player(
-				"Marcus"));
+	private void initGame(GameConfig gameConfig) {
+		this.game = new Game(gameConfig, new Player("Jürgen"), new Player("Marcus"));
 		this.gameScoreCalculator = gameConfig.getGameScoreCalculator();
 		this.gameScoreTableModel = new GameScoreTableModel(this.game, this.gameScoreCalculator);
 		this.seasonScoreTableModel = new SeasonScoreTableModel(this.game, new SeasonScoreCalculator(gameConfig
-				.getGameScoreCalculator(), bonusPoints));
+				.getGameScoreCalculator(), gameConfig.getBonusPoints()));
 		this.buttonModel = new ButtonModel(this.game);
 		JFrame oldFrame = this.frame;
 		this.frame = new JFrame();
@@ -90,7 +89,8 @@ public class IntermissionGameGui {
 		for (int i = this.game.getPlayers().size(); i < containerColumns; i++) {
 			container.add(createEmptyComponent());
 		}
-		this.frame.setSize(250 * containerColumns, Math.max(maxAttempts, numberOfGames) * 40);
+		this.frame.setSize(250 * containerColumns, Math.max(gameConfig.getMaxAttempts() + 1, gameConfig
+				.getNumberOfGames()) * 40);
 		this.frame.setVisible(true);
 		this.frame.setTitle("Intermission Game, enjoy your lunch break...");
 		this.buttonModel.updateModel();

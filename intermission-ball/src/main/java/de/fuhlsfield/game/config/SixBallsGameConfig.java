@@ -16,6 +16,9 @@ public class SixBallsGameConfig extends AbstractGameConfig {
 
 	private static String NAME = "Sechsball Konfiguration";
 	private static int TARGET_POINTS = 30;
+	private static int BONUS_POINTS = 4;
+	private static int MAX_ATTEMPTS = 10;
+	private static int NUMBER_OF_GAMES = 10;
 
 	@Override
 	public String getName() {
@@ -25,6 +28,21 @@ public class SixBallsGameConfig extends AbstractGameConfig {
 	@Override
 	public int getTargetPoints() {
 		return TARGET_POINTS;
+	}
+
+	@Override
+	public int getBonusPoints() {
+		return BONUS_POINTS;
+	}
+
+	@Override
+	public int getMaxAttempts() {
+		return MAX_ATTEMPTS;
+	}
+
+	@Override
+	public int getNumberOfGames() {
+		return NUMBER_OF_GAMES;
 	}
 
 	@Override
