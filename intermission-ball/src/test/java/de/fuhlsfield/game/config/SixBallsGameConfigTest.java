@@ -31,6 +31,21 @@ public class SixBallsGameConfigTest extends AbstractGameConfigTest<SixBallsGameC
 	}
 
 	@Test
+	public void testGetBonusPoints() {
+		assertEquals(4, createInstanceUnderTest().getBonusPoints());
+	}
+
+	@Test
+	public void testGetMaxAttempts() {
+		assertEquals(15, createInstanceUnderTest().getMaxAttempts());
+	}
+
+	@Test
+	public void testGetNumberOgGames() {
+		assertEquals(10, createInstanceUnderTest().getNumberOfGames());
+	}
+
+	@Test
 	public void testGetRuleChecks() {
 		HashSet<RuleCheck> expectedRuleChecks = new HashSet<RuleCheck>();
 		expectedRuleChecks.add(new EachBallAtLeastOnceRuleCheck(createExpectedGameScoreCalculator(),
