@@ -14,6 +14,15 @@ public enum Ball {
 	SCHRAEGI("Schrägi"), //
 	FLUMMI("Flummi");
 
+	public static Ball getBallByName(String name) {
+		for (Ball ball : values()) {
+			if (ball.name.equals(name)) {
+				return ball;
+			}
+		}
+		throw new IllegalArgumentException("No ball with name " + name + " defined!");
+	}
+
 	private String name;
 
 	private Ball(String name) {

@@ -11,16 +11,13 @@ import java.io.Reader;
 import java.util.LinkedList;
 import java.util.List;
 
+import de.fuhlsfield.game.Attempt;
+import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.Game;
 import de.fuhlsfield.game.Player;
 import de.fuhlsfield.game.config.GameConfig;
 
 public class ScoreCsvImporter {
-
-	private static final String EXPORT_DIR = System.getProperty("user.home");
-	private static final String EOL = System.getProperty("line.separator");
-	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
-	private static final String SEPARATOR = ",";
 
 	private final String shortName;
 
@@ -41,12 +38,14 @@ public class ScoreCsvImporter {
 		} finally {
 			closeInputStream(fileInputStream);
 		}
-		Game game = new Game(gameConfig, importPlayers());
+		List<Player> players = importPlayers();
+		Game game = new Game(gameConfig, players);
+		importSeasonGameScores(game);
 		return game;
 	}
 
 	private String getFileName() {
-		return EXPORT_DIR + FILE_SEPARATOR + "scores." + this.shortName;
+		return CsvConstants.EXPORT_DIR + CsvConstants.FILE_SEPARATOR + "scores." + this.shortName;
 	}
 
 	private List<Player> importPlayers() {
@@ -56,8 +55,8 @@ public class ScoreCsvImporter {
 		FileInputStream inputStream;
 		try {
 			inputStream = new FileInputStream(file);
-			reader = new BufferedReader(new InputStreamReader(inputStream, "UTF8"));
-			String[] playersArray = reader.readLine().split(SEPARATOR);
+			reader = new BufferedReader(new InputStreamReader(inputStream, CsvConstants.CHARSET));
+			List<String> playersArray = split(reader.readLine());
 			for (String player : playersArray) {
 				if (!player.isEmpty()) {
 					players.add(new Player(player));
@@ -69,6 +68,49 @@ public class ScoreCsvImporter {
 			closeReader(reader);
 		}
 		return players;
+	}
+
+	private void importSeasonGameScores(Game game) {
+		List<Player> players = game.getPlayers();
+		File file = new File(getFileName() + ".csv");
+		BufferedReader reader = null;
+		FileInputStream inputStream;
+		try {
+			inputStream = new FileInputStream(file);
+			reader = new BufferedReader(new InputStreamReader(inputStream, CsvConstants.CHARSET));
+			String row;
+			while (((row = reader.readLine()) != null) && !CsvConstants.HEADLINE_ALL_SCORES.equals(row)) {
+			}
+			if (CsvConstants.HEADLINE_ALL_SCORES.equals(row)) {
+				while ((row = reader.readLine()) != null) {
+					System.out.println(row);
+					List<String> scoreArray = split(row);
+					for (Player player : players) {
+						int playerIndex = players.indexOf(player);
+						Ball ball = Ball.getBallByName(scoreArray.get(2 * playerIndex + 1));
+						boolean isSuccessful = Integer.valueOf(scoreArray.get(2 * playerIndex + 2)) > 0;
+						game.getGameScoreKeeper(player).addAttempt(new Attempt(ball, isSuccessful));
+					}
+					if (game.isGameFinished()) {
+						game.finishGame();
+					}
+				}
+			}
+			reader.close();
+		} catch (IOException e) {
+		} finally {
+			closeReader(reader);
+		}
+	}
+
+	private List<String> split(String stringToSplit) {
+		LinkedList<String> stringResult = new LinkedList<String>();
+		for (String s : stringToSplit.split(CsvConstants.SEPARATOR)) {
+			if (!s.isEmpty()) {
+				stringResult.add(s);
+			}
+		}
+		return stringResult;
 	}
 
 	private void closeReader(Reader reader) {
