@@ -4,6 +4,8 @@ import de.fuhlsfield.game.score.GameScoreCalculator;
 
 abstract class AbstractRuleCheck implements RuleCheck {
 
+	private static final long serialVersionUID = 3843237611564556171L;
+
 	protected final GameScoreCalculator gameScoreCalculator;
 	protected final int targetPoints;
 

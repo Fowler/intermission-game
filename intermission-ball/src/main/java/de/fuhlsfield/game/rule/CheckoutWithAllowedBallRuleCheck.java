@@ -9,6 +9,8 @@ import de.fuhlsfield.game.score.GameScoreKeeper;
 
 public class CheckoutWithAllowedBallRuleCheck extends AbstractRuleCheck {
 
+	private static final long serialVersionUID = -6479296497072102436L;
+
 	private final Set<Ball> allowedBalls;
 
 	public CheckoutWithAllowedBallRuleCheck(GameScoreCalculator gameScoreCalculator, int targetPoints,

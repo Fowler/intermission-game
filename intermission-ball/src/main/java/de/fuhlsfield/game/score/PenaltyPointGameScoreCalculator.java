@@ -5,7 +5,9 @@ import de.fuhlsfield.game.config.BallValueMapper;
 
 public class PenaltyPointGameScoreCalculator extends StandardGameScoreCalculator {
 
-	private final static int PENALTY_POINTS = 1;
+	private static final long serialVersionUID = -6122987976803251018L;
+
+	private static final int PENALTY_POINTS = 1;
 
 	public PenaltyPointGameScoreCalculator(BallValueMapper ballValueMapper) {
 		super(ballValueMapper);

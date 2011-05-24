@@ -14,15 +14,23 @@ import de.fuhlsfield.game.score.PenaltyPointGameScoreCalculator;
 
 public class SixBallsGameConfig extends AbstractGameConfig {
 
-	private static String NAME = "Sechsball Konfiguration";
-	private static int TARGET_POINTS = 30;
-	private static int BONUS_POINTS = 4;
-	private static int MAX_ATTEMPTS = 15;
-	private static int NUMBER_OF_GAMES = 10;
+	private static final long serialVersionUID = -5191940831370001716L;
+
+	private static final String NAME = "Sechsball Konfiguration";
+	private static final String SHORT_NAME = "sixBall";
+	private static final int TARGET_POINTS = 30;
+	private static final int BONUS_POINTS = 4;
+	private static final int MAX_ATTEMPTS = 15;
+	private static final int NUMBER_OF_GAMES = 10;
 
 	@Override
 	public String getName() {
 		return NAME;
+	}
+
+	@Override
+	public String getShortName() {
+		return SHORT_NAME;
 	}
 
 	@Override

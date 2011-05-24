@@ -33,6 +33,7 @@ import de.fuhlsfield.ui.SeasonScoreTableModel;
 import de.fuhlsfield.ui.UndoButtonUpdater;
 import de.fuhlsfield.ui.actionListener.FailureActionListener;
 import de.fuhlsfield.ui.actionListener.FinishActionListener;
+import de.fuhlsfield.ui.actionListener.FromCsvActionListener;
 import de.fuhlsfield.ui.actionListener.SuccessActionListener;
 import de.fuhlsfield.ui.actionListener.ToCsvActionListener;
 import de.fuhlsfield.ui.actionListener.UndoActionListener;
@@ -56,16 +57,9 @@ public class IntermissionGameGui {
 		initSixBallGame();
 	}
 
-	private void initFiveBallGame() {
-		initGame(new FiveBallsGameConfig());
-	}
-
-	private void initSixBallGame() {
-		initGame(new SixBallsGameConfig());
-	}
-
-	private void initGame(GameConfig gameConfig) {
-		this.game = new Game(gameConfig, new Player("Jürgen"), new Player("Marcus"));
+	public void initGame(Game game) {
+		this.game = game;
+		GameConfig gameConfig = game.getGameConfig();
 		this.gameScoreCalculator = gameConfig.getGameScoreCalculator();
 		this.gameScoreTableModel = new GameScoreTableModel(this.game, this.gameScoreCalculator);
 		this.seasonScoreTableModel = new SeasonScoreTableModel(this.game, new SeasonScoreCalculator(gameConfig
@@ -101,6 +95,14 @@ public class IntermissionGameGui {
 		}
 	}
 
+	private void initFiveBallGame() {
+		initGame(new Game(new FiveBallsGameConfig(), Arrays.asList(new Player("Jürgen"), new Player("Marcus"))));
+	}
+
+	private void initSixBallGame() {
+		initGame(new Game(new SixBallsGameConfig(), Arrays.asList(new Player("Jürgen"), new Player("Marcus"))));
+	}
+
 	private JComponent createGameScoreComponent() {
 		JTable gameScoreTable = new JTable(this.gameScoreTableModel);
 		return new JScrollPane(gameScoreTable);
@@ -113,7 +115,7 @@ public class IntermissionGameGui {
 
 	private JComponent createOverviewComponent() {
 		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(5, 1));
+		panel.setLayout(new GridLayout(3, 2));
 		JButton finishButton = new JButton("Spiel beenden");
 		finishButton.addActionListener(new FinishActionListener(this.game, this.gameScoreTableModel,
 				this.seasonScoreTableModel, this.buttonModel));
@@ -127,9 +129,12 @@ public class IntermissionGameGui {
 		undoButtonUpdater.addButton(undoButton);
 		this.buttonModel.addUpdater(undoButtonUpdater);
 		panel.add(undoButton);
-		JButton exportToCsv = new JButton("export");
+		JButton exportToCsv = new JButton("Export");
 		exportToCsv.addActionListener(new ToCsvActionListener(this.game));
 		panel.add(exportToCsv);
+		JButton importFromCsv = new JButton("Import");
+		importFromCsv.addActionListener(new FromCsvActionListener(this.game, this));
+		panel.add(importFromCsv);
 		JButton fiveBallsConfigButton = new JButton(new FiveBallsGameConfig().getName());
 		fiveBallsConfigButton.addActionListener(new ActionListener() {
 

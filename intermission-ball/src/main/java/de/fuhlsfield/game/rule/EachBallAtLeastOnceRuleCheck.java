@@ -10,6 +10,8 @@ import de.fuhlsfield.game.score.GameScoreKeeper;
 
 public class EachBallAtLeastOnceRuleCheck extends AbstractRuleCheck {
 
+	private static final long serialVersionUID = -4488388208656383270L;
+
 	private final Set<Ball> ballsToPlay;
 
 	public EachBallAtLeastOnceRuleCheck(GameScoreCalculator gameScoreCalculator, int targetPoints, Set<Ball> balls) {

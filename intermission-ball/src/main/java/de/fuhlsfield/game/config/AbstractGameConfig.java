@@ -9,6 +9,8 @@ import de.fuhlsfield.game.rule.RuleCheck;
 
 abstract class AbstractGameConfig implements GameConfig {
 
+	private static final long serialVersionUID = -4757906686513115903L;
+
 	protected final BallValueMapper ballValueMapper = new BallValueMapper();
 	private final Set<RuleCheck> ruleChecks;
 

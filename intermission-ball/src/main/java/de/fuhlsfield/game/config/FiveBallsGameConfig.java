@@ -12,15 +12,23 @@ import de.fuhlsfield.game.score.StandardGameScoreCalculator;
 
 public class FiveBallsGameConfig extends AbstractGameConfig {
 
-	private static String NAME = "Fünfball Konfiguration";
-	private static int TARGET_POINTS = 14;
-	private static int BONUS_POINTS = 2;
-	private static int MAX_ATTEMPTS = 10;
-	private static int NUMBER_OF_GAMES = 10;
+	private static final long serialVersionUID = 2295318107562108539L;
+
+	private static final String NAME = "Fünfball Konfiguration";
+	private static final String SHORT_NAME = "fiveBall";
+	private static final int TARGET_POINTS = 14;
+	private static final int BONUS_POINTS = 2;
+	private static final int MAX_ATTEMPTS = 10;
+	private static final int NUMBER_OF_GAMES = 10;
 
 	@Override
 	public String getName() {
 		return NAME;
+	}
+
+	@Override
+	public String getShortName() {
+		return SHORT_NAME;
 	}
 
 	@Override

@@ -1,12 +1,12 @@
 package de.fuhlsfield.game;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import de.fuhlsfield.game.config.GameConfig;
 import de.fuhlsfield.game.persistence.ScoreCsvExporter;
+import de.fuhlsfield.game.persistence.ScoreCsvImporter;
 import de.fuhlsfield.game.rule.PlayerSequenceDeterminer;
 import de.fuhlsfield.game.rule.RuleCheckState;
 import de.fuhlsfield.game.rule.RuleChecker;
@@ -24,10 +24,11 @@ public class Game {
 	private final Map<Player, SeasonScoreKeeper> seasonScoreKeepers = new HashMap<Player, SeasonScoreKeeper>();
 	private final Map<Player, Map<Ball, RuleCheckState>> ballRuleCheckStates = new HashMap<Player, Map<Ball, RuleCheckState>>();
 	private final ScoreCsvExporter scoreCsvExporter;
+	private final ScoreCsvImporter scoreCsvImporter;
 
-	public Game(GameConfig gameConfig, Player... players) {
+	public Game(GameConfig gameConfig, List<Player> players) {
 		this.gameConfig = gameConfig;
-		this.players = Arrays.asList(players);
+		this.players = players;
 		this.ruleChecker = new RuleChecker(gameConfig, gameConfig.getMaxAttempts());
 		this.playerSequenceDeterminer = new PlayerSequenceDeterminer(gameConfig.getGameScoreCalculator(), gameConfig
 				.getTargetPoints(), gameConfig.getMaxAttempts(), this.players);
@@ -38,7 +39,8 @@ public class Game {
 			upateBallRuleCheckStates(player);
 		}
 		this.scoreCsvExporter = new ScoreCsvExporter(this.players, new SeasonScoreCalculator(gameConfig
-				.getGameScoreCalculator(), gameConfig.getBonusPoints()), gameConfig.getGameScoreCalculator());
+				.getGameScoreCalculator(), gameConfig.getBonusPoints()), gameConfig);
+		this.scoreCsvImporter = new ScoreCsvImporter(gameConfig);
 	}
 
 	public int getMaxAttempts() {
@@ -125,9 +127,16 @@ public class Game {
 		return this.seasonScoreKeepers;
 	}
 
-	public void export() {
-		this.scoreCsvExporter.export(this.seasonScoreKeepers, this.gameScoreKeepers);
+	public void exportScore() {
+		this.scoreCsvExporter.exportScoreAndConfig(this.seasonScoreKeepers, this.gameScoreKeepers);
+	}
 
+	public Game importScore() {
+		return this.scoreCsvImporter.importScoreAndConfig();
+	}
+
+	public GameConfig getGameConfig() {
+		return this.gameConfig;
 	}
 
 }

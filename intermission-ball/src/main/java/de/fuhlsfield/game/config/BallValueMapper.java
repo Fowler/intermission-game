@@ -1,5 +1,6 @@
 package de.fuhlsfield.game.config;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,7 +8,9 @@ import java.util.Map;
 
 import de.fuhlsfield.game.Ball;
 
-public class BallValueMapper {
+public class BallValueMapper implements Serializable {
+
+	private static final long serialVersionUID = 7109602736237252061L;
 
 	private final List<Ball> balls = new LinkedList<Ball>();
 	private final Map<Ball, Integer> ballValues = new HashMap<Ball, Integer>();
@@ -23,23 +26,30 @@ public class BallValueMapper {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		BallValueMapper other = (BallValueMapper) obj;
 		if (this.ballValues == null) {
-			if (other.ballValues != null)
+			if (other.ballValues != null) {
 				return false;
-		} else if (!this.ballValues.equals(other.ballValues))
+			}
+		} else if (!this.ballValues.equals(other.ballValues)) {
 			return false;
+		}
 		if (this.balls == null) {
-			if (other.balls != null)
+			if (other.balls != null) {
 				return false;
-		} else if (!this.balls.equals(other.balls))
+			}
+		} else if (!this.balls.equals(other.balls)) {
 			return false;
+		}
 		return true;
 	}
 

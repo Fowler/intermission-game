@@ -1,10 +1,11 @@
 package de.fuhlsfield.game.score;
 
+import java.io.Serializable;
 import java.util.List;
 
 import de.fuhlsfield.game.Ball;
 
-public interface GameScoreCalculator {
+public interface GameScoreCalculator extends Serializable {
 
 	int UNDEFINED_SCORE = Integer.MIN_VALUE;
 

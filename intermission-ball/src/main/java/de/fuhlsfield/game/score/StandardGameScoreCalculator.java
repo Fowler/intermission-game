@@ -8,6 +8,8 @@ import de.fuhlsfield.game.config.BallValueMapper;
 
 public class StandardGameScoreCalculator implements GameScoreCalculator {
 
+	private static final long serialVersionUID = 6251196773975309942L;
+
 	protected final BallValueMapper ballValueMapper;
 
 	public StandardGameScoreCalculator(BallValueMapper ballValueMapper) {
