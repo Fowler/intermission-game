@@ -18,8 +18,6 @@ public class Game {
 
 	private final GameConfig gameConfig;
 	private final List<Player> players;
-	private final int maxAttempts;
-	private final int numberOfGames;
 	private final RuleChecker ruleChecker;
 	private final PlayerSequenceDeterminer playerSequenceDeterminer;
 	private final Map<Player, GameScoreKeeper> gameScoreKeepers = new HashMap<Player, GameScoreKeeper>();
@@ -27,14 +25,12 @@ public class Game {
 	private final Map<Player, Map<Ball, RuleCheckState>> ballRuleCheckStates = new HashMap<Player, Map<Ball, RuleCheckState>>();
 	private final ScoreCsvExporter scoreCsvExporter;
 
-	public Game(GameConfig gameConfig, int maxAttempts, int numberOfGames, int bonusPoints, Player... players) {
+	public Game(GameConfig gameConfig, Player... players) {
 		this.gameConfig = gameConfig;
-		this.maxAttempts = maxAttempts;
-		this.numberOfGames = numberOfGames;
 		this.players = Arrays.asList(players);
-		this.ruleChecker = new RuleChecker(gameConfig, maxAttempts);
+		this.ruleChecker = new RuleChecker(gameConfig, gameConfig.getMaxAttempts());
 		this.playerSequenceDeterminer = new PlayerSequenceDeterminer(gameConfig.getGameScoreCalculator(), gameConfig
-				.getTargetPoints(), maxAttempts, this.players);
+				.getTargetPoints(), gameConfig.getMaxAttempts(), this.players);
 		for (Player player : this.players) {
 			GameScoreKeeper gameScoreKeeper = new GameScoreKeeper();
 			this.gameScoreKeepers.put(player, gameScoreKeeper);
@@ -42,15 +38,15 @@ public class Game {
 			upateBallRuleCheckStates(player);
 		}
 		this.scoreCsvExporter = new ScoreCsvExporter(this.players, new SeasonScoreCalculator(gameConfig
-				.getGameScoreCalculator(), bonusPoints), gameConfig.getGameScoreCalculator());
+				.getGameScoreCalculator(), gameConfig.getBonusPoints()), gameConfig.getGameScoreCalculator());
 	}
 
 	public int getMaxAttempts() {
-		return this.maxAttempts;
+		return this.gameConfig.getMaxAttempts();
 	}
 
 	public int getNumberOfGames() {
-		return this.numberOfGames;
+		return this.gameConfig.getNumberOfGames();
 	}
 
 	public List<Player> getPlayers() {
@@ -113,7 +109,8 @@ public class Game {
 	}
 
 	private boolean isSeasonFinished() {
-		return (this.seasonScoreKeepers.get(getPlayers().get(0)).getNumberOfGameScoreKeepers() >= this.numberOfGames);
+		return (this.seasonScoreKeepers.get(getPlayers().get(0)).getNumberOfGameScoreKeepers() >= this.gameConfig
+				.getNumberOfGames());
 	}
 
 	private void upateBallRuleCheckStates(Player player) {
