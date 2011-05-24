@@ -1,6 +1,5 @@
 package de.fuhlsfield.ui;
 
-import de.fuhlsfield.game.Attempt;
 import de.fuhlsfield.game.Game;
 import de.fuhlsfield.game.Player;
 import de.fuhlsfield.game.score.GameScoreCalculator;
@@ -40,11 +39,7 @@ public class GameScoreTableModel extends AbstractScoreTabelModel {
 		if (columnIndex == 0) {
 			return rowIndex + 1;
 		}
-		Attempt attempt = this.game.getGameScoreKeeper(getPlayer(columnIndex - 1)).getAttemptByIndex(rowIndex);
-		if (attempt == null) {
-			return null;
-		}
-		return attempt.getBall().getName();
+		return this.game.getGameScoreKeeper(getPlayer(columnIndex - 1)).getAttemptByIndex(rowIndex);
 	}
 
 	@Override
