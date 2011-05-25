@@ -41,6 +41,14 @@ public class StatisticKeeper {
 			this.failureCounter += value;
 		}
 
+		private void decSuccessCounter(int value) {
+			this.successCounter -= value;
+		}
+
+		private void decFailureCounter(int value) {
+			this.failureCounter -= value;
+		}
+
 		private int sum() {
 			return this.successCounter + this.failureCounter;
 		}
@@ -64,6 +72,20 @@ public class StatisticKeeper {
 		}
 	}
 
+	public void addSuccessfulAttempts(Ball ball, int times) {
+		if (!this.statistic.containsKey(ball)) {
+			this.statistic.put(ball, new SuccessFailure());
+		}
+		this.statistic.get(ball).incSuccessCounter(times);
+	}
+
+	public void addFailedAttempts(Ball ball, int times) {
+		if (!this.statistic.containsKey(ball)) {
+			this.statistic.put(ball, new SuccessFailure());
+		}
+		this.statistic.get(ball).incFailureCounter(times);
+	}
+
 	public void addStatisticKeeper(StatisticKeeper statisticKeeper) {
 		for (Ball ball : statisticKeeper.statistic.keySet()) {
 			if (!this.statistic.containsKey(ball)) {
@@ -71,6 +93,15 @@ public class StatisticKeeper {
 			}
 			this.statistic.get(ball).incSuccessCounter(statisticKeeper.getSuccessCounter(ball));
 			this.statistic.get(ball).incFailureCounter(statisticKeeper.getFailureCounter(ball));
+		}
+	}
+
+	public void removeStatisticKeeper(StatisticKeeper statisticKeeper) {
+		for (Ball ball : statisticKeeper.statistic.keySet()) {
+			if (this.statistic.containsKey(ball)) {
+				this.statistic.get(ball).decSuccessCounter(statisticKeeper.getSuccessCounter(ball));
+				this.statistic.get(ball).decFailureCounter(statisticKeeper.getFailureCounter(ball));
+			}
 		}
 	}
 

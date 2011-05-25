@@ -131,9 +131,9 @@ public class ScoreCsvExporter {
 			writer.write(this.csvFileProperties.getSeparator());
 			for (Player player : this.players) {
 				StatisticKeeper statisticKeeper = statisticKeepers.get(player);
-				writer.write(statisticKeeper.getSuccessCounter(ball));
+				writer.write(String.valueOf(statisticKeeper.getSuccessCounter(ball)));
 				writer.write(this.csvFileProperties.getSeparator());
-				writer.write(statisticKeeper.getFailureCounter(ball));
+				writer.write(String.valueOf(statisticKeeper.getFailureCounter(ball)));
 				writer.write(this.csvFileProperties.getSeparator());
 			}
 			writer.write(EOL);

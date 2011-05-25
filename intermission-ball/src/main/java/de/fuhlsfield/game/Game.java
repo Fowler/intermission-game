@@ -46,6 +46,13 @@ public class Game {
 		this.scoreCsvImporter = new ScoreCsvImporter(gameConfig);
 	}
 
+	public void setTotalStatisticKeepers(Map<Player, StatisticKeeper> statisticKeepers) {
+		for (Player player : statisticKeepers.keySet()) {
+			statisticKeepers.get(player).removeStatisticKeeper(getSeasonStatisticKeeper(player));
+			this.totalStatisticKeepers.put(player, statisticKeepers.get(player));
+		}
+	}
+
 	public int getMaxAttempts() {
 		return this.gameConfig.getMaxAttempts();
 	}

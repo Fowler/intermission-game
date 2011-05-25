@@ -8,14 +8,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.Reader;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import de.fuhlsfield.game.Attempt;
 import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.Game;
 import de.fuhlsfield.game.Player;
 import de.fuhlsfield.game.config.GameConfig;
+import de.fuhlsfield.game.score.StatisticKeeper;
 
 public class ScoreCsvImporter {
 
@@ -31,6 +34,7 @@ public class ScoreCsvImporter {
 		Game game = new Game(gameConfig, players);
 		importSeasonGameScores(game);
 		importCurrentGameScore(game);
+		game.setTotalStatisticKeepers(importStatisticKeepers(players));
 		for (Player player : players) {
 			game.upateBallRuleCheckStates(player);
 		}
@@ -106,6 +110,33 @@ public class ScoreCsvImporter {
 		} finally {
 			closeReader(reader);
 		}
+	}
+
+	private Map<Player, StatisticKeeper> importStatisticKeepers(List<Player> players) {
+		HashMap<Player, StatisticKeeper> statisticKeepers = new HashMap<Player, StatisticKeeper>();
+		for (Player player : players) {
+			statisticKeepers.put(player, new StatisticKeeper());
+		}
+		BufferedReader reader = null;
+		try {
+			reader = createBufferedReaderForScore();
+			if (readUpToMarker(reader, this.csvFileProperties.getHeadlineStatistic())) {
+				String row;
+				while ((row = reader.readLine()) != null) {
+					List<String> statistic = split(row);
+					Ball ball = Ball.getBallByName(statistic.get(0));
+					for (Player player : players) {
+						int index = players.indexOf(player) * 2 + 1;
+						statisticKeepers.get(player).addSuccessfulAttempts(ball, Integer.valueOf(statistic.get(index)));
+						statisticKeepers.get(player).addFailedAttempts(ball, Integer.valueOf(statistic.get(index + 1)));
+					}
+				}
+			}
+		} catch (IOException e) {
+		} finally {
+			closeReader(reader);
+		}
+		return statisticKeepers;
 	}
 
 	private BufferedReader createBufferedReaderForScore() throws IOException {
