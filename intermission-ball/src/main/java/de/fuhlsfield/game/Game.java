@@ -131,7 +131,8 @@ public class Game {
 	}
 
 	public void exportScore() {
-		this.scoreCsvExporter.exportScoreAndConfig(this.seasonScoreKeepers, this.gameScoreKeepers);
+		this.scoreCsvExporter.exportScoreAndConfig(this.seasonScoreKeepers, this.gameScoreKeepers,
+				getTotalStatisticKeepers());
 	}
 
 	public Game importScore() {
@@ -152,6 +153,14 @@ public class Game {
 		StatisticKeeper statisticKeeper = getSeasonStatisticKeeper(player);
 		statisticKeeper.addStatisticKeeper(this.totalStatisticKeepers.get(player));
 		return statisticKeeper;
+	}
+
+	private Map<Player, StatisticKeeper> getTotalStatisticKeepers() {
+		HashMap<Player, StatisticKeeper> statisticKeepers = new HashMap<Player, StatisticKeeper>();
+		for (Player player : this.players) {
+			statisticKeepers.put(player, getTotalStatisticKeeper(player));
+		}
+		return statisticKeepers;
 	}
 
 }

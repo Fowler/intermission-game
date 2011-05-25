@@ -94,7 +94,8 @@ public class ScoreCsvImporter {
 			reader = createBufferedReaderForScore();
 			if (readUpToMarker(reader, this.csvFileProperties.getHeadlineAllScores())) {
 				String row;
-				while ((row = reader.readLine()) != null) {
+				while (((row = reader.readLine()) != null)
+						&& !row.equals(this.csvFileProperties.getHeadlineStatistic())) {
 					importAttempt(game, row);
 					if (game.isGameFinished()) {
 						game.finishGame();
@@ -117,9 +118,11 @@ public class ScoreCsvImporter {
 		List<String> scoreArray = split(row);
 		for (Player player : players) {
 			int index = players.indexOf(player) * 2 + 1;
-			Ball ball = Ball.getBallByName(scoreArray.get(index));
-			boolean isSuccessful = Integer.valueOf(scoreArray.get(index + 1)) > 0;
-			game.getGameScoreKeeper(player).addAttempt(new Attempt(ball, isSuccessful));
+			if (index < scoreArray.size()) {
+				Ball ball = Ball.getBallByName(scoreArray.get(index));
+				boolean isSuccessful = Integer.valueOf(scoreArray.get(index + 1)) > 0;
+				game.getGameScoreKeeper(player).addAttempt(new Attempt(ball, isSuccessful));
+			}
 		}
 	}
 

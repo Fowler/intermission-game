@@ -10,6 +10,7 @@ class CsvFileProperties {
 	private static final String HEADLINE_CURRENT_SCORE = "aktueller Spielstand";
 	private static final String HEADLINE_SEASON_SCORE = "Saisonspielstand";
 	private static final String HEADLINE_ALL_SCORES = "bisherige Spiele";
+	private static final String HEADLINE_STATISTIC = "Statistik";
 
 	private final String shortName;
 
@@ -47,6 +48,10 @@ class CsvFileProperties {
 
 	String getHeadlineAllScores() {
 		return HEADLINE_ALL_SCORES;
+	}
+
+	String getHeadlineStatistic() {
+		return HEADLINE_STATISTIC;
 	}
 
 	private String getFileName(String extension) {

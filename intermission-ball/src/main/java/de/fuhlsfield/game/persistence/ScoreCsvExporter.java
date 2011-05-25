@@ -13,11 +13,13 @@ import java.util.List;
 import java.util.Map;
 
 import de.fuhlsfield.game.Attempt;
+import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.Player;
 import de.fuhlsfield.game.config.GameConfig;
 import de.fuhlsfield.game.score.GameScoreKeeper;
 import de.fuhlsfield.game.score.SeasonScoreCalculator;
 import de.fuhlsfield.game.score.SeasonScoreKeeper;
+import de.fuhlsfield.game.score.StatisticKeeper;
 
 public class ScoreCsvExporter {
 
@@ -36,13 +38,13 @@ public class ScoreCsvExporter {
 	}
 
 	public void exportScoreAndConfig(Map<Player, SeasonScoreKeeper> seasonScoreKeepers,
-			Map<Player, GameScoreKeeper> gameScoreKeepers) {
-		exportScore(seasonScoreKeepers, gameScoreKeepers);
+			Map<Player, GameScoreKeeper> gameScoreKeepers, Map<Player, StatisticKeeper> statisticKeepers) {
+		exportScore(seasonScoreKeepers, gameScoreKeepers, statisticKeepers);
 		exportConfig();
 	}
 
 	private void exportScore(Map<Player, SeasonScoreKeeper> seasonScoreKeepers,
-			Map<Player, GameScoreKeeper> gameScoreKeepers) {
+			Map<Player, GameScoreKeeper> gameScoreKeepers, Map<Player, StatisticKeeper> statisticKeepers) {
 		File file = new File(this.csvFileProperties.getScoreFileName());
 		BufferedWriter writer = null;
 		try {
@@ -53,6 +55,7 @@ public class ScoreCsvExporter {
 			writeCurrentGameScore(writer, gameScoreKeepers);
 			writeSeasonScore(writer, seasonScoreKeepers);
 			writeSeasonGameScores(writer, seasonScoreKeepers);
+			writeStatistics(writer, statisticKeepers);
 			writer.flush();
 		} catch (IOException e) {
 		} finally {
@@ -117,6 +120,23 @@ public class ScoreCsvExporter {
 				gameScoreKeepersToWrite.put(player, seasonScoreKeepers.get(player).getGameScoreKeeperByIndex(i));
 			}
 			writeGameScore(writer, gameScoreKeepersToWrite);
+		}
+	}
+
+	private void writeStatistics(Writer writer, Map<Player, StatisticKeeper> statisticKeepers) throws IOException {
+		writer.write(this.csvFileProperties.getHeadlineStatistic());
+		writer.write(EOL);
+		for (Ball ball : this.gameConfig.getAllowedBalls()) {
+			writer.write(ball.getName());
+			writer.write(this.csvFileProperties.getSeparator());
+			for (Player player : this.players) {
+				StatisticKeeper statisticKeeper = statisticKeepers.get(player);
+				writer.write(statisticKeeper.getSuccessCounter(ball));
+				writer.write(this.csvFileProperties.getSeparator());
+				writer.write(statisticKeeper.getFailureCounter(ball));
+				writer.write(this.csvFileProperties.getSeparator());
+			}
+			writer.write(EOL);
 		}
 	}
 
