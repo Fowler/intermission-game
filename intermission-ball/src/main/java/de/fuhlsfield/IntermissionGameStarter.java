@@ -1,6 +1,5 @@
 package de.fuhlsfield;
 
-
 /**
  * Starter for intermission game.
  * 

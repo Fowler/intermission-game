@@ -149,7 +149,9 @@ public class Game {
 	}
 
 	public StatisticKeeper getTotalStatisticKeeper(Player player) {
-		return this.totalStatisticKeepers.get(player);
+		StatisticKeeper statisticKeeper = getSeasonStatisticKeeper(player);
+		statisticKeeper.addStatisticKeeper(this.totalStatisticKeepers.get(player));
+		return statisticKeeper;
 	}
 
 }

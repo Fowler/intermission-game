@@ -31,6 +31,7 @@ import de.fuhlsfield.ui.FinishButtonUpdater;
 import de.fuhlsfield.ui.GameScoreTableModel;
 import de.fuhlsfield.ui.SeasonScoreTableModel;
 import de.fuhlsfield.ui.SeasonStatisticTableModel;
+import de.fuhlsfield.ui.TotalStatisticTableModel;
 import de.fuhlsfield.ui.UndoButtonUpdater;
 import de.fuhlsfield.ui.actionListener.FailureActionListener;
 import de.fuhlsfield.ui.actionListener.FinishActionListener;
@@ -52,6 +53,7 @@ public class IntermissionGameGui {
 	private GameScoreTableModel gameScoreTableModel;
 	private SeasonScoreTableModel seasonScoreTableModel;
 	private SeasonStatisticTableModel seasonStatisticTableModel;
+	private TotalStatisticTableModel totalStatisticTableModel;
 	private ButtonModel buttonModel;
 	private JFrame frame;
 
@@ -67,6 +69,7 @@ public class IntermissionGameGui {
 		this.seasonScoreTableModel = new SeasonScoreTableModel(this.game, new SeasonScoreCalculator(gameConfig
 				.getGameScoreCalculator(), gameConfig.getBonusPoints()));
 		this.seasonStatisticTableModel = new SeasonStatisticTableModel(this.game);
+		this.totalStatisticTableModel = new TotalStatisticTableModel(game);
 		this.buttonModel = new ButtonModel(this.game);
 		JFrame oldFrame = this.frame;
 		this.frame = new JFrame();
@@ -122,14 +125,15 @@ public class IntermissionGameGui {
 		panel.setLayout(new GridLayout(3, 2));
 		JButton finishButton = new JButton("Spiel beenden");
 		finishButton.addActionListener(new FinishActionListener(this.game, this.gameScoreTableModel,
-				this.seasonScoreTableModel, this.seasonStatisticTableModel, this.buttonModel));
+				this.seasonScoreTableModel, this.seasonStatisticTableModel, this.totalStatisticTableModel,
+				this.buttonModel));
 		FinishButtonUpdater finishButtonUpdater = new FinishButtonUpdater();
 		finishButtonUpdater.addButton(finishButton);
 		this.buttonModel.addUpdater(finishButtonUpdater);
 		panel.add(finishButton);
 		JButton undoButton = new JButton("Undo");
 		undoButton.addActionListener(new UndoActionListener(this.game, this.gameScoreTableModel,
-				this.seasonStatisticTableModel, this.buttonModel));
+				this.seasonStatisticTableModel, this.totalStatisticTableModel, this.buttonModel));
 		UndoButtonUpdater undoButtonUpdater = new UndoButtonUpdater();
 		undoButtonUpdater.addButton(undoButton);
 		this.buttonModel.addUpdater(undoButtonUpdater);
@@ -162,8 +166,13 @@ public class IntermissionGameGui {
 	}
 
 	private JComponent createStatisticComponent() {
-		JTable statisticTable = new JTable(this.seasonStatisticTableModel);
-		return new JScrollPane(statisticTable);
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridLayout(2, 1));
+		JTable seasonStatisticTable = new JTable(this.seasonStatisticTableModel);
+		panel.add(new JScrollPane(seasonStatisticTable));
+		JTable totalStatisticTable = new JTable(this.totalStatisticTableModel);
+		panel.add(new JScrollPane(totalStatisticTable));
+		return panel;
 	}
 
 	private JPanel createPanelWithButtons(Player player) {
@@ -177,11 +186,13 @@ public class IntermissionGameGui {
 			String ballName = ball.getName();
 			JButton attemptSuccessButton = new JButton(ballName);
 			attemptSuccessButton.addActionListener(new SuccessActionListener(this.game, ball, player,
-					this.gameScoreTableModel, this.seasonStatisticTableModel, this.buttonModel));
+					this.gameScoreTableModel, this.seasonStatisticTableModel, this.totalStatisticTableModel,
+					this.buttonModel));
 			attemptButtonUpdater.addSuccessButton(attemptSuccessButton, player, ball);
 			JButton attemptFailureButton = new JButton("-" + ballName);
 			attemptFailureButton.addActionListener(new FailureActionListener(this.game, ball, player,
-					this.gameScoreTableModel, this.seasonStatisticTableModel, this.buttonModel));
+					this.gameScoreTableModel, this.seasonStatisticTableModel, this.totalStatisticTableModel,
+					this.buttonModel));
 			attemptButtonUpdater.addFailureButton(attemptFailureButton, player, ball);
 			panel.add(attemptSuccessButton);
 			panel.add(attemptFailureButton);
