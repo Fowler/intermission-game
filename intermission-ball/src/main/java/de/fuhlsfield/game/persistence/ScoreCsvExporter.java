@@ -21,14 +21,18 @@ import de.fuhlsfield.game.score.SeasonScoreKeeper;
 
 public class ScoreCsvExporter {
 
+	private static final String EOL = System.getProperty("line.separator");
+
 	private final List<Player> players;
 	private final SeasonScoreCalculator seasonScoreCalculator;
 	private final GameConfig gameConfig;
+	private final CsvFileProperties csvFileProperties;
 
 	public ScoreCsvExporter(List<Player> players, SeasonScoreCalculator seasonScoreCalculator, GameConfig gameConfig) {
 		this.players = players;
 		this.seasonScoreCalculator = seasonScoreCalculator;
 		this.gameConfig = gameConfig;
+		this.csvFileProperties = new CsvFileProperties(gameConfig.getShortName());
 	}
 
 	public void exportScoreAndConfig(Map<Player, SeasonScoreKeeper> seasonScoreKeepers,
@@ -39,13 +43,13 @@ public class ScoreCsvExporter {
 
 	private void exportScore(Map<Player, SeasonScoreKeeper> seasonScoreKeepers,
 			Map<Player, GameScoreKeeper> gameScoreKeepers) {
-		File file = new File(getFileName() + ".csv");
-		Writer writer = null;
+		File file = new File(this.csvFileProperties.getScoreFileName());
+		BufferedWriter writer = null;
 		try {
 			file.createNewFile();
-			FileOutputStream outputStream = new FileOutputStream(file);
-			writer = new BufferedWriter(new OutputStreamWriter(outputStream, CsvConstants.CHARSET));
-			writeHeadline(writer);
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), this.csvFileProperties
+					.getCharSet()));
+			writePlayers(writer);
 			writeCurrentGameScore(writer, gameScoreKeepers);
 			writeSeasonScore(writer, seasonScoreKeepers);
 			writeSeasonGameScores(writer, seasonScoreKeepers);
@@ -57,59 +61,56 @@ public class ScoreCsvExporter {
 	}
 
 	private void exportConfig() {
-		File file = new File(getFileName() + ".cfg");
-		FileOutputStream fileOutputStream = null;
+		File file = new File(this.csvFileProperties.getConfigFileName());
+		ObjectOutputStream outputStream = null;
 		try {
-			fileOutputStream = new FileOutputStream(file);
 			file.createNewFile();
-			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-			objectOutputStream.writeObject(this.gameConfig);
-			fileOutputStream.flush();
+			outputStream = new ObjectOutputStream(new FileOutputStream(file));
+			outputStream.writeObject(this.gameConfig);
+			outputStream.flush();
 		} catch (IOException e) {
 		} finally {
-			closeOutputStream(fileOutputStream);
+			closeOutputStream(outputStream);
 		}
 	}
 
-	private String getFileName() {
-		return CsvConstants.EXPORT_DIR + CsvConstants.FILE_SEPARATOR + "scores." + this.gameConfig.getShortName();
-	}
-
-	private void writeHeadline(Writer writer) throws IOException {
-		writer.append(CsvConstants.SEPARATOR);
+	private void writePlayers(Writer writer) throws IOException {
+		writer.write(this.csvFileProperties.getHeadlinePlayers());
+		writer.write(EOL);
+		writer.append(this.csvFileProperties.getSeparator());
 		for (Player player : this.players) {
 			writer.append(player.getName());
-			writer.append(CsvConstants.SEPARATOR);
-			writer.append(CsvConstants.SEPARATOR);
+			writer.append(this.csvFileProperties.getSeparator());
+			writer.append(this.csvFileProperties.getSeparator());
 		}
-		writer.append(CsvConstants.EOL);
+		writer.append(EOL);
 	}
 
 	private void writeCurrentGameScore(Writer writer, Map<Player, GameScoreKeeper> gameScoreKeepers) throws IOException {
-		writer.write(CsvConstants.HEADLINE_CURRENT_SCORE);
-		writer.write(CsvConstants.EOL);
+		writer.write(this.csvFileProperties.getHeadlineCurrentScore());
+		writer.write(EOL);
 		writeGameScore(writer, gameScoreKeepers);
 	}
 
 	private void writeSeasonScore(Writer writer, Map<Player, SeasonScoreKeeper> seasonScoreKeepers) throws IOException {
-		writer.write("Saisonspielstand");
-		writer.write(CsvConstants.EOL);
+		writer.write(this.csvFileProperties.getHeadlineSeasonScore());
+		writer.write(EOL);
 		for (int i = 0; i < seasonScoreKeepers.get(this.players.get(0)).getNumberOfGameScoreKeepers(); i++) {
 			writer.write(String.valueOf(i + 1));
-			writer.write(CsvConstants.SEPARATOR);
+			writer.write(this.csvFileProperties.getSeparator());
 			for (Player player : this.players) {
 				writer.write(String.valueOf(this.seasonScoreCalculator.calculateScore(seasonScoreKeepers, player, i)));
-				writer.write(CsvConstants.SEPARATOR);
-				writer.write(CsvConstants.SEPARATOR);
+				writer.write(this.csvFileProperties.getSeparator());
+				writer.write(this.csvFileProperties.getSeparator());
 			}
-			writer.write(CsvConstants.EOL);
+			writer.write(EOL);
 		}
 	}
 
 	private void writeSeasonGameScores(Writer writer, Map<Player, SeasonScoreKeeper> seasonScoreKeepers)
 			throws IOException {
-		writer.write(CsvConstants.HEADLINE_ALL_SCORES);
-		writer.write(CsvConstants.EOL);
+		writer.write(this.csvFileProperties.getHeadlineAllScores());
+		writer.write(EOL);
 		for (int i = 0; i < seasonScoreKeepers.get(this.players.get(0)).getNumberOfGameScoreKeepers(); i++) {
 			HashMap<Player, GameScoreKeeper> gameScoreKeepersToWrite = new HashMap<Player, GameScoreKeeper>();
 			for (Player player : this.players) {
@@ -122,21 +123,21 @@ public class ScoreCsvExporter {
 	private void writeGameScore(Writer writer, Map<Player, GameScoreKeeper> gameScoreKeepers) throws IOException {
 		for (int i = 0; i < gameScoreKeepers.get(this.players.get(0)).getNumberOfAttempts(); i++) {
 			writer.write(String.valueOf(i + 1));
-			writer.write(CsvConstants.SEPARATOR);
+			writer.write(this.csvFileProperties.getSeparator());
 			for (Player player : this.players) {
 				GameScoreKeeper gameScoreKeeper = gameScoreKeepers.get(player);
 				Attempt attempt = gameScoreKeeper.getAttemptByIndex(i);
 				if (attempt != null) {
 					writer.write(attempt.getBall().getName());
 				}
-				writer.write(CsvConstants.SEPARATOR);
+				writer.write(this.csvFileProperties.getSeparator());
 				if (attempt != null) {
 					writer.write(String.valueOf(this.gameConfig.getGameScoreCalculator().calculateScoreForAttempt(
 							gameScoreKeeper, i)));
 				}
-				writer.write(CsvConstants.SEPARATOR);
+				writer.write(this.csvFileProperties.getSeparator());
 			}
-			writer.write(CsvConstants.EOL);
+			writer.write(EOL);
 		}
 	}
 

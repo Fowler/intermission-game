@@ -87,12 +87,12 @@ public class IntermissionGameGui {
 				.getNumberOfGames()) * 40);
 		this.frame.setVisible(true);
 		this.frame.setTitle("Intermission Game, enjoy your lunch break...");
-		this.buttonModel.updateModel();
 		if (oldFrame != null) {
 			this.frame.setLocation(oldFrame.getLocation().x, oldFrame.getLocation().y);
 			oldFrame.setVisible(false);
 			oldFrame.dispose();
 		}
+		this.buttonModel.updateModel();
 	}
 
 	private void initFiveBallGame() {

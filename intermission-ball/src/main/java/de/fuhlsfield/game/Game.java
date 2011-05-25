@@ -110,13 +110,13 @@ public class Game {
 		return this.playerSequenceDeterminer.isGameFinished(this.gameScoreKeepers);
 	}
 
+	public void upateBallRuleCheckStates(Player player) {
+		this.ballRuleCheckStates.put(player, this.ruleChecker.determineRuleCheckStates(getGameScoreKeeper(player)));
+	}
+
 	private boolean isSeasonFinished() {
 		return (this.seasonScoreKeepers.get(getPlayers().get(0)).getNumberOfGameScoreKeepers() >= this.gameConfig
 				.getNumberOfGames());
-	}
-
-	private void upateBallRuleCheckStates(Player player) {
-		this.ballRuleCheckStates.put(player, this.ruleChecker.determineRuleCheckStates(getGameScoreKeeper(player)));
 	}
 
 	public Map<Player, GameScoreKeeper> getGameScoreKeepers() {

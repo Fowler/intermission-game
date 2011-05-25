@@ -19,50 +19,51 @@ import de.fuhlsfield.game.config.GameConfig;
 
 public class ScoreCsvImporter {
 
-	private final String shortName;
+	private final CsvFileProperties csvFileProperties;
 
 	public ScoreCsvImporter(GameConfig gameConfig) {
-		this.shortName = gameConfig.getShortName();
+		this.csvFileProperties = new CsvFileProperties(gameConfig.getShortName());
 	}
 
 	public Game importScoreAndConfig() {
-		File file = new File(getFileName() + ".cfg");
-		FileInputStream fileInputStream = null;
-		GameConfig gameConfig = null;
-		try {
-			fileInputStream = new FileInputStream(file);
-			ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-			gameConfig = (GameConfig) objectInputStream.readObject();
-		} catch (IOException e) {
-		} catch (ClassNotFoundException e) {
-		} finally {
-			closeInputStream(fileInputStream);
-		}
+		GameConfig gameConfig = importConfig();
 		List<Player> players = importPlayers();
 		Game game = new Game(gameConfig, players);
 		importSeasonGameScores(game);
+		importCurrentGameScore(game);
+		for (Player player : players) {
+			game.upateBallRuleCheckStates(player);
+		}
 		return game;
 	}
 
-	private String getFileName() {
-		return CsvConstants.EXPORT_DIR + CsvConstants.FILE_SEPARATOR + "scores." + this.shortName;
+	private GameConfig importConfig() {
+		File file = new File(this.csvFileProperties.getConfigFileName());
+		ObjectInputStream inputStream = null;
+		try {
+			inputStream = new ObjectInputStream(new FileInputStream(file));
+			return (GameConfig) inputStream.readObject();
+		} catch (IOException e) {
+		} catch (ClassNotFoundException e) {
+		} finally {
+			closeInputStream(inputStream);
+		}
+		return null;
 	}
 
 	private List<Player> importPlayers() {
 		LinkedList<Player> players = new LinkedList<Player>();
-		File file = new File(getFileName() + ".csv");
 		BufferedReader reader = null;
-		FileInputStream inputStream;
 		try {
-			inputStream = new FileInputStream(file);
-			reader = new BufferedReader(new InputStreamReader(inputStream, CsvConstants.CHARSET));
-			List<String> playersArray = split(reader.readLine());
-			for (String player : playersArray) {
-				if (!player.isEmpty()) {
-					players.add(new Player(player));
+			reader = createBufferedReaderForScore();
+			if (readUpToMarker(reader, this.csvFileProperties.getHeadlinePlayers())) {
+				List<String> playersArray = split(reader.readLine());
+				for (String player : playersArray) {
+					if (!player.isEmpty()) {
+						players.add(new Player(player));
+					}
 				}
 			}
-			reader.close();
 		} catch (IOException e) {
 		} finally {
 			closeReader(reader);
@@ -70,42 +71,68 @@ public class ScoreCsvImporter {
 		return players;
 	}
 
-	private void importSeasonGameScores(Game game) {
-		List<Player> players = game.getPlayers();
-		File file = new File(getFileName() + ".csv");
+	private void importCurrentGameScore(Game game) {
 		BufferedReader reader = null;
-		FileInputStream inputStream;
 		try {
-			inputStream = new FileInputStream(file);
-			reader = new BufferedReader(new InputStreamReader(inputStream, CsvConstants.CHARSET));
-			String row;
-			while (((row = reader.readLine()) != null) && !CsvConstants.HEADLINE_ALL_SCORES.equals(row)) {
-			}
-			if (CsvConstants.HEADLINE_ALL_SCORES.equals(row)) {
-				while ((row = reader.readLine()) != null) {
-					System.out.println(row);
-					List<String> scoreArray = split(row);
-					for (Player player : players) {
-						int playerIndex = players.indexOf(player);
-						Ball ball = Ball.getBallByName(scoreArray.get(2 * playerIndex + 1));
-						boolean isSuccessful = Integer.valueOf(scoreArray.get(2 * playerIndex + 2)) > 0;
-						game.getGameScoreKeeper(player).addAttempt(new Attempt(ball, isSuccessful));
-					}
-					if (game.isGameFinished()) {
-						game.finishGame();
-					}
+			reader = createBufferedReaderForScore();
+			if (readUpToMarker(reader, this.csvFileProperties.getHeadlineCurrentScore())) {
+				String row;
+				while (((row = reader.readLine()) != null)
+						&& !row.equals(this.csvFileProperties.getHeadlineSeasonScore())) {
+					importAttempt(game, row);
 				}
 			}
-			reader.close();
 		} catch (IOException e) {
 		} finally {
 			closeReader(reader);
 		}
 	}
 
+	private void importSeasonGameScores(Game game) {
+		BufferedReader reader = null;
+		try {
+			reader = createBufferedReaderForScore();
+			if (readUpToMarker(reader, this.csvFileProperties.getHeadlineAllScores())) {
+				String row;
+				while ((row = reader.readLine()) != null) {
+					importAttempt(game, row);
+					if (game.isGameFinished()) {
+						game.finishGame();
+					}
+				}
+			}
+		} catch (IOException e) {
+		} finally {
+			closeReader(reader);
+		}
+	}
+
+	private BufferedReader createBufferedReaderForScore() throws IOException {
+		File file = new File(this.csvFileProperties.getScoreFileName());
+		return new BufferedReader(new InputStreamReader(new FileInputStream(file), this.csvFileProperties.getCharSet()));
+	}
+
+	private void importAttempt(Game game, String row) {
+		List<Player> players = game.getPlayers();
+		List<String> scoreArray = split(row);
+		for (Player player : players) {
+			int index = players.indexOf(player) * 2 + 1;
+			Ball ball = Ball.getBallByName(scoreArray.get(index));
+			boolean isSuccessful = Integer.valueOf(scoreArray.get(index + 1)) > 0;
+			game.getGameScoreKeeper(player).addAttempt(new Attempt(ball, isSuccessful));
+		}
+	}
+
+	private boolean readUpToMarker(BufferedReader reader, String marker) throws IOException {
+		String row;
+		while (((row = reader.readLine()) != null) && !marker.equals(row)) {
+		}
+		return marker.equals(row);
+	}
+
 	private List<String> split(String stringToSplit) {
 		LinkedList<String> stringResult = new LinkedList<String>();
-		for (String s : stringToSplit.split(CsvConstants.SEPARATOR)) {
+		for (String s : stringToSplit.split(this.csvFileProperties.getSeparator())) {
 			if (!s.isEmpty()) {
 				stringResult.add(s);
 			}
