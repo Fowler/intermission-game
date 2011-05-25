@@ -30,6 +30,7 @@ import de.fuhlsfield.ui.ButtonModel;
 import de.fuhlsfield.ui.FinishButtonUpdater;
 import de.fuhlsfield.ui.GameScoreTableModel;
 import de.fuhlsfield.ui.SeasonScoreTableModel;
+import de.fuhlsfield.ui.SeasonStatisticTableModel;
 import de.fuhlsfield.ui.UndoButtonUpdater;
 import de.fuhlsfield.ui.actionListener.FailureActionListener;
 import de.fuhlsfield.ui.actionListener.FinishActionListener;
@@ -50,6 +51,7 @@ public class IntermissionGameGui {
 	private GameScoreCalculator gameScoreCalculator;
 	private GameScoreTableModel gameScoreTableModel;
 	private SeasonScoreTableModel seasonScoreTableModel;
+	private SeasonStatisticTableModel seasonStatisticTableModel;
 	private ButtonModel buttonModel;
 	private JFrame frame;
 
@@ -64,12 +66,13 @@ public class IntermissionGameGui {
 		this.gameScoreTableModel = new GameScoreTableModel(this.game, this.gameScoreCalculator);
 		this.seasonScoreTableModel = new SeasonScoreTableModel(this.game, new SeasonScoreCalculator(gameConfig
 				.getGameScoreCalculator(), gameConfig.getBonusPoints()));
+		this.seasonStatisticTableModel = new SeasonStatisticTableModel(this.game);
 		this.buttonModel = new ButtonModel(this.game);
 		JFrame oldFrame = this.frame;
 		this.frame = new JFrame();
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Container container = this.frame.getContentPane();
-		int containerColumns = Math.max(3, this.game.getPlayers().size());
+		int containerColumns = Math.max(3, this.game.getPlayers().size() + 1);
 		container.setLayout(new GridLayout(2, containerColumns));
 		container.add(createGameScoreComponent());
 		container.add(createSeasonScoreComponent());
@@ -80,7 +83,8 @@ public class IntermissionGameGui {
 		for (Player player : this.game.getPlayers()) {
 			container.add(createPanelWithButtons(player));
 		}
-		for (int i = this.game.getPlayers().size(); i < containerColumns; i++) {
+		container.add(createStatisticComponent());
+		for (int i = this.game.getPlayers().size() + 1; i < containerColumns; i++) {
 			container.add(createEmptyComponent());
 		}
 		this.frame.setSize(250 * containerColumns, Math.max(gameConfig.getMaxAttempts() + 1, gameConfig
@@ -118,13 +122,14 @@ public class IntermissionGameGui {
 		panel.setLayout(new GridLayout(3, 2));
 		JButton finishButton = new JButton("Spiel beenden");
 		finishButton.addActionListener(new FinishActionListener(this.game, this.gameScoreTableModel,
-				this.seasonScoreTableModel, this.buttonModel));
+				this.seasonScoreTableModel, this.seasonStatisticTableModel, this.buttonModel));
 		FinishButtonUpdater finishButtonUpdater = new FinishButtonUpdater();
 		finishButtonUpdater.addButton(finishButton);
 		this.buttonModel.addUpdater(finishButtonUpdater);
 		panel.add(finishButton);
 		JButton undoButton = new JButton("Undo");
-		undoButton.addActionListener(new UndoActionListener(this.game, this.gameScoreTableModel, this.buttonModel));
+		undoButton.addActionListener(new UndoActionListener(this.game, this.gameScoreTableModel,
+				this.seasonStatisticTableModel, this.buttonModel));
 		UndoButtonUpdater undoButtonUpdater = new UndoButtonUpdater();
 		undoButtonUpdater.addButton(undoButton);
 		this.buttonModel.addUpdater(undoButtonUpdater);
@@ -156,6 +161,11 @@ public class IntermissionGameGui {
 		return panel;
 	}
 
+	private JComponent createStatisticComponent() {
+		JTable statisticTable = new JTable(this.seasonStatisticTableModel);
+		return new JScrollPane(statisticTable);
+	}
+
 	private JPanel createPanelWithButtons(Player player) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(this.game.getBalls().size() + 1, 2));
@@ -167,11 +177,11 @@ public class IntermissionGameGui {
 			String ballName = ball.getName();
 			JButton attemptSuccessButton = new JButton(ballName);
 			attemptSuccessButton.addActionListener(new SuccessActionListener(this.game, ball, player,
-					this.gameScoreTableModel, this.buttonModel));
+					this.gameScoreTableModel, this.seasonStatisticTableModel, this.buttonModel));
 			attemptButtonUpdater.addSuccessButton(attemptSuccessButton, player, ball);
 			JButton attemptFailureButton = new JButton("-" + ballName);
 			attemptFailureButton.addActionListener(new FailureActionListener(this.game, ball, player,
-					this.gameScoreTableModel, this.buttonModel));
+					this.gameScoreTableModel, this.seasonStatisticTableModel, this.buttonModel));
 			attemptButtonUpdater.addFailureButton(attemptFailureButton, player, ball);
 			panel.add(attemptSuccessButton);
 			panel.add(attemptFailureButton);

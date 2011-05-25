@@ -13,6 +13,7 @@ import de.fuhlsfield.game.rule.RuleChecker;
 import de.fuhlsfield.game.score.GameScoreKeeper;
 import de.fuhlsfield.game.score.SeasonScoreCalculator;
 import de.fuhlsfield.game.score.SeasonScoreKeeper;
+import de.fuhlsfield.game.score.StatisticKeeper;
 
 public class Game {
 
@@ -25,6 +26,7 @@ public class Game {
 	private final Map<Player, Map<Ball, RuleCheckState>> ballRuleCheckStates = new HashMap<Player, Map<Ball, RuleCheckState>>();
 	private final ScoreCsvExporter scoreCsvExporter;
 	private final ScoreCsvImporter scoreCsvImporter;
+	private final Map<Player, StatisticKeeper> totalStatisticKeepers = new HashMap<Player, StatisticKeeper>();
 
 	public Game(GameConfig gameConfig, List<Player> players) {
 		this.gameConfig = gameConfig;
@@ -36,6 +38,7 @@ public class Game {
 			GameScoreKeeper gameScoreKeeper = new GameScoreKeeper();
 			this.gameScoreKeepers.put(player, gameScoreKeeper);
 			this.seasonScoreKeepers.put(player, new SeasonScoreKeeper());
+			this.totalStatisticKeepers.put(player, new StatisticKeeper());
 			upateBallRuleCheckStates(player);
 		}
 		this.scoreCsvExporter = new ScoreCsvExporter(this.players, new SeasonScoreCalculator(gameConfig
@@ -137,6 +140,16 @@ public class Game {
 
 	public GameConfig getGameConfig() {
 		return this.gameConfig;
+	}
+
+	public StatisticKeeper getSeasonStatisticKeeper(Player player) {
+		StatisticKeeper statisticKeeper = this.seasonScoreKeepers.get(player).createStatisticKeeper();
+		statisticKeeper.addStatisticKeeper(this.gameScoreKeepers.get(player).createStatisticKeeper());
+		return statisticKeeper;
+	}
+
+	public StatisticKeeper getTotalStatisticKeeper(Player player) {
+		return this.totalStatisticKeepers.get(player);
 	}
 
 }
