@@ -28,6 +28,7 @@ import de.fuhlsfield.game.score.SeasonScoreCalculator;
 import de.fuhlsfield.ui.AttemptButtonUpdater;
 import de.fuhlsfield.ui.ButtonModel;
 import de.fuhlsfield.ui.FinishButtonUpdater;
+import de.fuhlsfield.ui.GameButton;
 import de.fuhlsfield.ui.GameScoreTableModel;
 import de.fuhlsfield.ui.SeasonScoreTableModel;
 import de.fuhlsfield.ui.SeasonStatisticTableModel;
@@ -124,7 +125,7 @@ public class IntermissionGameGui {
 	private JComponent createOverviewComponent() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(4, 2));
-		JButton finishButton = new JButton("Spiel beenden");
+		JButton finishButton = new GameButton("Spiel beenden");
 		finishButton.addActionListener(new FinishActionListener(this.game, this.gameScoreTableModel,
 				this.seasonScoreTableModel, this.seasonStatisticTableModel, this.totalStatisticTableModel,
 				this.buttonModel));
@@ -132,26 +133,26 @@ public class IntermissionGameGui {
 		finishButtonUpdater.addButton(finishButton);
 		this.buttonModel.addUpdater(finishButtonUpdater);
 		panel.add(finishButton);
-		JButton undoButton = new JButton("Undo");
+		JButton undoButton = new GameButton("Undo");
 		undoButton.addActionListener(new UndoActionListener(this.game, this.gameScoreTableModel,
 				this.seasonStatisticTableModel, this.totalStatisticTableModel, this.buttonModel));
 		UndoButtonUpdater undoButtonUpdater = new UndoButtonUpdater();
 		undoButtonUpdater.addButton(undoButton);
 		this.buttonModel.addUpdater(undoButtonUpdater);
 		panel.add(undoButton);
-		JButton exportToCsv = new JButton("Export");
+		JButton exportToCsv = new GameButton("Export");
 		exportToCsv.addActionListener(new ToCsvActionListener(this.game));
 		panel.add(exportToCsv);
-		JButton importFromCsv = new JButton("Import");
+		JButton importFromCsv = new GameButton("Import");
 		importFromCsv.addActionListener(new FromCsvActionListener(this.game, this));
 		panel.add(importFromCsv);
-		JButton resetButton = new JButton("Reset");
+		JButton resetButton = new GameButton("Reset");
 		resetButton.addActionListener(new ResetActionListener(this.game, this.gameScoreTableModel,
 				this.seasonScoreTableModel, this.seasonStatisticTableModel, this.totalStatisticTableModel,
 				this.buttonModel));
 		panel.add(resetButton);
 		panel.add(createEmptyComponent());
-		JButton fiveBallsConfigButton = new JButton(new FiveBallsGameConfig().getName());
+		JButton fiveBallsConfigButton = new GameButton(new FiveBallsGameConfig().getName());
 		fiveBallsConfigButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -160,7 +161,7 @@ public class IntermissionGameGui {
 			}
 		});
 		panel.add(fiveBallsConfigButton);
-		JButton sixBallsConfigButton = new JButton(new SixBallsGameConfig().getName());
+		JButton sixBallsConfigButton = new GameButton(new SixBallsGameConfig().getName());
 		sixBallsConfigButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -191,12 +192,12 @@ public class IntermissionGameGui {
 		AttemptButtonUpdater attemptButtonUpdater = new AttemptButtonUpdater();
 		for (Ball ball : this.game.getBalls()) {
 			String ballName = ball.getName();
-			JButton attemptSuccessButton = new JButton(ballName);
+			JButton attemptSuccessButton = new GameButton(ballName);
 			attemptSuccessButton.addActionListener(new SuccessActionListener(this.game, ball, player,
 					this.gameScoreTableModel, this.seasonStatisticTableModel, this.totalStatisticTableModel,
 					this.buttonModel));
 			attemptButtonUpdater.addSuccessButton(attemptSuccessButton, player, ball);
-			JButton attemptFailureButton = new JButton("-" + ballName);
+			JButton attemptFailureButton = new GameButton("-" + ballName);
 			attemptFailureButton.addActionListener(new FailureActionListener(this.game, ball, player,
 					this.gameScoreTableModel, this.seasonStatisticTableModel, this.totalStatisticTableModel,
 					this.buttonModel));

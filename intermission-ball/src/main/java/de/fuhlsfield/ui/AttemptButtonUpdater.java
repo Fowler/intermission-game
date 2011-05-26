@@ -13,14 +13,29 @@ import de.fuhlsfield.game.rule.RuleCheckState;
 
 public class AttemptButtonUpdater extends AbstractButtonUpdater {
 
-	private static Map<RuleCheckState, Color> BUTTON_COLORS = new HashMap<RuleCheckState, Color>();
+	private static Map<RuleCheckState, ButtonColor> BUTTON_COLORS = new HashMap<RuleCheckState, ButtonColor>();
+
+	private static class ButtonColor {
+
+		private final Color backgroundColor;
+		private final Color fontColor;
+
+		private ButtonColor(Color backgroundColor, Color fontColor) {
+			this.backgroundColor = backgroundColor;
+			this.fontColor = fontColor;
+		}
+
+	}
 
 	static {
-		BUTTON_COLORS.put(RuleCheckState.CHECKOUT, new Color(0, 255, 0));
-		BUTTON_COLORS.put(RuleCheckState.ALLOWED, new Color(0, 255, 255));
-		BUTTON_COLORS.put(RuleCheckState.ALLOWED_AND_PLAYED, new Color(0, 0, 255));
-		BUTTON_COLORS.put(RuleCheckState.NOT_ALLOWED, new Color(255, 0, 255));
-		BUTTON_COLORS.put(RuleCheckState.NOT_ALLOWED_AND_PLAYED, new Color(255, 0, 0));
+		BUTTON_COLORS.put(RuleCheckState.CHECKOUT, new ButtonColor(new Color(135, 245, 135), new Color(205, 245, 205)));
+		BUTTON_COLORS.put(RuleCheckState.ALLOWED, new ButtonColor(new Color(100, 160, 220),
+				new Color(180, 220, 230)));
+		BUTTON_COLORS.put(RuleCheckState.ALLOWED_AND_PLAYED, new ButtonColor(new Color(100, 100, 230), new Color(190,
+				190, 230)));
+		BUTTON_COLORS.put(RuleCheckState.NOT_ALLOWED, new ButtonColor(new Color(240, 140, 240), new Color(240, 210, 240)));
+		BUTTON_COLORS.put(RuleCheckState.NOT_ALLOWED_AND_PLAYED, new ButtonColor(new Color(250, 100, 100), new Color(
+				255, 180, 180)));
 	}
 
 	private class PlayerBall {
@@ -54,7 +69,10 @@ public class AttemptButtonUpdater extends AbstractButtonUpdater {
 		if (this.buttonMappings.containsKey(button)) {
 			PlayerBall playerBall = this.buttonMappings.get(button);
 			if (playerBall.isSuccessButton) {
-				button.setBackground(BUTTON_COLORS.get(game.getRuleCheckState(playerBall.player, playerBall.ball)));
+				button
+						.setBackground(BUTTON_COLORS.get(game.getRuleCheckState(playerBall.player, playerBall.ball)).backgroundColor);
+				button
+						.setForeground(BUTTON_COLORS.get(game.getRuleCheckState(playerBall.player, playerBall.ball)).fontColor);
 			}
 			button.setEnabled(game.isAttemptAllowed(playerBall.player, playerBall.ball));
 		}
