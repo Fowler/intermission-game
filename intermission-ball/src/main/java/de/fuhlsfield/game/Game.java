@@ -35,8 +35,7 @@ public class Game {
 		this.playerSequenceDeterminer = new PlayerSequenceDeterminer(gameConfig.getGameScoreCalculator(), gameConfig
 				.getTargetPoints(), gameConfig.getMaxAttempts(), this.players);
 		for (Player player : this.players) {
-			GameScoreKeeper gameScoreKeeper = new GameScoreKeeper();
-			this.gameScoreKeepers.put(player, gameScoreKeeper);
+			this.gameScoreKeepers.put(player, new GameScoreKeeper());
 			this.seasonScoreKeepers.put(player, new SeasonScoreKeeper());
 			this.totalStatisticKeepers.put(player, new StatisticKeeper());
 			upateBallRuleCheckStates(player);
@@ -50,6 +49,14 @@ public class Game {
 		for (Player player : statisticKeepers.keySet()) {
 			statisticKeepers.get(player).removeStatisticKeeper(getSeasonStatisticKeeper(player));
 			this.totalStatisticKeepers.put(player, statisticKeepers.get(player));
+		}
+	}
+
+	public void reset() {
+		for (Player player : this.players) {
+			this.gameScoreKeepers.put(player, new GameScoreKeeper());
+			this.seasonScoreKeepers.put(player, new SeasonScoreKeeper());
+			upateBallRuleCheckStates(player);
 		}
 	}
 

@@ -36,6 +36,7 @@ import de.fuhlsfield.ui.UndoButtonUpdater;
 import de.fuhlsfield.ui.actionListener.FailureActionListener;
 import de.fuhlsfield.ui.actionListener.FinishActionListener;
 import de.fuhlsfield.ui.actionListener.FromCsvActionListener;
+import de.fuhlsfield.ui.actionListener.ResetActionListener;
 import de.fuhlsfield.ui.actionListener.SuccessActionListener;
 import de.fuhlsfield.ui.actionListener.ToCsvActionListener;
 import de.fuhlsfield.ui.actionListener.UndoActionListener;
@@ -90,7 +91,7 @@ public class IntermissionGameGui {
 		for (int i = this.game.getPlayers().size() + 1; i < containerColumns; i++) {
 			container.add(createEmptyComponent());
 		}
-		this.frame.setSize(250 * containerColumns, Math.max(gameConfig.getMaxAttempts() + 1, gameConfig
+		this.frame.setSize(350 * containerColumns, Math.max(gameConfig.getMaxAttempts() + 1, gameConfig
 				.getNumberOfGames()) * 40);
 		this.frame.setVisible(true);
 		this.frame.setTitle("Intermission Game, enjoy your lunch break...");
@@ -122,7 +123,7 @@ public class IntermissionGameGui {
 
 	private JComponent createOverviewComponent() {
 		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(3, 2));
+		panel.setLayout(new GridLayout(4, 2));
 		JButton finishButton = new JButton("Spiel beenden");
 		finishButton.addActionListener(new FinishActionListener(this.game, this.gameScoreTableModel,
 				this.seasonScoreTableModel, this.seasonStatisticTableModel, this.totalStatisticTableModel,
@@ -144,6 +145,12 @@ public class IntermissionGameGui {
 		JButton importFromCsv = new JButton("Import");
 		importFromCsv.addActionListener(new FromCsvActionListener(this.game, this));
 		panel.add(importFromCsv);
+		JButton resetButton = new JButton("Reset");
+		resetButton.addActionListener(new ResetActionListener(this.game, this.gameScoreTableModel,
+				this.seasonScoreTableModel, this.seasonStatisticTableModel, this.totalStatisticTableModel,
+				this.buttonModel));
+		panel.add(resetButton);
+		panel.add(createEmptyComponent());
 		JButton fiveBallsConfigButton = new JButton(new FiveBallsGameConfig().getName());
 		fiveBallsConfigButton.addActionListener(new ActionListener() {
 
