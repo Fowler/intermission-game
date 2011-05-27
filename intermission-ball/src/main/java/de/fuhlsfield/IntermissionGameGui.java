@@ -27,8 +27,10 @@ import de.fuhlsfield.game.score.GameScoreCalculator;
 import de.fuhlsfield.game.score.SeasonScoreCalculator;
 import de.fuhlsfield.ui.AttemptButtonUpdater;
 import de.fuhlsfield.ui.ButtonModel;
+import de.fuhlsfield.ui.DefaultScoreTable;
 import de.fuhlsfield.ui.FinishButtonUpdater;
 import de.fuhlsfield.ui.GameButton;
+import de.fuhlsfield.ui.GameScoreTableCellRenderer;
 import de.fuhlsfield.ui.GameScoreTableModel;
 import de.fuhlsfield.ui.SeasonScoreTableModel;
 import de.fuhlsfield.ui.SeasonStatisticTableModel;
@@ -113,12 +115,13 @@ public class IntermissionGameGui {
 	}
 
 	private JComponent createGameScoreComponent() {
-		JTable gameScoreTable = new JTable(this.gameScoreTableModel);
+		JTable gameScoreTable = new DefaultScoreTable(this.gameScoreTableModel);
+		gameScoreTable.setDefaultRenderer(Object.class, new GameScoreTableCellRenderer());
 		return new JScrollPane(gameScoreTable);
 	}
 
 	private JComponent createSeasonScoreComponent() {
-		JTable seasonScoreTable = new JTable(this.seasonScoreTableModel);
+		JTable seasonScoreTable = new DefaultScoreTable(this.seasonScoreTableModel);
 		return new JScrollPane(seasonScoreTable);
 	}
 
@@ -176,9 +179,9 @@ public class IntermissionGameGui {
 	private JComponent createStatisticComponent() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(2, 1));
-		JTable seasonStatisticTable = new JTable(this.seasonStatisticTableModel);
+		JTable seasonStatisticTable = new DefaultScoreTable(this.seasonStatisticTableModel);
 		panel.add(new JScrollPane(seasonStatisticTable));
-		JTable totalStatisticTable = new JTable(this.totalStatisticTableModel);
+		JTable totalStatisticTable = new DefaultScoreTable(this.totalStatisticTableModel);
 		panel.add(new JScrollPane(totalStatisticTable));
 		return panel;
 	}
