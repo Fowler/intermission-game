@@ -28,14 +28,14 @@ public class AttemptButtonUpdater extends AbstractButtonUpdater {
 	}
 
 	static {
-		BUTTON_COLORS.put(RuleCheckState.CHECKOUT, new ButtonColor(new Color(135, 245, 135), new Color(205, 245, 205)));
-		BUTTON_COLORS.put(RuleCheckState.ALLOWED, new ButtonColor(new Color(100, 160, 220),
-				new Color(180, 220, 230)));
-		BUTTON_COLORS.put(RuleCheckState.ALLOWED_AND_PLAYED, new ButtonColor(new Color(100, 100, 230), new Color(190,
-				190, 230)));
-		BUTTON_COLORS.put(RuleCheckState.NOT_ALLOWED, new ButtonColor(new Color(240, 140, 240), new Color(240, 210, 240)));
-		BUTTON_COLORS.put(RuleCheckState.NOT_ALLOWED_AND_PLAYED, new ButtonColor(new Color(250, 100, 100), new Color(
-				255, 180, 180)));
+		BUTTON_COLORS.put(RuleCheckState.CHECKOUT, new ButtonColor(new Color(135, 255, 135), new Color(215, 245, 215)));
+		BUTTON_COLORS.put(RuleCheckState.ALLOWED, new ButtonColor(new Color(120, 180, 255), new Color(220, 230, 240)));
+		BUTTON_COLORS.put(RuleCheckState.ALLOWED_AND_PLAYED, new ButtonColor(new Color(100, 120, 255), new Color(210,
+				220, 230)));
+		BUTTON_COLORS.put(RuleCheckState.NOT_ALLOWED,
+				new ButtonColor(new Color(255, 150, 80), new Color(240, 230, 220)));
+		BUTTON_COLORS.put(RuleCheckState.NOT_ALLOWED_AND_PLAYED, new ButtonColor(new Color(255, 90, 90), new Color(235,
+				200, 200)));
 	}
 
 	private class PlayerBall {

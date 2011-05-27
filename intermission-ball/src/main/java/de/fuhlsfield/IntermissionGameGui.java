@@ -81,7 +81,7 @@ public class IntermissionGameGui {
 		container.setLayout(new GridLayout(2, containerColumns));
 		container.add(createGameScoreComponent());
 		container.add(createSeasonScoreComponent());
-		container.add(createOverviewComponent());
+		container.add(createButtonComponent());
 		for (int i = containerColumns; i < this.game.getPlayers().size(); i++) {
 			container.add(createEmptyComponent());
 		}
@@ -122,7 +122,7 @@ public class IntermissionGameGui {
 		return new JScrollPane(seasonScoreTable);
 	}
 
-	private JComponent createOverviewComponent() {
+	private JComponent createButtonComponent() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(4, 2));
 		JButton finishButton = new GameButton("Spiel beenden");
@@ -192,7 +192,7 @@ public class IntermissionGameGui {
 		AttemptButtonUpdater attemptButtonUpdater = new AttemptButtonUpdater();
 		for (Ball ball : this.game.getBalls()) {
 			String ballName = ball.getName();
-			JButton attemptSuccessButton = new GameButton(ballName);
+			JButton attemptSuccessButton = new GameButton(ballName, false);
 			attemptSuccessButton.addActionListener(new SuccessActionListener(this.game, ball, player,
 					this.gameScoreTableModel, this.seasonStatisticTableModel, this.totalStatisticTableModel,
 					this.buttonModel));

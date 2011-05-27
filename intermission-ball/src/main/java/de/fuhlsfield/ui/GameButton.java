@@ -15,13 +15,19 @@ public class GameButton extends JButton implements MouseListener {
 
 	private static final long serialVersionUID = 1L;
 
+	private final boolean accentDisabled;
 	private boolean isPressed;
 
 	public GameButton(String label) {
+		this(label, true);
+	}
+
+	public GameButton(String label, boolean accentDisabled) {
 		super(label);
 		addMouseListener(this);
 		setBackground(new Color(215, 230, 245));
 		setForeground(new Color(225, 235, 245));
+		this.accentDisabled = accentDisabled;
 	}
 
 	@Override
@@ -29,7 +35,7 @@ public class GameButton extends JButton implements MouseListener {
 		Graphics2D graphics2d = (Graphics2D) graphics;
 		graphics2d.setFont(new Font("Arial", Font.BOLD, 12));
 		graphics2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		if (isEnabled()) {
+		if (isEnabled() || !this.accentDisabled) {
 			if (this.isPressed) {
 				setPaint(graphics2d, getBackground().darker());
 			} else {
