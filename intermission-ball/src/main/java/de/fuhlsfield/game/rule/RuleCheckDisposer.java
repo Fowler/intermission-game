@@ -5,7 +5,7 @@ import java.util.Set;
 
 import de.fuhlsfield.game.score.GameScoreKeeper;
 
-public class RuleCheckDisposer {
+class RuleCheckDisposer {
 
 	private final Set<RuleCheck> ruleChecks;
 

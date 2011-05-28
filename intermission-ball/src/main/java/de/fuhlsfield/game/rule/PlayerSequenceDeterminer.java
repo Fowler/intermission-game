@@ -82,4 +82,5 @@ public class PlayerSequenceDeterminer {
 		}
 		return false;
 	}
+
 }

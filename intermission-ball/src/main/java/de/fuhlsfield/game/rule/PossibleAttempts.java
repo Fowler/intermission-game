@@ -8,7 +8,7 @@ import java.util.Map;
 
 import de.fuhlsfield.game.Ball;
 
-public class PossibleAttempts {
+class PossibleAttempts {
 
 	private final Ball firstAttempt;
 	private final Map<Ball, Integer> nextAttempts = new HashMap<Ball, Integer>();

@@ -44,12 +44,4 @@ public class GameScoreKeeper {
 		return Collections.unmodifiableSet(balls);
 	}
 
-	public StatisticKeeper createStatisticKeeper() {
-		StatisticKeeper statisticKeeper = new StatisticKeeper();
-		for (Attempt attempt : this.attempts) {
-			statisticKeeper.addAttempt(attempt);
-		}
-		return statisticKeeper;
-	}
-
 }

@@ -5,7 +5,6 @@ import java.math.MathContext;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.fuhlsfield.game.Attempt;
 import de.fuhlsfield.game.Ball;
 
 public class StatisticKeeper {
@@ -17,36 +16,12 @@ public class StatisticKeeper {
 		private int successCounter;
 		private int failureCounter;
 
-		private void addAttempt(boolean isSuccessfull) {
-			if (isSuccessfull) {
-				this.successCounter++;
-			} else {
-				this.failureCounter++;
-			}
-		}
-
-		private void removeAttempt(boolean isSuccessfull) {
-			if (isSuccessfull) {
-				this.successCounter--;
-			} else {
-				this.failureCounter--;
-			}
-		}
-
 		private void incSuccessCounter(int value) {
 			this.successCounter += value;
 		}
 
 		private void incFailureCounter(int value) {
 			this.failureCounter += value;
-		}
-
-		private void decSuccessCounter(int value) {
-			this.successCounter -= value;
-		}
-
-		private void decFailureCounter(int value) {
-			this.failureCounter -= value;
 		}
 
 		private int sum() {
@@ -56,54 +31,6 @@ public class StatisticKeeper {
 	}
 
 	private final Map<Ball, SuccessFailure> statistic = new HashMap<Ball, SuccessFailure>();
-
-	public void addAttempt(Attempt attempt) {
-		Ball ball = attempt.getBall();
-		if (!this.statistic.containsKey(ball)) {
-			this.statistic.put(ball, new SuccessFailure());
-		}
-		this.statistic.get(ball).addAttempt(attempt.isSuccessful());
-	}
-
-	public void removeAttempt(Attempt attempt) {
-		Ball ball = attempt.getBall();
-		if (this.statistic.containsKey(ball)) {
-			this.statistic.get(ball).removeAttempt(attempt.isSuccessful());
-		}
-	}
-
-	public void addSuccessfulAttempts(Ball ball, int times) {
-		if (!this.statistic.containsKey(ball)) {
-			this.statistic.put(ball, new SuccessFailure());
-		}
-		this.statistic.get(ball).incSuccessCounter(times);
-	}
-
-	public void addFailedAttempts(Ball ball, int times) {
-		if (!this.statistic.containsKey(ball)) {
-			this.statistic.put(ball, new SuccessFailure());
-		}
-		this.statistic.get(ball).incFailureCounter(times);
-	}
-
-	public void addStatisticKeeper(StatisticKeeper statisticKeeper) {
-		for (Ball ball : statisticKeeper.statistic.keySet()) {
-			if (!this.statistic.containsKey(ball)) {
-				this.statistic.put(ball, new SuccessFailure());
-			}
-			this.statistic.get(ball).incSuccessCounter(statisticKeeper.getSuccessCounter(ball));
-			this.statistic.get(ball).incFailureCounter(statisticKeeper.getFailureCounter(ball));
-		}
-	}
-
-	public void removeStatisticKeeper(StatisticKeeper statisticKeeper) {
-		for (Ball ball : statisticKeeper.statistic.keySet()) {
-			if (this.statistic.containsKey(ball)) {
-				this.statistic.get(ball).decSuccessCounter(statisticKeeper.getSuccessCounter(ball));
-				this.statistic.get(ball).decFailureCounter(statisticKeeper.getFailureCounter(ball));
-			}
-		}
-	}
 
 	public int getSuccessCounter(Ball ball) {
 		if (this.statistic.containsKey(ball)) {
@@ -128,6 +55,39 @@ public class StatisticKeeper {
 			}
 		}
 		return null;
+	}
+
+	void addSuccessfulAttempts(Ball ball, int times) {
+		if (!this.statistic.containsKey(ball)) {
+			this.statistic.put(ball, new SuccessFailure());
+		}
+		this.statistic.get(ball).incSuccessCounter(times);
+	}
+
+	void addFailedAttempts(Ball ball, int times) {
+		if (!this.statistic.containsKey(ball)) {
+			this.statistic.put(ball, new SuccessFailure());
+		}
+		this.statistic.get(ball).incFailureCounter(times);
+	}
+
+	void addStatisticKeeper(StatisticKeeper statisticKeeper) {
+		modifyStatisticKeeper(statisticKeeper, true);
+	}
+
+	void removeStatisticKeeper(StatisticKeeper statisticKeeper) {
+		modifyStatisticKeeper(statisticKeeper, false);
+	}
+
+	private void modifyStatisticKeeper(StatisticKeeper statisticKeeper, boolean isToAdd) {
+		for (Ball ball : statisticKeeper.statistic.keySet()) {
+			if (!this.statistic.containsKey(ball)) {
+				this.statistic.put(ball, new SuccessFailure());
+			}
+			int factor = isToAdd ? 1 : -1;
+			addSuccessfulAttempts(ball, factor * statisticKeeper.getSuccessCounter(ball));
+			addFailedAttempts(ball, factor * statisticKeeper.getFailureCounter(ball));
+		}
 	}
 
 }

@@ -22,12 +22,4 @@ public class SeasonScoreKeeper {
 		return this.gameScoreKeepers.get(index);
 	}
 
-	public StatisticKeeper createStatisticKeeper() {
-		StatisticKeeper statisticKeeper = new StatisticKeeper();
-		for (GameScoreKeeper gameScoreKeeper : this.gameScoreKeepers) {
-			statisticKeeper.addStatisticKeeper(gameScoreKeeper.createStatisticKeeper());
-		}
-		return statisticKeeper;
-	}
-
 }

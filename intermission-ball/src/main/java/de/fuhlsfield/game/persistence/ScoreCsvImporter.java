@@ -19,6 +19,7 @@ import de.fuhlsfield.game.Game;
 import de.fuhlsfield.game.Player;
 import de.fuhlsfield.game.config.GameConfig;
 import de.fuhlsfield.game.score.StatisticKeeper;
+import de.fuhlsfield.game.score.StatisticKeeperFactory;
 
 public class ScoreCsvImporter {
 
@@ -113,9 +114,11 @@ public class ScoreCsvImporter {
 	}
 
 	private Map<Player, StatisticKeeper> importStatisticKeepers(List<Player> players) {
-		HashMap<Player, StatisticKeeper> statisticKeepers = new HashMap<Player, StatisticKeeper>();
+		HashMap<Player, Map<Ball, Integer>> successfulAttempts = new HashMap<Player, Map<Ball, Integer>>();
+		HashMap<Player, Map<Ball, Integer>> failedAttempts = new HashMap<Player, Map<Ball, Integer>>();
 		for (Player player : players) {
-			statisticKeepers.put(player, new StatisticKeeper());
+			successfulAttempts.put(player, new HashMap<Ball, Integer>());
+			failedAttempts.put(player, new HashMap<Ball, Integer>());
 		}
 		BufferedReader reader = null;
 		try {
@@ -127,14 +130,27 @@ public class ScoreCsvImporter {
 					Ball ball = Ball.getBallByName(statistic.get(0));
 					for (Player player : players) {
 						int index = players.indexOf(player) * 2 + 1;
-						statisticKeepers.get(player).addSuccessfulAttempts(ball, Integer.valueOf(statistic.get(index)));
-						statisticKeepers.get(player).addFailedAttempts(ball, Integer.valueOf(statistic.get(index + 1)));
+						Integer attempts = successfulAttempts.get(player).get(ball);
+						if (attempts == null) {
+							attempts = 0;
+						}
+						successfulAttempts.get(player).put(ball, attempts + Integer.valueOf(statistic.get(index)));
+						attempts = failedAttempts.get(player).get(ball);
+						if (attempts == null) {
+							attempts = 0;
+						}
+						failedAttempts.get(player).put(ball, attempts + Integer.valueOf(statistic.get(index + 1)));
 					}
 				}
 			}
 		} catch (IOException e) {
 		} finally {
 			closeReader(reader);
+		}
+		HashMap<Player, StatisticKeeper> statisticKeepers = new HashMap<Player, StatisticKeeper>();
+		for (Player player : players) {
+			statisticKeepers.put(player, new StatisticKeeperFactory().createStatisticKeeper(successfulAttempts
+					.get(player), failedAttempts.get(player)));
 		}
 		return statisticKeepers;
 	}
