@@ -18,10 +18,12 @@ public class StatisticKeeper {
 
 		private void incSuccessCounter(int value) {
 			this.successCounter += value;
+			this.successCounter = Math.max(0, this.successCounter);
 		}
 
 		private void incFailureCounter(int value) {
 			this.failureCounter += value;
+			this.failureCounter = Math.max(0, this.failureCounter);
 		}
 
 		private int sum() {
