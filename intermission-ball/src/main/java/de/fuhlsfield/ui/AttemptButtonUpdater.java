@@ -29,7 +29,7 @@ public class AttemptButtonUpdater extends AbstractButtonUpdater {
 
 	static {
 		BUTTON_COLORS.put(RuleCheckState.CHECKOUT, new ButtonColor(new Color(135, 255, 135), new Color(215, 245, 215)));
-		BUTTON_COLORS.put(RuleCheckState.ALLOWED, new ButtonColor(new Color(120, 180, 255), new Color(220, 230, 240)));
+		BUTTON_COLORS.put(RuleCheckState.ALLOWED, new ButtonColor(new Color(130, 200, 255), new Color(220, 230, 240)));
 		BUTTON_COLORS.put(RuleCheckState.ALLOWED_AND_PLAYED, new ButtonColor(new Color(100, 120, 255), new Color(210,
 				220, 230)));
 		BUTTON_COLORS.put(RuleCheckState.NOT_ALLOWED,
@@ -54,18 +54,18 @@ public class AttemptButtonUpdater extends AbstractButtonUpdater {
 
 	private final Map<JButton, PlayerBall> buttonMappings = new HashMap<JButton, PlayerBall>();
 
-	public void addSuccessButton(JButton button, Player player, Ball ball) {
+	public void addSuccessButton (JButton button, Player player, Ball ball) {
 		addButton(button);
 		this.buttonMappings.put(button, new PlayerBall(player, ball, true));
 	}
 
-	public void addFailureButton(JButton button, Player player, Ball ball) {
+	public void addFailureButton (JButton button, Player player, Ball ball) {
 		addButton(button);
 		this.buttonMappings.put(button, new PlayerBall(player, ball, false));
 	}
 
 	@Override
-	protected void updateButtonState(Game game, JButton button) {
+	protected void updateButtonState (Game game, JButton button) {
 		if (this.buttonMappings.containsKey(button)) {
 			PlayerBall playerBall = this.buttonMappings.get(button);
 			if (playerBall.isSuccessButton) {
