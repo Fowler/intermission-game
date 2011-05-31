@@ -10,8 +10,7 @@ public class FinishActionListener extends GameActionListener {
 	}
 
 	@Override
-	protected void modifyGameState() {
-		this.game.finishGame();
+	protected void modifyGameState () {
+		this.game.finishGameAndExport();
 	}
-
 }

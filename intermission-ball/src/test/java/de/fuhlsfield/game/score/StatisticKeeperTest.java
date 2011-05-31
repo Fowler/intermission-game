@@ -12,17 +12,17 @@ import de.fuhlsfield.game.Ball;
 public class StatisticKeeperTest {
 
 	@Test
-	public void testGetSuccessCounterWhenNoSuccefulAttempt() {
+	public void testGetSuccessCounterWhenNoSuccefulAttempt () {
 		assertEquals(0, createInstanceUnderTest().getSuccessCounter(Ball.BASKI));
 	}
 
 	@Test
-	public void testGetFailureCounterWhenNoFailedAttempt() {
+	public void testGetFailureCounterWhenNoFailedAttempt () {
 		assertEquals(0, createInstanceUnderTest().getFailureCounter(Ball.BASKI));
 	}
 
 	@Test
-	public void testCalculateSuccessRate() {
+	public void testCalculateSuccessRate () {
 		StatisticKeeper statisticKeeper = createInstanceUnderTest();
 		statisticKeeper.addSuccessfulAttempts(Ball.BASKI, 1);
 		statisticKeeper.addFailedAttempts(Ball.BASKI, 3);
@@ -30,7 +30,7 @@ public class StatisticKeeperTest {
 	}
 
 	@Test
-	public void testCalculateSuccessRateWhenRounded() {
+	public void testCalculateSuccessRateWhenRounded () {
 		StatisticKeeper statisticKeeper = createInstanceUnderTest();
 		statisticKeeper.addSuccessfulAttempts(Ball.BASKI, 1);
 		statisticKeeper.addFailedAttempts(Ball.BASKI, 2);
@@ -38,12 +38,20 @@ public class StatisticKeeperTest {
 	}
 
 	@Test
-	public void testCalculateSuccessRateWhenNoAttempts() {
+	public void testCalculateSuccessRateWhenNoAttempts () {
 		assertNull(createInstanceUnderTest().calculateSuccessRate(Ball.BASKI));
 	}
 
 	@Test
-	public void testAddStatisticKeeper() {
+	public void testCalculateSucessRateWhenSuccessRateLessTenPercent () {
+		StatisticKeeper statisticKeeper = createInstanceUnderTest();
+		statisticKeeper.addSuccessfulAttempts(Ball.BASKI, 1);
+		statisticKeeper.addFailedAttempts(Ball.BASKI, 10);
+		assertEquals(new BigDecimal("9.1"), statisticKeeper.calculateSuccessRate(Ball.BASKI));
+	}
+
+	@Test
+	public void testAddStatisticKeeper () {
 		StatisticKeeper statisticKeeper = createInstanceUnderTest();
 		statisticKeeper.addSuccessfulAttempts(Ball.BASKI, 1);
 		statisticKeeper.addFailedAttempts(Ball.BASKI, 2);
@@ -56,7 +64,7 @@ public class StatisticKeeperTest {
 	}
 
 	@Test
-	public void testRemoveStatisticKeeper() {
+	public void testRemoveStatisticKeeper () {
 		StatisticKeeper statisticKeeper = createInstanceUnderTest();
 		statisticKeeper.addSuccessfulAttempts(Ball.BASKI, 3);
 		statisticKeeper.addFailedAttempts(Ball.BASKI, 5);
@@ -69,7 +77,7 @@ public class StatisticKeeperTest {
 	}
 
 	@Test
-	public void testRemoveStatisticKeeperWithMoreAttempts() {
+	public void testRemoveStatisticKeeperWithMoreAttempts () {
 		StatisticKeeper statisticKeeper = createInstanceUnderTest();
 		statisticKeeper.addSuccessfulAttempts(Ball.BASKI, 1);
 		statisticKeeper.addFailedAttempts(Ball.BASKI, 2);
@@ -81,7 +89,7 @@ public class StatisticKeeperTest {
 		assertEquals(0, statisticKeeper.getFailureCounter(Ball.BASKI));
 	}
 
-	private StatisticKeeper createInstanceUnderTest() {
+	private StatisticKeeper createInstanceUnderTest () {
 		return new StatisticKeeper();
 	}
 

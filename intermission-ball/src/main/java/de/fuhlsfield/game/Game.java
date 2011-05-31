@@ -118,14 +118,11 @@ public class Game {
 	}
 
 	public void finishGame () {
-		if (!isSeasonFinished() && isGameFinished()) {
-			for (Player player : this.players) {
-				this.seasonScoreKeepers.get(player).addGameScoreKeeper(this.gameScoreKeepers.get(player));
-				this.gameScoreKeepers.put(player, new GameScoreKeeper());
-				upateBallRuleCheckStates(player);
-			}
-			exportScore();
-		}
+		finishGame(false);
+	}
+
+	public void finishGameAndExport () {
+		finishGame(true);
 	}
 
 	public RuleCheckState getRuleCheckState (Player player, Ball ball) {
@@ -175,6 +172,19 @@ public class Game {
 		for (Player player : statisticKeepers.keySet()) {
 			this.totalStatisticKeepers.put(player, this.statisticKeeperFactory.removeStatisticKeeper(statisticKeepers
 					.get(player), getSeasonStatisticKeeper(player)));
+		}
+	}
+
+	private void finishGame (boolean export) {
+		if (!isSeasonFinished() && isGameFinished()) {
+			for (Player player : this.players) {
+				this.seasonScoreKeepers.get(player).addGameScoreKeeper(this.gameScoreKeepers.get(player));
+				this.gameScoreKeepers.put(player, new GameScoreKeeper());
+				upateBallRuleCheckStates(player);
+			}
+			if (export) {
+				exportScore();
+			}
 		}
 	}
 
