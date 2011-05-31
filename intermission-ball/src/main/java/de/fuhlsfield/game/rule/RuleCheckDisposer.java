@@ -13,7 +13,7 @@ class RuleCheckDisposer {
 		this.ruleChecks = ruleChecks;
 	}
 
-	Set<PossibleAttempts> disposeRuleChecks(Set<PossibleAttempts> allBalls, GameScoreKeeper gameScoreKeeper) {
+	Set<PossibleAttempts> disposeRuleChecks (Set<PossibleAttempts> allBalls, GameScoreKeeper gameScoreKeeper) {
 		HashSet<PossibleAttempts> resultAllBalls = new HashSet<PossibleAttempts>(allBalls);
 		for (RuleCheck ruleCheck : this.ruleChecks) {
 			for (PossibleAttempts balls : allBalls) {
