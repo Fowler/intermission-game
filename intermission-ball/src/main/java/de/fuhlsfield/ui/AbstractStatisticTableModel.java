@@ -24,12 +24,12 @@ public abstract class AbstractStatisticTableModel extends AbstractScoreTabelMode
 
 	@Override
 	public int getRowCount() {
-		return this.game.getBalls().size();
+		return this.game.getAllowedBalls().size();
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		Ball ball = this.game.getBalls().get(rowIndex);
+		Ball ball = this.game.getAllowedBalls().get(rowIndex);
 		if (columnIndex == 0) {
 			return ball.getName();
 		}
