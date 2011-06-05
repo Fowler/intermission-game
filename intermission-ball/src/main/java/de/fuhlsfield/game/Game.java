@@ -41,7 +41,7 @@ public class Game {
 			this.gameScoreKeepers.put(player, new GameScoreKeeper());
 			this.seasonScoreKeepers.put(player, new SeasonScoreKeeper());
 			this.totalStatisticKeepers.put(player, this.statisticKeeperFactory.createStatisticKeeper());
-			upateBallRuleCheckStates(player);
+			updateBallRuleCheckStates(player);
 		}
 		this.scoreCsvExporter = new ScoreCsvExporter(this.players, new SeasonScoreCalculator(gameConfig
 				.getGameScoreCalculator(), gameConfig.getBonusPoints()), gameConfig);
@@ -50,9 +50,15 @@ public class Game {
 
 	public void reset () {
 		for (Player player : this.players) {
+			StatisticKeeper totalStatisticKeeper = this.totalStatisticKeepers.get(player);
+			totalStatisticKeeper = this.statisticKeeperFactory.mergeStatisticKeeper(totalStatisticKeeper,
+					this.statisticKeeperFactory.createStatisticKeeper(this.gameScoreKeepers.get(player)));
+			totalStatisticKeeper = this.statisticKeeperFactory.mergeStatisticKeeper(totalStatisticKeeper,
+					this.statisticKeeperFactory.createStatisticKeeper(this.seasonScoreKeepers.get(player)));
+			this.totalStatisticKeepers.put(player, totalStatisticKeeper);
 			this.gameScoreKeepers.put(player, new GameScoreKeeper());
 			this.seasonScoreKeepers.put(player, new SeasonScoreKeeper());
-			upateBallRuleCheckStates(player);
+			updateBallRuleCheckStates(player);
 		}
 	}
 
@@ -91,7 +97,7 @@ public class Game {
 	public void addAttempt (Player player, Attempt attempt) {
 		if (isAttemptAllowed(player, attempt.getBall())) {
 			this.gameScoreKeepers.get(player).addAttempt(attempt);
-			upateBallRuleCheckStates(this.playerSequenceDeterminer.determinePreviousPlayer(this.gameScoreKeepers));
+			updateBallRuleCheckStates(this.playerSequenceDeterminer.determinePreviousPlayer(this.gameScoreKeepers));
 		}
 	}
 
@@ -103,7 +109,7 @@ public class Game {
 		if (isUndoLastAttemptPossible()) {
 			this.gameScoreKeepers.get(this.playerSequenceDeterminer.determinePreviousPlayer(this.gameScoreKeepers))
 					.undoLastAttempt();
-			upateBallRuleCheckStates(this.playerSequenceDeterminer.determineNextPlayer(this.gameScoreKeepers));
+			updateBallRuleCheckStates(this.playerSequenceDeterminer.determineNextPlayer(this.gameScoreKeepers));
 		}
 	}
 
@@ -129,7 +135,7 @@ public class Game {
 		return this.ballRuleCheckStates.get(player).get(ball);
 	}
 
-	public void upateBallRuleCheckStates (Player player) {
+	public void updateBallRuleCheckStates (Player player) {
 		this.ballRuleCheckStates.put(player, this.ruleChecker.determineRuleCheckStates(getGameScoreKeeper(player)));
 	}
 
@@ -180,7 +186,7 @@ public class Game {
 			for (Player player : this.players) {
 				this.seasonScoreKeepers.get(player).addGameScoreKeeper(this.gameScoreKeepers.get(player));
 				this.gameScoreKeepers.put(player, new GameScoreKeeper());
-				upateBallRuleCheckStates(player);
+				updateBallRuleCheckStates(player);
 			}
 			if (export) {
 				exportScore();

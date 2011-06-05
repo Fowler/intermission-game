@@ -37,7 +37,7 @@ public class ScoreCsvImporter {
 		importCurrentGameScore(game);
 		game.setTotalStatisticKeepers(importStatisticKeepers(players));
 		for (Player player : players) {
-			game.upateBallRuleCheckStates(player);
+			game.updateBallRuleCheckStates(player);
 		}
 		return game;
 	}
