@@ -16,7 +16,7 @@ class RuleCheckStateDeterminer {
 		this.targetPoints = targetPoints;
 	}
 
-	RuleCheckState determineRuleCheckState(Ball ball, Set<PossibleAttempts> possibleAttempts,
+	RuleCheckState determineRuleCheckState (Ball ball, Set<PossibleAttempts> possibleAttempts,
 			GameScoreKeeper gameScoreKeeper) {
 		RuleCheckState ruleCheckState;
 		if (possibleAttempts.isEmpty()) {
@@ -29,19 +29,22 @@ class RuleCheckStateDeterminer {
 		return determineRuleCheckState(ball, ruleCheckState, gameScoreKeeper);
 	}
 
-	RuleCheckState determineRuleCheckState(Ball ball, RuleCheckState ruleCheckState, GameScoreKeeper gameScoreKeeper) {
+	RuleCheckState determineRuleCheckState (Ball ball, RuleCheckState ruleCheckState, GameScoreKeeper gameScoreKeeper) {
 		if (gameScoreKeeper.getSuccessfulPlayedBalls().contains(ball)) {
 			switch (ruleCheckState) {
 			case ALLOWED:
 				return RuleCheckState.ALLOWED_AND_PLAYED;
 			case NOT_ALLOWED:
 				return RuleCheckState.NOT_ALLOWED_AND_PLAYED;
+			case ALLOWED_AND_PLAYED:
+			case CHECKOUT:
+			case NOT_ALLOWED_AND_PLAYED:
 			}
 		}
 		return ruleCheckState;
 	}
 
-	private boolean isCheckoutPossible(Set<PossibleAttempts> possibleAttempts, GameScoreKeeper gameScoreKeeper) {
+	private boolean isCheckoutPossible (Set<PossibleAttempts> possibleAttempts, GameScoreKeeper gameScoreKeeper) {
 		for (PossibleAttempts possibleAttempt : possibleAttempts) {
 			if ((possibleAttempt.size() == 1)
 					&& (this.gameScoreCalculator.calculateScore(gameScoreKeeper, possibleAttempt.toList()) >= this.targetPoints)) {

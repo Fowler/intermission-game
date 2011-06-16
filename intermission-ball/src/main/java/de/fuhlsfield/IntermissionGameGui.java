@@ -21,6 +21,7 @@ import de.fuhlsfield.game.Ball;
 import de.fuhlsfield.game.Game;
 import de.fuhlsfield.game.Player;
 import de.fuhlsfield.game.config.FiveBallsGameConfig;
+import de.fuhlsfield.game.config.FourBallsGameConfig;
 import de.fuhlsfield.game.config.SixBallsGameConfig;
 import de.fuhlsfield.game.score.SeasonScoreCalculator;
 import de.fuhlsfield.ui.AttemptButtonUpdater;
@@ -62,7 +63,7 @@ public class IntermissionGameGui {
 		initSixBallGame();
 	}
 
-	public void initGame(Game game) {
+	public void initGame (Game game) {
 		this.game = game;
 		this.gameScoreTableModel = new GameScoreTableModel(this.game);
 		this.seasonScoreTableModel = new SeasonScoreTableModel(this.game, new SeasonScoreCalculator(this.game
@@ -100,28 +101,32 @@ public class IntermissionGameGui {
 		this.buttonModel.updateModel();
 	}
 
-	private void initFiveBallGame() {
+	private void initFourBallGame () {
+		initGame(new Game(new FourBallsGameConfig(), Arrays.asList(new Player("Jürgen"), new Player("Marcus"))));
+	}
+
+	private void initFiveBallGame () {
 		initGame(new Game(new FiveBallsGameConfig(), Arrays.asList(new Player("Jürgen"), new Player("Marcus"))));
 	}
 
-	private void initSixBallGame() {
+	private void initSixBallGame () {
 		initGame(new Game(new SixBallsGameConfig(), Arrays.asList(new Player("Jürgen"), new Player("Marcus"))));
 	}
 
-	private JComponent createGameScoreComponent() {
+	private JComponent createGameScoreComponent () {
 		JTable gameScoreTable = new DefaultScoreTable(this.gameScoreTableModel);
 		gameScoreTable.setDefaultRenderer(Object.class, new GameScoreTableCellRenderer());
 		return new JScrollPane(gameScoreTable);
 	}
 
-	private JComponent createSeasonScoreComponent() {
+	private JComponent createSeasonScoreComponent () {
 		JTable seasonScoreTable = new DefaultScoreTable(this.seasonScoreTableModel);
 		return new JScrollPane(seasonScoreTable);
 	}
 
-	private JComponent createButtonComponent() {
+	private JComponent createButtonComponent () {
 		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(4, 2));
+		panel.setLayout(new GridLayout(5, 2));
 		JButton finishButton = new GameButton("Spiel beenden");
 		finishButton.addActionListener(new FinishActionListener(this.game, this.gameScoreTableModel,
 				this.seasonScoreTableModel, this.seasonStatisticTableModel, this.totalStatisticTableModel,
@@ -148,21 +153,31 @@ public class IntermissionGameGui {
 				this.seasonScoreTableModel, this.seasonStatisticTableModel, this.totalStatisticTableModel,
 				this.buttonModel));
 		panel.add(resetButton);
+		JButton fourBallsConfigButton = new GameButton(new FourBallsGameConfig().getName());
+		fourBallsConfigButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed (ActionEvent e) {
+				initFourBallGame();
+			}
+		});
+		panel.add(fourBallsConfigButton);
 		panel.add(createEmptyComponent());
 		JButton fiveBallsConfigButton = new GameButton(new FiveBallsGameConfig().getName());
 		fiveBallsConfigButton.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed (ActionEvent arg0) {
 				initFiveBallGame();
 			}
 		});
 		panel.add(fiveBallsConfigButton);
+		panel.add(createEmptyComponent());
 		JButton sixBallsConfigButton = new GameButton(new SixBallsGameConfig().getName());
 		sixBallsConfigButton.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed (ActionEvent e) {
 				initSixBallGame();
 			}
 		});
@@ -170,7 +185,7 @@ public class IntermissionGameGui {
 		return panel;
 	}
 
-	private JComponent createStatisticComponent() {
+	private JComponent createStatisticComponent () {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(2, 1));
 		JTable seasonStatisticTable = new DefaultScoreTable(this.seasonStatisticTableModel);
@@ -180,7 +195,7 @@ public class IntermissionGameGui {
 		return panel;
 	}
 
-	private JPanel createPanelWithButtons(Player player) {
+	private JPanel createPanelWithButtons (Player player) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridLayout(this.game.getAllowedBalls().size() + 1, 2));
 		panel.add(new JLabel(player.getName()));
@@ -207,7 +222,7 @@ public class IntermissionGameGui {
 		return panel;
 	}
 
-	private JComponent createEmptyComponent() {
+	private JComponent createEmptyComponent () {
 		return new JPanel();
 	}
 
